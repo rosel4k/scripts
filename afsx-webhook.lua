@@ -1,7 +1,8 @@
 getgenv().truestat = true
 while getgenv().truestat do
     pcall(function()
-local container = game:GetService("Players").LocalPlayer.PlayerGui.Menu.PagesContainer.Champions.container["1"].extra["1"]
+local player = game:GetService("Players").LocalPlayer
+local container = player.PlayerGui.Menu.PagesContainer.Champions.container["1"].extra["1"]
 local found = false
 local name = "You don't have equipped champion"
 local level = ""
@@ -18,15 +19,15 @@ for _, v in pairs(container:GetDescendants()) do
         end
     end
     end
-local totalpower = game:GetService("Players").LocalPlayer.leaderstats.Power.Value
-local firstpath = game:GetService("Players").LocalPlayer.PlayerGui.Menu.PagesContainer.Upgrades.container["1"]
+local totalpower = player.leaderstats.Power.Value
+local firstpath = player.PlayerGui.Menu.PagesContainer.Upgrades.container["1"]
 local sword = firstpath.Sword.upgradeName.Text
 local speed = firstpath.Speed.upgradeName.Text
 local chakra = firstpath.Chakra.upgradeName.Text
 local durability = firstpath.Durability.upgradeName.Text
 local strength = firstpath.Strength.upgradeName.Text
-local yen = game:GetService("Players").LocalPlayer.PlayerGui.Menu.RightFrame.Yen.currencyAmount.Text
-local chikara = game:GetService("Players").LocalPlayer.PlayerGui.Menu.RightFrame.Chikara.currencyAmount.Text
+local yen = player.PlayerGui.Menu.RightFrame.Yen.currencyAmount.Text
+local chikara = player.PlayerGui.Menu.RightFrame.Chikara.currencyAmount.Text
 local response = request({
                 Url = getgenv().WebhookURL,
                 Method = "POST",
@@ -38,7 +39,7 @@ local response = request({
                     embeds = {
                         {
                             title = "Stats sender",
-                            description = tostring(game:GetService("Players").LocalPlayer.Name).." stats:",
+                            description = tostring(player.Name).." stats:",
                             color = 16711680,
                             fields = {
                                 {
