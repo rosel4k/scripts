@@ -50,7 +50,7 @@ local totalValue = getValue(powerValue)
 local savedAfterMinute = totalValue - savedValue
 local powerperminute = formatNumber(savedAfterMinute)
 local powerperhour = formatNumber(savedAfterMinute * 60)
-local powerper10hours = formatNumber(savedAfterMinute * 60 * 10)
+local powerperday = formatNumber(savedAfterMinute * 60 * 24)
 local response = request({
                 Url = getgenv().WebhookURL,
                 Method = "POST",
@@ -106,8 +106,8 @@ local response = request({
                                     value = powerperhour
                                 },
                                 {
-                                    name = "Power per 10 hours: ",
-                                    value = powerper10hours
+                                    name = "Power per day: ",
+                                    value = powerperday
                                 },
                                 {
                                     name = "Name of equipped champion: ",
