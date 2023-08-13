@@ -28,6 +28,29 @@ local durability = firstpath.Durability.upgradeName.Text
 local strength = firstpath.Strength.upgradeName.Text
 local yen = player.PlayerGui.Menu.RightFrame.Yen.currencyAmount.Text
 local chikara = player.PlayerGui.Menu.RightFrame.Chikara.currencyAmount.Text
+local function formatNumber(number)
+    local suffixes = {"", "K", "M", "B", "T"}
+    local index = 1
+    while number >= 1000 and index < #suffixes do
+        number = number / 1000
+        index = index + 1
+    end
+    return string.format(index == 1 and "%.0f" or "%.1f%s", number, suffixes[index])
+end
+local function getValue(text)
+    local numericValue, multiplier = text:match("([%d%.]+)(%a+)")
+    local multiplierValue = { T = 1e12, B = 1e9, M = 1e6, K = 1e3 }
+    return tonumber(numericValue) * (multiplierValue[multiplier] or 1)
+end
+local powerValue = player.leaderstats.Power.Value
+local savedValue = getValue(powerValue)
+wait(60)
+powerValue = player.leaderstats.Power.Value
+local totalValue = getValue(powerValue)
+local savedAfterMinute = totalValue - savedValue
+local powerperminute = formatNumber(savedAfterMinute)
+local powerperhour = formatNumber(savedAfterMinute * 60)
+local powerper10hours = formatNumber(savedAfterMinute * 60 * 10)
 local response = request({
                 Url = getgenv().WebhookURL,
                 Method = "POST",
@@ -75,11 +98,23 @@ local response = request({
                                     value = speed
                                 },
                                 {
-                                    name = "Name of champion: ",
+                                    name = "Power per minute: ",
+                                    value = powerperminute
+                                },
+                                {
+                                    name = "Power per hour: ",
+                                    value = powerperhour
+                                },
+                                {
+                                    name = "Power per 10 hours: ",
+                                    value = powerper10hours
+                                },
+                                {
+                                    name = "Name of equipped champion: ",
                                     value = name
                                 },
                                 {
-                                    name = "Level of champion: ",
+                                    name = "Level of equipped champion: ",
                                     value = level
                                 },
                                 {
@@ -95,5 +130,5 @@ local response = request({
                 })
             }) 
 end)
-wait(getgenv().MinutesBetweenMessages * 60)
+wait((getgenv().MinutesBetweenMessages - 1 )* 60)
 end
