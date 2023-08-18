@@ -29,7 +29,7 @@ end
 
 
 
-local NotificationFrame = game:GetObjects("rbxassetid://11675536014")[1]
+local NotificationFrame = game:GetObjects("rbxassetid://11642336014")[1]
 NotificationFrame.ZIndex = 4
 NotificationFrame.Parent = NotificationHolder
 script = NotificationFrame.NotifScript
