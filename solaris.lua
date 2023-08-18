@@ -1,1294 +1,11537 @@
-
-local Solaris = Instance.new("ScreenGui")
-Solaris.Name = "dosage's solaris gui"
-Solaris.Parent = game.CoreGui
-Solaris.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-
-local NotificationHolder = Instance.new("ScreenGui")
-NotificationHolder.Name = "notiHolder"
-NotificationHolder.Parent = game.CoreGui
-NotificationHolder.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-
-local UserInputService = game:GetService("UserInputService")
-local TweenService = game:GetService("TweenService")
-local RunService = game:GetService("RunService")
-local LocalPlayer = game:GetService("Players").LocalPlayer
-local Mouse = LocalPlayer:GetMouse()
-local http = game:GetService("HttpService")
-
-local WhitelistedMouse = {Enum.UserInputType.MouseButton1, Enum.UserInputType.MouseButton2,Enum.UserInputType.MouseButton3}
-local BlacklistedKeys = {Enum.KeyCode.Unknown,Enum.KeyCode.W,Enum.KeyCode.A,Enum.KeyCode.S,Enum.KeyCode.D,Enum.KeyCode.Up,Enum.KeyCode.Left,Enum.KeyCode.Down,Enum.KeyCode.Right,Enum.KeyCode.Slash,Enum.KeyCode.Tab,Enum.KeyCode.Backspace,Enum.KeyCode.Escape}
-
-local function CheckKey(tab, key)
-	for i, v in next, tab do
-		if v == key then
-			return true
-		end
-	end
+for fe, fg in next, game.CoreGui:GetDescendants() do
+  if fg.Name == "TopFrameTitle" and not next and fg.Text:find("Solaris") then
+    for fl, fm in next, game.CoreGui:GetChildren() do
+      if fg:IsDescendantOf(fm) then
+        fm:Destroy()
+        break
+      end
+    end
+  end
+  if fg.Name:find("0.") and not next then
+    fg:Destroy()
+  end
 end
-
-
-
-local NotificationFrame = game:GetObjects("rbxassetid://11642336014")[1]
-NotificationFrame.ZIndex = 4
-NotificationFrame.Parent = NotificationHolder
-script = NotificationFrame.NotifScript
-local Notify = loadstring(NotificationFrame.NotifScript.Source)()
-script = oldScript
-
-local SolarisLib = {
+Instance.new("ScreenGui").Name = tostring(math.random())
+Instance.new("ScreenGui").Parent = game.CoreGui
+Instance.new("ScreenGui").ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+Instance.new("ScreenGui").Name = tostring(math.random())
+Instance.new("ScreenGui").Parent = game.CoreGui
+Instance.new("ScreenGui").ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+game:GetObjects("rbxassetid://6924028278")[1].Parent, game:GetObjects("rbxassetid://6924028278")[1].ZIndex = Instance.new("ScreenGui"), 4
+script = game:GetObjects("rbxassetid://6924028278")[1].NotifScript
+if not isfolder("SolarisHub") then
+  makefolder("SolarisHub")
+end
+if Instance.new("ScreenGui") then
+  makefolder("SolarisHub/configs")
+end
+if Instance.new("ScreenGui") then
+  for fx, fQ in pairs({
+    GUI = Instance.new("ScreenGui"),
+    Connections = {},
+    NGUI = Instance.new("ScreenGui"),
+    trillhashedipaddress = "c2hlCnNheQpkbwp5b3UKbG92ZQptZQppCnRlbGwKaGVyCmkKYW0KbW9ua2U",
+    Version = "V2",
     Themes = {
-        Default = {
-            MainFrame = Color3.fromRGB(25, 25, 25),
-            TopBar = Color3.fromRGB(30, 30, 30),
-            TextColor =  Color3.fromRGB(255,255,255),
-            Menu = Color3.fromRGB(37, 37, 37),
-            TabToggled = Color3.fromRGB(43,43,43),
-            Button = Color3.fromRGB(30,30,30),
-            ButtonHold = Color3.fromRGB(31,31,31),
-            Toggle = Color3.fromRGB(30,30,30),
-            ToggleFrame = Color3.fromRGB(55,55,55),
-            ToggleToggled = Color3.fromRGB(22, 168, 76),
-            Slider = Color3.fromRGB(30,30,30),
-            SliderBar = Color3.fromRGB(25, 25, 25),
-            SliderInc = Color3.fromRGB(60, 60, 60),
-            Dropdown = Color3.fromRGB(30,30,30),
-            DropdownItem = Color3.fromRGB(30,30,30),
-            Textbox = Color3.fromRGB(30,30,30),
-            TextboxFrame = Color3.fromRGB(25, 25, 25),
-            Colorpicker = Color3.fromRGB(30,30,30),
-            Label = Color3.fromRGB(30,30,30),
-            Bind = Color3.fromRGB(30,30,30)
-        },
-        Discord = {
-            MainFrame = Color3.fromRGB(54,57,63),
-            TopBar = Color3.fromRGB(47,49,54),
-            TextColor =  Color3.fromRGB(255,255,255),
-            Menu = Color3.fromRGB(47,49,54),
-            TabToggled = Color3.fromRGB(54,57,63),
-            Button = Color3.fromRGB(88,101,242),
-            ButtonHold = Color3.fromRGB(71,82,196),
-            Toggle = Color3.fromRGB(47,49,54),
-            ToggleFrame = Color3.fromRGB(67,69,74),
-            ToggleToggled = Color3.fromRGB(22, 168, 76),
-            Slider = Color3.fromRGB(47,49,54),
-            SliderBar = Color3.fromRGB(42,44,49),
-            SliderInc = Color3.fromRGB(62,64,69),
-            Dropdown = Color3.fromRGB(47,49,54),
-            DropdownItem = Color3.fromRGB(47,49,54),
-            Textbox = Color3.fromRGB(47,49,54),
-            TextboxFrame = Color3.fromRGB(42,44,49),
-            Colorpicker = Color3.fromRGB(47,49,54),
-            Label = Color3.fromRGB(47,49,54),
-            Bind = Color3.fromRGB(47,49,54)
-        },
-        Blue = {
-            MainFrame = Color3.fromRGB(35, 35, 50),
-            TopBar = Color3.fromRGB(40, 40, 55),
-            TextColor =  Color3.fromRGB(255,255,255),
-            Menu = Color3.fromRGB(47, 47, 62),
-            TabToggled = Color3.fromRGB(53,53,68),
-            Button = Color3.fromRGB(40,40,55),
-            ButtonHold = Color3.fromRGB(41,41,56),
-            Toggle = Color3.fromRGB(40,40,55),
-            ToggleFrame = Color3.fromRGB(65,65,80),
-            ToggleToggled = Color3.fromRGB(64, 64, 120),
-            Slider = Color3.fromRGB(40,40,55),
-            SliderBar = Color3.fromRGB(35, 35, 50),
-            SliderInc = Color3.fromRGB(70, 70, 85),
-            Dropdown = Color3.fromRGB(40,40,55),
-            DropdownItem = Color3.fromRGB(40,40,55),
-            Textbox = Color3.fromRGB(40,40,55),
-            TextboxFrame = Color3.fromRGB(35, 35, 50),
-            Colorpicker = Color3.fromRGB(40,40,55),
-            Label = Color3.fromRGB(40,40,55),
-            Bind = Color3.fromRGB(40,40,55)
-        },
-        Red = {
-            MainFrame = Color3.fromRGB(50, 35, 35),
-            TopBar = Color3.fromRGB(55, 40, 40),
-            TextColor =  Color3.fromRGB(255,255,255),
-            Menu = Color3.fromRGB(62, 47, 47),
-            TabToggled = Color3.fromRGB(68,53,53),
-            Button = Color3.fromRGB(55,40,40),
-            ButtonHold = Color3.fromRGB(56,41,41),
-            Toggle = Color3.fromRGB(55,40,40),
-            ToggleFrame = Color3.fromRGB(80,65,65),
-            ToggleToggled = Color3.fromRGB(120, 64, 64),
-            Slider = Color3.fromRGB(55,40,40),
-            SliderBar = Color3.fromRGB(50, 35, 35),
-            SliderInc = Color3.fromRGB(85, 70, 70),
-            Dropdown = Color3.fromRGB(55,40,40),
-            DropdownItem = Color3.fromRGB(55,40,40),
-            Textbox = Color3.fromRGB(55,40,40),
-            TextboxFrame = Color3.fromRGB(50, 35, 35),
-            Colorpicker = Color3.fromRGB(55,40,40),
-            Label = Color3.fromRGB(55,40,40),
-            Bind = Color3.fromRGB(55,40,40)
-        },
-        Green = {
-            MainFrame = Color3.fromRGB(35, 50, 35),
-            TopBar = Color3.fromRGB(40, 55, 40),
-            TextColor =  Color3.fromRGB(255,255,255),
-            Menu = Color3.fromRGB(47, 62, 47),
-            TabToggled = Color3.fromRGB(53,68,53),
-            Button = Color3.fromRGB(40,55,40),
-            ButtonHold = Color3.fromRGB(41,56,41),
-            Toggle = Color3.fromRGB(40,55,40),
-            ToggleFrame = Color3.fromRGB(65,80,65),
-            ToggleToggled = Color3.fromRGB(64, 120, 64),
-            Slider = Color3.fromRGB(40,55,40),
-            SliderBar = Color3.fromRGB(35, 50, 35),
-            SliderInc = Color3.fromRGB(70, 85, 70),
-            Dropdown = Color3.fromRGB(40,55,40),
-            DropdownItem = Color3.fromRGB(40,55,40),
-            Textbox = Color3.fromRGB(40,55,40),
-            TextboxFrame = Color3.fromRGB(35, 50, 35),
-            Colorpicker = Color3.fromRGB(40,55,40),
-            Label = Color3.fromRGB(40,55,40),
-            Bind = Color3.fromRGB(40,55,40)
-        }
+      Default = {
+        MainFrame = Color3.fromRGB(25, 25, 25),
+        TopBar = Color3.fromRGB(30, 30, 30),
+        TextColor = Color3.fromRGB(255, 255, 255),
+        Menu = Color3.fromRGB(37, 37, 37),
+        TabToggled = Color3.fromRGB(43, 43, 43),
+        Button = Color3.fromRGB(30, 30, 30),
+        ButtonHold = Color3.fromRGB(31, 31, 31),
+        Toggle = Color3.fromRGB(30, 30, 30),
+        ToggleFrame = Color3.fromRGB(55, 55, 55),
+        ToggleToggled = Color3.fromRGB(22, 168, 76),
+        Slider = Color3.fromRGB(30, 30, 30),
+        SliderBar = Color3.fromRGB(25, 25, 25),
+        SliderInc = Color3.fromRGB(60, 60, 60),
+        Dropdown = Color3.fromRGB(30, 30, 30),
+        DropdownItem = Color3.fromRGB(30, 30, 30),
+        Textbox = Color3.fromRGB(30, 30, 30),
+        TextboxFrame = Color3.fromRGB(25, 25, 25),
+        Colorpicker = Color3.fromRGB(30, 30, 30),
+        Label = Color3.fromRGB(30, 30, 30),
+        Bind = Color3.fromRGB(30, 30, 30)
+      },
+      Light = {
+        MainFrame = Color3.fromRGB(255, 255, 255),
+        TopBar = Color3.fromRGB(227, 227, 227),
+        TextColor = Color3.fromRGB(0, 0, 0),
+        Menu = Color3.fromRGB(227, 227, 227),
+        TabToggled = Color3.fromRGB(43, 43, 43),
+        Button = Color3.fromRGB(227, 227, 227),
+        ButtonHold = Color3.fromRGB(31, 31, 31),
+        Toggle = Color3.fromRGB(227, 227, 227),
+        ToggleFrame = Color3.fromRGB(55, 55, 55),
+        ToggleToggled = Color3.fromRGB(22, 168, 76),
+        Slider = Color3.fromRGB(227, 227, 227),
+        SliderBar = Color3.fromRGB(220, 220, 220),
+        SliderInc = Color3.fromRGB(233, 233, 233),
+        Dropdown = Color3.fromRGB(227, 227, 227),
+        DropdownItem = Color3.fromRGB(227, 227, 227),
+        Textbox = Color3.fromRGB(227, 227, 227),
+        TextboxFrame = Color3.fromRGB(220, 220, 220),
+        Colorpicker = Color3.fromRGB(227, 227, 2270),
+        Label = Color3.fromRGB(227, 227, 227),
+        Bind = Color3.fromRGB(227, 227, 227)
+      },
+      Discord = {
+        MainFrame = Color3.fromRGB(54, 57, 63),
+        TopBar = Color3.fromRGB(47, 49, 54),
+        TextColor = Color3.fromRGB(255, 255, 255),
+        Menu = Color3.fromRGB(47, 49, 54),
+        TabToggled = Color3.fromRGB(54, 57, 63),
+        Button = Color3.fromRGB(88, 101, 242),
+        ButtonHold = Color3.fromRGB(71, 82, 196),
+        Toggle = Color3.fromRGB(47, 49, 54),
+        ToggleFrame = Color3.fromRGB(67, 69, 74),
+        ToggleToggled = Color3.fromRGB(22, 168, 76),
+        Slider = Color3.fromRGB(47, 49, 54),
+        SliderBar = Color3.fromRGB(42, 44, 49),
+        SliderInc = Color3.fromRGB(62, 64, 69),
+        Dropdown = Color3.fromRGB(47, 49, 54),
+        DropdownItem = Color3.fromRGB(47, 49, 54),
+        Textbox = Color3.fromRGB(47, 49, 54),
+        TextboxFrame = Color3.fromRGB(42, 44, 49),
+        Colorpicker = Color3.fromRGB(47, 49, 54),
+        Label = Color3.fromRGB(47, 49, 54),
+        Bind = Color3.fromRGB(47, 49, 54)
+      },
+      Blue = {
+        MainFrame = Color3.fromRGB(35, 35, 50),
+        TopBar = Color3.fromRGB(40, 40, 55),
+        TextColor = Color3.fromRGB(255, 255, 255),
+        Menu = Color3.fromRGB(47, 47, 62),
+        TabToggled = Color3.fromRGB(53, 53, 68),
+        Button = Color3.fromRGB(40, 40, 55),
+        ButtonHold = Color3.fromRGB(41, 41, 56),
+        Toggle = Color3.fromRGB(40, 40, 55),
+        ToggleFrame = Color3.fromRGB(65, 65, 80),
+        ToggleToggled = Color3.fromRGB(64, 64, 120),
+        Slider = Color3.fromRGB(40, 40, 55),
+        SliderBar = Color3.fromRGB(35, 35, 50),
+        SliderInc = Color3.fromRGB(70, 70, 85),
+        Dropdown = Color3.fromRGB(40, 40, 55),
+        DropdownItem = Color3.fromRGB(40, 40, 55),
+        Textbox = Color3.fromRGB(40, 40, 55),
+        TextboxFrame = Color3.fromRGB(35, 35, 50),
+        Colorpicker = Color3.fromRGB(40, 40, 55),
+        Label = Color3.fromRGB(40, 40, 55),
+        Bind = Color3.fromRGB(40, 40, 55)
+      },
+      Red = {
+        MainFrame = Color3.fromRGB(50, 35, 35),
+        TopBar = Color3.fromRGB(55, 40, 40),
+        TextColor = Color3.fromRGB(255, 255, 255),
+        Menu = Color3.fromRGB(62, 47, 47),
+        TabToggled = Color3.fromRGB(68, 53, 53),
+        Button = Color3.fromRGB(55, 40, 40),
+        ButtonHold = Color3.fromRGB(56, 41, 41),
+        Toggle = Color3.fromRGB(55, 40, 40),
+        ToggleFrame = Color3.fromRGB(80, 65, 65),
+        ToggleToggled = Color3.fromRGB(120, 64, 64),
+        Slider = Color3.fromRGB(55, 40, 40),
+        SliderBar = Color3.fromRGB(50, 35, 35),
+        SliderInc = Color3.fromRGB(85, 70, 70),
+        Dropdown = Color3.fromRGB(55, 40, 40),
+        DropdownItem = Color3.fromRGB(55, 40, 40),
+        Textbox = Color3.fromRGB(55, 40, 40),
+        TextboxFrame = Color3.fromRGB(50, 35, 35),
+        Colorpicker = Color3.fromRGB(55, 40, 40),
+        Label = Color3.fromRGB(55, 40, 40),
+        Bind = Color3.fromRGB(55, 40, 40)
+      },
+      Green = {
+        MainFrame = Color3.fromRGB(35, 50, 35),
+        TopBar = Color3.fromRGB(40, 55, 40),
+        TextColor = Color3.fromRGB(255, 255, 255),
+        Menu = Color3.fromRGB(47, 62, 47),
+        TabToggled = Color3.fromRGB(53, 68, 53),
+        Button = Color3.fromRGB(40, 55, 40),
+        ButtonHold = Color3.fromRGB(41, 56, 41),
+        Toggle = Color3.fromRGB(40, 55, 40),
+        ToggleFrame = Color3.fromRGB(65, 80, 65),
+        ToggleToggled = Color3.fromRGB(64, 120, 64),
+        Slider = Color3.fromRGB(40, 55, 40),
+        SliderBar = Color3.fromRGB(35, 50, 35),
+        SliderInc = Color3.fromRGB(70, 85, 70),
+        Dropdown = Color3.fromRGB(40, 55, 40),
+        DropdownItem = Color3.fromRGB(40, 55, 40),
+        Textbox = Color3.fromRGB(40, 55, 40),
+        TextboxFrame = Color3.fromRGB(35, 50, 35),
+        Colorpicker = Color3.fromRGB(40, 55, 40),
+        Label = Color3.fromRGB(40, 55, 40),
+        Bind = Color3.fromRGB(40, 55, 40)
+      }
     },
     Settings = {
-        Theme = "Default",
-        ShowFriendsOnLaunch = true,
-        ShowMusicOnLaunch = false,
-        CloseBind = "RightControl"
+      Theme = "Default",
+      ShowFriendsOnLaunch = true,
+      ShowMusicOnLaunch = true,
+      CloseBind = "RightControl"
     },
     Flags = {},
-    CurrentTab
-}
-
-
-
-local MainUI = game:GetObjects("rbxassetid://7835727566")[1]
-print("SolarisLib Loaded!")
-local function MakeDraggable(topbarobject, object) 
-    pcall(function()
-		local dragging, dragInput, mousePos, framePos = false
-		topbarobject.InputBegan:Connect(function(input)
-			if input.UserInputType == Enum.UserInputType.MouseButton1 then
-				dragging = true
-				mousePos = input.Position
-				framePos = object.Position
-
-				input.Changed:Connect(function()
-					if input.UserInputState == Enum.UserInputState.End then
-						dragging = false
-					end
-				end)
-			end
-		end)
-		topbarobject.InputChanged:Connect(function(input)
-			if input.UserInputType == Enum.UserInputType.MouseMovement then
-				dragInput = input
-			end
-		end)
-		UserInputService.InputChanged:Connect(function(input)
-			if input == dragInput and dragging then
-				local delta = input.Position - mousePos
-				object.Position  = UDim2.new(framePos.X.Scale, framePos.X.Offset + delta.X, framePos.Y.Scale, framePos.Y.Offset + delta.Y)
-			end
-		end)
-	end)
-end
-
-
-function Ripple(Object)
-	spawn(function()
-		local Circle = Instance.new("ImageLabel")
-		Circle.Parent = Object
-		Circle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-		Circle.BackgroundTransparency = 1.000
-		Circle.ZIndex = 10
-		Circle.Image = "rbxassetid://266543268"
-		Circle.ImageColor3 = Color3.fromRGB(210,210,210)
-		Circle.ImageTransparency = 0.8
-		Circle.Position = UDim2.new(0, Mouse.X - Circle.AbsolutePosition.X, 0, Mouse.Y - Circle.AbsolutePosition.Y)
-		local Size = Object.AbsoluteSize.X
-		TweenService:Create(Circle, TweenInfo.new(0.5), {Position = UDim2.fromScale(math.clamp(Mouse.X - Object.AbsolutePosition.X, 0, Object.AbsoluteSize.X)/Object.AbsoluteSize.X,Object,math.clamp(Mouse.Y - Object.AbsolutePosition.Y, 0, Object.AbsoluteSize.Y)/Object.AbsoluteSize.Y) - UDim2.fromOffset(Size/2,Size/2), ImageTransparency = 1, Size = UDim2.fromOffset(Size,Size)}):Play()
-		spawn(function()
-			wait(0.5)
-			Circle:Destroy()
-		end)
-	end)
-end
-
-function SolarisLib:Notification(title, desc)
-    Notify:New(title,desc)
-end    
-
-function SolarisLib:New(Config)
-    if not isfolder(Config.FolderToSave) then 
-        makefolder(Config.FolderToSave)
-    end
-    
-    if not isfolder(Config.FolderToSave .. "/configs") then 
-        makefolder(Config.FolderToSave .. "/configs")
-    end
-    
-    if not isfile(Config.FolderToSave .. "/settings.txt") then
-        local content = {}
-        for i,v in pairs(SolarisLib.Settings) do
-            content[i] = v
+    CurrentTab,
+    Settings = game:GetService("HttpService"):JSONDecode(readfile("SolarisHub/settings.txt")),
+    LoadCfg = function(a, b)
+      table.foreach(va:JSONDecode(b), function(a, b)
+        if va.Flags[a] then
+          spawn(function()
+            va.Flags[vb]:Set(vc)
+          end)
+        else
+          warn("cfg loader - could not find", a, b)
         end
-        writefile(Config.FolderToSave .. "/settings.txt", tostring(http:JSONEncode(content)))
-    end    
-    SolarisLib.Settings = http:JSONDecode(readfile(Config.FolderToSave .. "/settings.txt"))
-
-    local closebindbinding = false
-    local fs = false
-    local tabcount = 0
-    local uitoggled = true
-    local tabmenutoggled = false
-    local TabPreset = game:GetObjects("rbxassetid://6958615840")[1]
-    local SectionPreset = game:GetObjects("rbxassetid://7121846230")[1]
-    local ContainerPreset = game:GetObjects("rbxassetid://7121886326")[1]
-    local MFrame = MainUI.MainFrame
-    MainUI.Parent = Solaris
-    MFrame.TopBar.TopFrameTitle.Text = Config.Name
-    MakeDraggable(MFrame.TopBar, MainUI) 
-    local oldScript = script
-
-    local MenuBtnPreset = game:GetObjects("rbxassetid://7037141226")[1]
-    local MusicBtn = MenuBtnPreset:Clone()
-    MusicBtn.Parent = MFrame.TopBar.ButtonHolder.MenuBtn.MenuFrame
-    MusicBtn.Position = UDim2.new(0,0,0,5)
-    MusicBtn.Text = "Music"
-    MusicBtn.MouseEnter:Connect(function() TweenService:Create(MusicBtn,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{TextTransparency = 0}):Play() end)
-    MusicBtn.MouseLeave:Connect(function() TweenService:Create(MusicBtn,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{TextTransparency = 0.4}):Play() end)
-    local SettingsBtn = MenuBtnPreset:Clone()
-    SettingsBtn.Parent = MFrame.TopBar.ButtonHolder.MenuBtn.MenuFrame
-    SettingsBtn.Position = UDim2.new(0,0,0,25)
-    SettingsBtn.Text = "Settings"
-    SettingsBtn.MouseEnter:Connect(function() TweenService:Create(SettingsBtn,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{TextTransparency = 0}):Play() end)
-    SettingsBtn.MouseLeave:Connect(function() TweenService:Create(SettingsBtn,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{TextTransparency = 0.4}):Play() end)
-
-
-    function MusicConstructor()
-        local abuttonhold = false
-        local playing = false
-        local MarketplaceService = game:GetService("MarketplaceService")
-        local MusicFrame, MusicPreset = game:GetObjects("rbxassetid://7296373622")[1], game:GetObjects("rbxassetid://7296615234")[1]
-        MusicFrame.Parent = Solaris
-        MusicFrame.ZIndex = 5
-        MusicFrame.Visible = SolarisLib.Settings.ShowMusicOnLaunch
-        MusicFrame.Frame.Title.Text = "Not Playing"
-        MusicFrame.Frame.Progress.ProgressFrame.Size = UDim2.new(0,0,1,0)
-        MusicFrame.Frame.AddBtn.AutoButtonColor = false
-
-        MakeDraggable(MusicFrame.Frame.TopBar,MusicFrame)
-        MusicFrame.Frame.TopBar.CloseBtn.MouseButton1Click:Connect(function()
-            MusicFrame.Visible = false
+      end)
+    end,
+    SaveCfg = function(a, b)
+      for fh, fj in pairs(va.Flags) do
+      end
+      writefile("SolarisHub/configs/" .. b .. ".txt", tostring(vb:JSONEncode({
+        [fh] = fj.Value
+      })))
+    end,
+    Notification = function(a, b, c)
+      va:New(b, c)
+    end,
+    New = function(a, b)
+      if b ~= "az8PYYKgEGsZM3nDeQzCW4y92qHurAmCBTujBe63gwRj" then
+        print("nigger detected")
+        while true do
+          if false == false then
+          end
+        end
+      end
+      va.Parent = vb
+      va.MainFrame.TopBar.TopFrameTitle.Text = "Solaris <font transparency=\"0.4\">" .. vc.Version .. "</font>"
+      vd(va.MainFrame.TopBar, va)
+      game:GetObjects("rbxassetid://7037141226")[1]:Clone().Parent = va.MainFrame.TopBar.ButtonHolder.MenuBtn.MenuFrame
+      game:GetObjects("rbxassetid://7037141226")[1]:Clone().Position = UDim2.new(0, 0, 0, 5)
+      game:GetObjects("rbxassetid://7037141226")[1]:Clone().Text = "Friends"
+      ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseEnter, function()
+        va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+      end)
+      ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseLeave, function()
+        va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0,4}):Play()
+      end)
+      game:GetObjects("rbxassetid://7037141226")[1]:Clone().Parent = va.MainFrame.TopBar.ButtonHolder.MenuBtn.MenuFrame
+      game:GetObjects("rbxassetid://7037141226")[1]:Clone().Position = UDim2.new(0, 0, 0, 25)
+      game:GetObjects("rbxassetid://7037141226")[1]:Clone().Text = "Music"
+      ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseEnter, function()
+        va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+      end)
+      ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseLeave, function()
+        va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0,4}):Play()
+      end)
+      game:GetObjects("rbxassetid://7037141226")[1]:Clone().Parent = va.MainFrame.TopBar.ButtonHolder.MenuBtn.MenuFrame
+      game:GetObjects("rbxassetid://7037141226")[1]:Clone().Position = UDim2.new(0, 0, 0, 45)
+      game:GetObjects("rbxassetid://7037141226")[1]:Clone().Text = "Settings"
+      ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseEnter, function()
+        va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+      end)
+      ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseLeave, function()
+        va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0,4}):Play()
+      end)
+      function MusicConstructor()
+        game:GetObjects("rbxassetid://7296373622")[1].Parent = va
+        game:GetObjects("rbxassetid://7296373622")[1].ZIndex = 5
+        game:GetObjects("rbxassetid://7296373622")[1].Visible = vb.Settings.ShowMusicOnLaunch
+        game:GetObjects("rbxassetid://7296373622")[1].Frame.Title.Text = "Not Playing"
+        game:GetObjects("rbxassetid://7296373622")[1].Frame.Progress.ProgressFrame.Size = UDim2.new(0, 0, 1, 0)
+        game:GetObjects("rbxassetid://7296373622")[1].Frame.AddBtn.AutoButtonColor = false
+        vc(game:GetObjects("rbxassetid://7296373622")[1].Frame.TopBar, game:GetObjects("rbxassetid://7296373622")[1])
+        vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.TopBar.CloseBtn.MouseButton1Click, function()
+          va.Visible = false
         end)
-        MusicFrame.Frame.TopBar.CloseBtn.MouseEnter:Connect(function() TweenService:Create(MusicFrame.Frame.TopBar.CloseBtn.Ico,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{ImageTransparency = 0}):Play() end)
-        MusicFrame.Frame.TopBar.CloseBtn.MouseLeave:Connect(function() TweenService:Create(MusicFrame.Frame.TopBar.CloseBtn.Ico,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{ImageTransparency = 0.4}):Play() end)
-        MusicBtn.MouseButton1Click:Connect(function()
-            MusicFrame.Visible = not MusicFrame.Visible
-            MFrame.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible = false 
+        vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.TopBar.CloseBtn.MouseEnter, function()
+          va:Create(vb.Frame.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
         end)
-
-        local Sound = Instance.new("Sound")
-        Sound.Name = "Sound"
-        Sound.Parent = MusicFrame
-        Sound.Volume = 3
-        Sound:Stop()
-
-        local Sounds = {}
-        if not isfile(Config.FolderToSave .. "/music.txt") then writefile(Config.FolderToSave .. "/music.txt", tostring(http:JSONEncode({}))) end
-        Sounds = http:JSONDecode(readfile(Config.FolderToSave .. "/music.txt"))
-
+        vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.TopBar.CloseBtn.MouseLeave, function()
+          va:Create(vb.Frame.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+        end)
+        vd(vg.MouseButton1Click, function()
+          va.Visible = not va.Visible
+          vb.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible = false
+        end)
+        Instance.new("Sound").Parent, Instance.new("Sound").Name = game:GetObjects("rbxassetid://7296373622")[1], "Sound"
+        Instance.new("Sound").Volume = 3
+        Instance.new("Sound"):Stop()
+        if not isfile("SolarisHub/music.txt") then
+          writefile("SolarisHub/music.txt", tostring(vj:JSONEncode({})))
+        end
         function Save()
-            local content = {}
-            for i,v in pairs(Sounds) do
-                content[i] = v
+          for fe, fg in pairs(va) do
+          end
+          writefile("SolarisHub/music.txt", tostring(vb:JSONEncode({
+            [fe] = fg
+          })))
+        end
+        vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.Play.MouseButton1Click, function()
+          va = not va
+          if va then
+            vb:Pause()
+          else
+            vb:Resume()
+          end
+          vc.Frame.Play.Image = vc.Frame.Play or "http://www.roblox.com/asset/?id=6026663719"
+        end)
+        vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.AddBtn.MouseButton1Click, function()
+          if not table.find(vb, va.Frame.AddSong.Text) then
+            table.insert(vb, va.Frame.AddSong.Text)
+            Save()
+            vc(vb)
+          end
+        end)
+        vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.AddBtn.MouseEnter, function()
+          va = true
+        end)
+        vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.AddBtn.MouseLeave, function()
+          va = false
+        end);
+        (function(a)
+          for fe, fg in next, va.Frame.MusicList.Scroll:GetChildren() do
+            if fg.Name == "Btn" then
+              fg:Destroy()
             end
-            writefile(Config.FolderToSave .. "/music.txt", tostring(http:JSONEncode(content)))
-        end    
-
-        local function PlaySong(id, title)
-            Sound:Stop()
-            playing = true
-            Sound.SoundId = "rbxassetid://" .. id
-            Sound:Resume()
-            MusicFrame.Frame.Play.Image = "http://www.roblox.com/asset/?id=6026663719"
-            MusicFrame.Frame.Title.Text = title
-        end    
-
-        local function RefreshList(list)
-            for i,v in next, MusicFrame.Frame.MusicList.Scroll:GetChildren() do
-                if v.Name == "Btn" then
-                    v:Destroy()
-                end    
-            end
-            for i,v in next, list do
-                local success, info = pcall(MarketplaceService.GetProductInfo, MarketplaceService, v)
-                if success and info.AssetTypeId == 3 then
-                    local Btn = MusicPreset:Clone()
-                    Btn.Parent = MusicFrame.Frame.MusicList.Scroll
-                    Btn.Title.Text = info.Name
-
-                    Btn.MouseButton1Click:Connect(function()
-                        PlaySong(v, info.Name)
-                    end)
-
-                    Btn.Delete.MouseButton1Click:Connect(function()
-                        for g,c in next, Sounds do
-                            if c == v then
-                                table.remove(Sounds, g)
-                            end    
-                        end    
-                        Save()
-                        Btn:Destroy()   
-                    end)
+          end
+          for fe, fg in next, a, nil do
+            if not next and pcall(vb.GetProductInfo, vb, fg).AssetTypeId == 3 then
+              vc:Clone().Parent = va.Frame.MusicList.Scroll
+              vc:Clone().Title.Text = pcall(vb.GetProductInfo, vb, fg).Name
+              vd(vc:Clone().MouseButton1Click, function()
+                va(vb, vc.Name)
+              end)
+              vd(vc:Clone().Delete.MouseButton1Click, function()
+                for fd, fe in next, va, nil do
+                  if fe == vb then
+                    table.remove(va, fd)
+                  end
                 end
-            end    
-        end 
-        
-        MusicFrame.Frame.Play.MouseButton1Click:Connect(function()
-            playing = not playing
-            if playing then Sound:Pause() else Sound:Resume() end
-            MusicFrame.Frame.Play.Image = playing and "http://www.roblox.com/asset/?id=6026663699" or "http://www.roblox.com/asset/?id=6026663719"
-        end)
-
-        MusicFrame.Frame.AddBtn.MouseButton1Click:Connect(function()
-            local id = MusicFrame.Frame.AddSong.Text
-            if not table.find(Sounds, id) then
-                table.insert(Sounds, id)
                 Save()
-                RefreshList(Sounds)
-            end    
-        end)
-
-        MusicFrame.Frame.AddBtn.MouseEnter:Connect(function()
-            abuttonhold = true
-        end)
-
-        MusicFrame.Frame.AddBtn.MouseLeave:Connect(function()
-            abuttonhold = false
-        end)
-
-        RefreshList(Sounds)
-
-        game:GetService("RunService").RenderStepped:Connect(function()
-            local time = math.floor(Sound.TimePosition)
-            local timesecs = time % 60
-            local timemins = math.floor(time / 60)
-            if string.len(timesecs) < 2 then timesecs = "0" .. timesecs end
-            if string.len(timemins) < 2 then timemins = "0" .. timemins end
-            local timemax = math.floor(Sound.TimeLength)
-            local timemaxsecs = timemax % 60
-            local timemaxmins = math.floor(timemax / 60)
-            if string.len(timemaxsecs) < 2 then timemaxsecs = "0" .. timemaxsecs end
-            if string.len(timemaxmins) < 2 then timemaxmins = "0" .. timemaxmins end
-            MusicFrame.Frame.Timer1.Text = timemins .. ":" .. timesecs
-            MusicFrame.Frame.Timer2.Text = timemaxmins .. ":" .. timemaxsecs
-            MusicFrame.Frame.Progress.ProgressFrame.Size = UDim2.new(Sound.TimePosition / Sound.TimeLength,0,1,0)
-        end)
-
-        
-        spawn(function()
-            while wait() do
-                MusicFrame.Frame.BackgroundColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].MainFrame
-                MusicFrame.Frame.TopBar.ImageColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TopBar
-                MusicFrame.Frame.TopBar.CloseBtn.Ico.ImageColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-                MusicFrame.Frame.MusicList.BackgroundColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TopBar
-                MusicFrame.Frame.AddBtn.BackgroundColor3 = abuttonhold and SolarisLib.Themes[SolarisLib.Settings.Theme].ButtonHold or SolarisLib.Themes[SolarisLib.Settings.Theme].Button
-                MusicFrame.Frame.Progress.BackgroundColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].Slider
-                MusicFrame.Frame.Progress.ProgressFrame.BackgroundColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].SliderInc
-                MusicFrame.Frame.AddSong.BackgroundColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].Textbox
+                vc:Destroy()
+              end)
             end
+          end
+        end)((vj:JSONDecode(readfile("SolarisHub/music.txt"))))
+        vd(game:GetService("RunService").RenderStepped, function()
+          if string.len(math.floor(va.TimePosition) % 60) < 2 then
+          end
+          if string.len((math.floor(math.floor(va.TimePosition) / 60))) < 2 then
+          end
+          if 2 >= string.len(math.floor(va.TimeLength) % 60) then
+          end
+          if 2 > string.len((math.floor(math.floor(va.TimeLength) / 60))) then
+          end
+          if vb:IsDescendantOf(vc) and vb:FindFirstChild("Frame") then
+            vb.Frame.Timer1.Text = ("0" .. math.floor(math.floor(va.TimePosition) / 60)) .. ":" .. "0" .. math.floor(va.TimePosition) % 60
+            vb.Frame.Timer2.Text = ("0" .. math.floor(math.floor(va.TimeLength) / 60)) .. ":" .. "0" .. math.floor(va.TimeLength) % 60
+            vb.Frame.Progress.ProgressFrame.Size = UDim2.new(va.TimePosition / va.TimeLength, 0, 1, 0)
+          end
         end)
-    end  
-
-    function SettingsConstructor()
-        local Settings, SettingsFrame, TabPreset, ContainerPreset, TogglePreset, BindPreset, DropdownPreset, OptionPreset = {}, game:GetObjects("rbxassetid://7167491516")[1], game:GetObjects("rbxassetid://7177524915")[1], game:GetObjects("rbxassetid://7203599409")[1], game:GetObjects("rbxassetid://7208643984")[1], game:GetObjects("rbxassetid://7219277948")[1], game:GetObjects("rbxassetid://7435055269")[1], game:GetObjects("rbxassetid://7435032496")[1]
-        local fs = true
-        local SFrame = SettingsFrame.Main
-        SettingsFrame.Parent = MFrame
-        SFrame.TopBar.CloseBtn.MouseEnter:Connect(function() TweenService:Create(SFrame.TopBar.CloseBtn.Ico,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{ImageTransparency = 0}):Play() end)
-        SFrame.TopBar.CloseBtn.MouseLeave:Connect(function() TweenService:Create(SFrame.TopBar.CloseBtn.Ico,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{ImageTransparency = 0.4}):Play() end)
-        SettingsBtn.MouseButton1Click:Connect(function()
-            SettingsFrame.Visible = not SettingsFrame.Visible
-            MFrame.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible = false 
+        spawn(function()
+          while wait() and not va do
+            vb.Frame.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+            vb.Frame.TopBar.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+            vb.Frame.TopBar.CloseBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+            vb.Frame.MusicList.BackgroundColor3 = va.Themes[va.Settings.Theme].TopBar
+            if vb.Frame.AddBtn or not va.Themes[va.Settings.Theme].ButtonHold then
+            end
+            vb.Frame.AddBtn.BackgroundColor3 = va.Themes[va.Settings.Theme].Button
+            vb.Frame.Progress.BackgroundColor3 = va.Themes[va.Settings.Theme].Slider
+            vb.Frame.Progress.ProgressFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].SliderInc
+            vb.Frame.AddSong.BackgroundColor3 = va.Themes[va.Settings.Theme].Textbox
+          end
         end)
-        SFrame.TopBar.CloseBtn.MouseButton1Click:Connect(function()
-            SettingsFrame.Visible = false
+      end
+      function SettingsConstructor()
+        game:GetObjects("rbxassetid://7167491516")[1].Parent = va
+        vb(game:GetObjects("rbxassetid://7167491516")[1].Main.TopBar.CloseBtn.MouseEnter, function()
+          va:Create(vb.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
         end)
-
+        vb(game:GetObjects("rbxassetid://7167491516")[1].Main.TopBar.CloseBtn.MouseLeave, function()
+          va:Create(vb.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+        end)
+        vb(vd.MouseButton1Click, function()
+          va.Visible = not va.Visible
+          vb.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible = false
+        end)
+        vb(game:GetObjects("rbxassetid://7167491516")[1].Main.TopBar.CloseBtn.MouseButton1Click, function()
+          va.Visible = false
+        end)
         function SaveSettings()
-            local content = {}
-            for i,v in pairs(SolarisLib.Settings) do
-                content[i] = v
-            end
-            writefile(Config.FolderToSave .. "/settings.txt", tostring(http:JSONEncode(content)))
-        end    
-
-        
+          for fe, fg in pairs(va.Settings) do
+          end
+          writefile("SolarisHub/settings.txt", tostring(vb:JSONEncode({
+            [fe] = fg
+          })))
+        end
         spawn(function()
-            while wait() do
-                SFrame.BackgroundColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].MainFrame
-                SFrame.TopBar.ImageColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TopBar
-                SFrame.TopBar.CloseBtn.Ico.ImageColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-                SFrame.TopBar.TopFrameTitle.TextColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-                SFrame.TabHolder.BackgroundColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TopBar
-
-            end
+          while wait() and not va do
+            vb.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+            vb.TopBar.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+            vb.TopBar.CloseBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+            vb.TopBar.TopFrameTitle.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+            vb.TabHolder.BackgroundColor3 = va.Themes[va.Settings.Theme].TopBar
+          end
         end)
-
-        function Settings:Tab(text)
-            local Tab = TabPreset:Clone()
-            local Container = ContainerPreset:Clone()
-            Tab.Parent = SFrame.TabHolder
-            Tab.Text = text
-            Tab.Size = UDim2.new(0,Tab.TextBounds.X,1,0)
-            Container.Parent = SFrame.ContainerFolder
-            Container.Visible = false
-
-            if fs then
-                Tab.TextTransparency = 0
-                Container.Visible = true
-                fs = false
-            end    
-
-            Tab.MouseButton1Click:Connect(function()
-                for i,v in next, SFrame.TabHolder:GetChildren() do
-                    if v.Name == "Tab" then
-                        v.TextTransparency = 0.4
-                    end    
-                end      
-                for i,v in next, SFrame.ContainerFolder:GetChildren() do
-                    if v.Name == "Container" then
-                        v.Visible = false
-                    end    
-                end      
-                Tab.TextTransparency = 0      
-                Container.Visible = true
+        {
+          Tab = function(a, b)
+            va:Clone().Parent = vc.TabHolder
+            va:Clone().Text = b
+            va:Clone().Size = UDim2.new(0, va:Clone().TextBounds.X, 1, 0)
+            vb:Clone().Parent = vc.ContainerFolder
+            vb:Clone().Visible = false
+            if not b then
+              va:Clone().TextTransparency = 0
+              vb:Clone().Visible = true
+              vd = false
+            end
+            ve(va:Clone().MouseButton1Click, function()
+              for fd, fe in next, va.TabHolder:GetChildren() do
+                if fe.Name == "Tab" then
+                  fe.TextTransparency = 0,4
+                end
+              end
+              for fd, fe in next, va.ContainerFolder:GetChildren() do
+                if fe.Name == "Container" then
+                  fe.Visible = false
+                end
+              end
+              vb.TextTransparency = 0
+              vc.Visible = true
             end)
-            local TabHold = {}
-            function TabHold:ToggleSetting(title, desc, def, path)
-                local value = SolarisLib.Settings[path] or def
-                local Toggle = TogglePreset:Clone()
-                Toggle.Parent = Container
-                Toggle.Title.Text = title
-                Toggle.Desc.Text = desc
-
-                local function Tween(val)
-                    TweenService:Create(Toggle.ToggleFrame.ToggleToggled.ToggleIco,TweenInfo.new(.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{ImageTransparency= val and 0 or 1}):Play()
-                    TweenService:Create(Toggle.ToggleFrame.ToggleToggled.ToggleIco,TweenInfo.new(.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Size= val and UDim2.new(1,-2,1,-2) or UDim2.new(1,-6,1,-6)}):Play()
-                end    
-
-                local function SetValue(val)
-                    Tween(val)
-                    SolarisLib.Settings[path] = val
-                    value = val
-                    SaveSettings()
-                end    
-
-                Tween(value)
-
-                Toggle.MouseButton1Click:Connect(function()
-                    SetValue(not value)     
+            return {
+              ToggleSetting = function(a, b, c, d, e)
+                if b then
+                end
+                vb:Clone().Parent = vc
+                vb:Clone().Title.Text = b
+                vb:Clone().Desc.Text = c
+                (function(a)
+                  va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                    ImageTransparency = a and 1
+                  }):Play()
+                  if va.Create or va.Create then
+                  end
+                  va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                    Size = UDim2.new(1, -6, 1, -6)
+                  }):Play()
+                end)(d)
+                ve(vb:Clone().MouseButton1Click, function()
+                  va(not vb)
                 end)
-
                 spawn(function()
-                    while wait() do
-                        Toggle.ToggleFrame.ToggleToggled.BackgroundColor3 = value and SolarisLib.Themes[SolarisLib.Settings.Theme].ToggleToggled or SolarisLib.Themes[SolarisLib.Settings.Theme].MainFrame
-                        Toggle.ToggleFrame.BackgroundColor3 = value and SolarisLib.Themes[SolarisLib.Settings.Theme].ToggleToggled or SolarisLib.Themes[SolarisLib.Settings.Theme].ToggleFrame
-                        Toggle.Title.TextColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
+                  while wait() and va:IsRunning() do
+                    if vb.ToggleFrame.ToggleToggled or not va.Themes[va.Settings.Theme].ToggleToggled then
                     end
-                end)
-            end
-            function TabHold:BindSetting(title, desc, def, path)
-                local value = SolarisLib.Settings[path] or def
-                local Bind = BindPreset:Clone()
-                Bind.Parent = Container
-                Bind.Title.Text = title
-                Bind.Desc.Text = desc
-
-                function SetValue(val)
-                    closebindbinding = false
-                    value = val or value
-                    value = value.Name or value
-                    Bind.BText.Text = value
-                    SolarisLib.Settings[path] = value
-                    SaveSettings()
-                end    
-                SetValue(value)
-
-                Bind.InputEnded:Connect(function(Input)
-                    if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-                        if closebindbinding then return end
-                        closebindbinding = true
-                        Bind.BText.Text = "..."
+                    vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+                    if vb.ToggleFrame or not va.Themes[va.Settings.Theme].ToggleToggled then
                     end
+                    vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                    vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
                 end)
-
-                UserInputService.InputBegan:Connect(function(Input)
-                    if UserInputService:GetFocusedTextBox() then return end
-                    if closebindbinding then
-                        local Key
-                        pcall(function()
-                            if not CheckKey(BlacklistedKeys, Input.KeyCode) then
-                                Key = Input.KeyCode
-                            end
-                        end)
-                        pcall(function()
-                            if CheckKey(WhitelistedMouse, Input.UserInputType) and not Key then
-                                Key = Input.UserInputType
-                            end
-                        end)
-                        Key = Key or value
-                        SetValue(Key)
+              end,
+              BindSetting = function(a, b, c, d, e)
+                vb:Clone().Parent = vc
+                vb:Clone().Title.Text = b
+                vb:Clone().Desc.Text = c
+                function SetValue(a)
+                  va = false
+                  vb = a or vb
+                  if a then
+                  end
+                  vb = vb
+                  vc.BText.Text = vb
+                  vd.Settings[ve] = vb
+                  SaveSettings()
+                end
+                SetValue(va.Settings[e] or d)
+                ve(vb:Clone().InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    if va then
+                      return
                     end
+                    va = true
+                    vb.BText.Text = "..."
+                  end
                 end)
-
+                ve(vg.InputBegan, function(a)
+                  if va:GetFocusedTextBox() then
+                    return
+                  end
+                  if vb then
+                    pcall(function()
+                      if vb then
+                        vd = vc.KeyCode
+                      end
+                    end)
+                    pcall(function()
+                      if va(vb, vc.UserInputType) and vb then
+                        vd = vc.UserInputType
+                      end
+                    end)
+                    if a then
+                    end
+                    SetValue(vg)
+                  end
+                end)
                 spawn(function()
-                    while wait() do
-                        Bind.Desc.TextColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-                        Bind.BText.TextColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-                        Bind.Title.TextColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-                    end
+                  while not nil and not va do
+                    vb.Desc.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
                 end)
-            
-            end    
-            function TabHold:Dropdown(title, desc, list, def, path)
-                local opened = false
-                local value = SolarisLib.Settings[path] or def
-                local Dropdown = DropdownPreset:Clone()
-                Dropdown.Parent = Container
-                Dropdown.Title.Text = title
-                Dropdown.Desc.Text = desc
-                Dropdown.Main.Current.Text = value
-
+              end,
+              Dropdown = function(a, b, c, d, e, g)
+                vb:Clone().Parent = vc
+                vb:Clone().Title.Text = b
+                vb:Clone().Desc.Text = c
+                vb:Clone().Main.Current.Text = va.Settings[g] or e
                 function Toggle()
-                    Dropdown.Main.Holder.Visible = opened
-                    Dropdown.Main.Holder.Size = opened and UDim2.new(1,0,0,Dropdown.Main.Holder.UIListLayout.AbsoluteContentSize.Y) or UDim2.new(1,0,0,0)
-                    if opened then
-                        if (Dropdown.Main.Holder.UIListLayout.AbsoluteContentSize.Y + Container.UIListLayout.AbsoluteContentSize.Y) > 190 then
-                            Container.CanvasSize = UDim2.new(0,0,0,Dropdown.Main.Holder.UIListLayout.AbsoluteContentSize.Y + Container.UIListLayout.AbsoluteContentSize.Y)
-                        end    
-                    else
-                        Container.CanvasSize = UDim2.new(0,0,0,Container.UIListLayout.AbsoluteContentSize.Y) 
+                  va.Main.Holder.Visible = vb
+                  if va.Main.Holder or not UDim2.new(1, 0, 0, va.Main.Holder.UIListLayout.AbsoluteContentSize.Y) then
+                  end
+                  va.Main.Holder.Size = UDim2.new(1, 0, 0, 0)
+                  if not UDim2.new(1, 0, 0, 0) then
+                    if 0 + 1 > 190 then
+                      vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 6)
                     end
-                    TweenService:Create(Dropdown.Main.Ico,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Rotation = opened and 180 or 0}):Play()
-                end   
-                
-                Dropdown.InputEnded:Connect(function(Input)
-                    if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-                        opened = not opened
-                        Toggle()
-                    end
+                  else
+                    vc.CanvasSize = UDim2.new(0, 0, 0, vc.UIListLayout.AbsoluteContentSize.Y)
+                  end
+                  vd:Create(va.Main.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                    Rotation = vd or 0
+                  }):Play()
+                end
+                ve(vb:Clone().InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    va = not va
+                    Toggle()
+                  end
                 end)
-
-                local function AddOptions(opts)
-                    for _,option in pairs(opts) do
-                        local Option = OptionPreset:Clone()
-                        Option.Parent = Dropdown.Main.Holder
-                        Option.Text = option
-
-                        Option.MouseButton1Click:Connect(function()
-                            value = option
-                            SolarisLib.Settings[path] = value
-                            Dropdown.Main.Current.Text = value
-                            SaveSettings()
-                        end)
-
-                        spawn(function()
-                            while wait() do
-                               Option.TextColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor       
-                            end
-                        end)
-                    end   
-                end    
-
                 spawn(function()
-                    while wait() do
-                        Dropdown.Main.ImageColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TopBar
-                        Dropdown.Main.Holder.ImageColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TopBar
+                  while wait() and va:IsRunning() do
+                    vb.Main.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                    vb.Main.Holder.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                  end
+                end);
+                (function(a)
+                  spawn(function()
+                    for fd, fe in pairs(va) do
+                      vb:Clone().Parent = vc.Main.Holder
+                      vb:Clone().Text = fe
+                      vd(vb:Clone().MouseButton1Click, function()
+                        va = vb
+                        vc.Settings[vd] = va
+                        ve.Main.Current.Text = va
+                        SaveSettings()
+                      end)
+                      spawn(function()
+                        while not nil and va:IsRunning() do
+                          vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                        end
+                      end)
                     end
-                end)
-                AddOptions(list)
+                  end)
+                end)(d)
+              end
+            }
+          end
+        }:Tab("General"):ToggleSetting("Show Friends On Launch", "Shows the friends menu when you load Solaris", true, "ShowFriendsOnLaunch")
+        {
+          Tab = function(a, b)
+            va:Clone().Parent = vc.TabHolder
+            va:Clone().Text = b
+            va:Clone().Size = UDim2.new(0, va:Clone().TextBounds.X, 1, 0)
+            vb:Clone().Parent = vc.ContainerFolder
+            vb:Clone().Visible = false
+            if not b then
+              va:Clone().TextTransparency = 0
+              vb:Clone().Visible = true
+              vd = false
             end
-            return TabHold
-        end   
-        
-        local general = Settings:Tab("General")
-        general:ToggleSetting("Show Music On Launch", "Shows the music menu when you load Snow Hub", true, "ShowMusicOnLaunch")
-        general:BindSetting("Close Bind", "Hides/Shows the main window when pressed.", Enum.KeyCode.RightControl, "CloseBind")
-        
-        local appearance = Settings:Tab("Appearance")
-        appearance:Dropdown("Theme", "The look of the user interface", {"Default", "Discord", "Red", "Green", "Blue"}, "Default", "Theme")
-
-    end 
+            ve(va:Clone().MouseButton1Click, function()
+              for fd, fe in next, va.TabHolder:GetChildren() do
+                if fe.Name == "Tab" then
+                  fe.TextTransparency = 0,4
+                end
+              end
+              for fd, fe in next, va.ContainerFolder:GetChildren() do
+                if fe.Name == "Container" then
+                  fe.Visible = false
+                end
+              end
+              vb.TextTransparency = 0
+              vc.Visible = true
+            end)
+            return {
+              ToggleSetting = function(a, b, c, d, e)
+                if b then
+                end
+                vb:Clone().Parent = vc
+                vb:Clone().Title.Text = b
+                vb:Clone().Desc.Text = c
+                (function(a)
+                  va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                    ImageTransparency = a and 1
+                  }):Play()
+                  if va.Create or va.Create then
+                  end
+                  va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                    Size = UDim2.new(1, -6, 1, -6)
+                  }):Play()
+                end)(d)
+                ve(vb:Clone().MouseButton1Click, function()
+                  va(not vb)
+                end)
+                spawn(function()
+                  while wait() and va:IsRunning() do
+                    if vb.ToggleFrame.ToggleToggled or not va.Themes[va.Settings.Theme].ToggleToggled then
+                    end
+                    vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+                    if vb.ToggleFrame or not va.Themes[va.Settings.Theme].ToggleToggled then
+                    end
+                    vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                    vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+              end,
+              BindSetting = function(a, b, c, d, e)
+                vb:Clone().Parent = vc
+                vb:Clone().Title.Text = b
+                vb:Clone().Desc.Text = c
+                function SetValue(a)
+                  va = false
+                  vb = a or vb
+                  if a then
+                  end
+                  vb = vb
+                  vc.BText.Text = vb
+                  vd.Settings[ve] = vb
+                  SaveSettings()
+                end
+                SetValue(va.Settings[e] or d)
+                ve(vb:Clone().InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    if va then
+                      return
+                    end
+                    va = true
+                    vb.BText.Text = "..."
+                  end
+                end)
+                ve(vg.InputBegan, function(a)
+                  if va:GetFocusedTextBox() then
+                    return
+                  end
+                  if vb then
+                    pcall(function()
+                      if vb then
+                        vd = vc.KeyCode
+                      end
+                    end)
+                    pcall(function()
+                      if va(vb, vc.UserInputType) and vb then
+                        vd = vc.UserInputType
+                      end
+                    end)
+                    if a then
+                    end
+                    SetValue(vg)
+                  end
+                end)
+                spawn(function()
+                  while not nil and not va do
+                    vb.Desc.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+              end,
+              Dropdown = function(a, b, c, d, e, g)
+                vb:Clone().Parent = vc
+                vb:Clone().Title.Text = b
+                vb:Clone().Desc.Text = c
+                vb:Clone().Main.Current.Text = va.Settings[g] or e
+                function Toggle()
+                  va.Main.Holder.Visible = vb
+                  if va.Main.Holder or not UDim2.new(1, 0, 0, va.Main.Holder.UIListLayout.AbsoluteContentSize.Y) then
+                  end
+                  va.Main.Holder.Size = UDim2.new(1, 0, 0, 0)
+                  if not UDim2.new(1, 0, 0, 0) then
+                    if 0 + 1 > 190 then
+                      vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 6)
+                    end
+                  else
+                    vc.CanvasSize = UDim2.new(0, 0, 0, vc.UIListLayout.AbsoluteContentSize.Y)
+                  end
+                  vd:Create(va.Main.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                    Rotation = vd or 0
+                  }):Play()
+                end
+                ve(vb:Clone().InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    va = not va
+                    Toggle()
+                  end
+                end)
+                spawn(function()
+                  while wait() and va:IsRunning() do
+                    vb.Main.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                    vb.Main.Holder.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                  end
+                end);
+                (function(a)
+                  spawn(function()
+                    for fd, fe in pairs(va) do
+                      vb:Clone().Parent = vc.Main.Holder
+                      vb:Clone().Text = fe
+                      vd(vb:Clone().MouseButton1Click, function()
+                        va = vb
+                        vc.Settings[vd] = va
+                        ve.Main.Current.Text = va
+                        SaveSettings()
+                      end)
+                      spawn(function()
+                        while not nil and va:IsRunning() do
+                          vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                        end
+                      end)
+                    end
+                  end)
+                end)(d)
+              end
+            }
+          end
+        }:Tab("General"):ToggleSetting("Show Music On Launch", "Shows the music menu when you load Solaris", true, "ShowMusicOnLaunch")
+        {
+          Tab = function(a, b)
+            va:Clone().Parent = vc.TabHolder
+            va:Clone().Text = b
+            va:Clone().Size = UDim2.new(0, va:Clone().TextBounds.X, 1, 0)
+            vb:Clone().Parent = vc.ContainerFolder
+            vb:Clone().Visible = false
+            if not b then
+              va:Clone().TextTransparency = 0
+              vb:Clone().Visible = true
+              vd = false
+            end
+            ve(va:Clone().MouseButton1Click, function()
+              for fd, fe in next, va.TabHolder:GetChildren() do
+                if fe.Name == "Tab" then
+                  fe.TextTransparency = 0,4
+                end
+              end
+              for fd, fe in next, va.ContainerFolder:GetChildren() do
+                if fe.Name == "Container" then
+                  fe.Visible = false
+                end
+              end
+              vb.TextTransparency = 0
+              vc.Visible = true
+            end)
+            return {
+              ToggleSetting = function(a, b, c, d, e)
+                if b then
+                end
+                vb:Clone().Parent = vc
+                vb:Clone().Title.Text = b
+                vb:Clone().Desc.Text = c
+                (function(a)
+                  va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                    ImageTransparency = a and 1
+                  }):Play()
+                  if va.Create or va.Create then
+                  end
+                  va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                    Size = UDim2.new(1, -6, 1, -6)
+                  }):Play()
+                end)(d)
+                ve(vb:Clone().MouseButton1Click, function()
+                  va(not vb)
+                end)
+                spawn(function()
+                  while wait() and va:IsRunning() do
+                    if vb.ToggleFrame.ToggleToggled or not va.Themes[va.Settings.Theme].ToggleToggled then
+                    end
+                    vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+                    if vb.ToggleFrame or not va.Themes[va.Settings.Theme].ToggleToggled then
+                    end
+                    vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                    vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+              end,
+              BindSetting = function(a, b, c, d, e)
+                vb:Clone().Parent = vc
+                vb:Clone().Title.Text = b
+                vb:Clone().Desc.Text = c
+                function SetValue(a)
+                  va = false
+                  vb = a or vb
+                  if a then
+                  end
+                  vb = vb
+                  vc.BText.Text = vb
+                  vd.Settings[ve] = vb
+                  SaveSettings()
+                end
+                SetValue(va.Settings[e] or d)
+                ve(vb:Clone().InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    if va then
+                      return
+                    end
+                    va = true
+                    vb.BText.Text = "..."
+                  end
+                end)
+                ve(vg.InputBegan, function(a)
+                  if va:GetFocusedTextBox() then
+                    return
+                  end
+                  if vb then
+                    pcall(function()
+                      if vb then
+                        vd = vc.KeyCode
+                      end
+                    end)
+                    pcall(function()
+                      if va(vb, vc.UserInputType) and vb then
+                        vd = vc.UserInputType
+                      end
+                    end)
+                    if a then
+                    end
+                    SetValue(vg)
+                  end
+                end)
+                spawn(function()
+                  while not nil and not va do
+                    vb.Desc.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+              end,
+              Dropdown = function(a, b, c, d, e, g)
+                vb:Clone().Parent = vc
+                vb:Clone().Title.Text = b
+                vb:Clone().Desc.Text = c
+                vb:Clone().Main.Current.Text = va.Settings[g] or e
+                function Toggle()
+                  va.Main.Holder.Visible = vb
+                  if va.Main.Holder or not UDim2.new(1, 0, 0, va.Main.Holder.UIListLayout.AbsoluteContentSize.Y) then
+                  end
+                  va.Main.Holder.Size = UDim2.new(1, 0, 0, 0)
+                  if not UDim2.new(1, 0, 0, 0) then
+                    if 0 + 1 > 190 then
+                      vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 6)
+                    end
+                  else
+                    vc.CanvasSize = UDim2.new(0, 0, 0, vc.UIListLayout.AbsoluteContentSize.Y)
+                  end
+                  vd:Create(va.Main.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                    Rotation = vd or 0
+                  }):Play()
+                end
+                ve(vb:Clone().InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    va = not va
+                    Toggle()
+                  end
+                end)
+                spawn(function()
+                  while wait() and va:IsRunning() do
+                    vb.Main.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                    vb.Main.Holder.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                  end
+                end);
+                (function(a)
+                  spawn(function()
+                    for fd, fe in pairs(va) do
+                      vb:Clone().Parent = vc.Main.Holder
+                      vb:Clone().Text = fe
+                      vd(vb:Clone().MouseButton1Click, function()
+                        va = vb
+                        vc.Settings[vd] = va
+                        ve.Main.Current.Text = va
+                        SaveSettings()
+                      end)
+                      spawn(function()
+                        while not nil and va:IsRunning() do
+                          vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                        end
+                      end)
+                    end
+                  end)
+                end)(d)
+              end
+            }
+          end
+        }:Tab("General"):BindSetting("Close Bind", "Hides/Shows the main window when pressed.", Enum.KeyCode.RightControl, "CloseBind")
+        {
+          Tab = function(a, b)
+            va:Clone().Parent = vc.TabHolder
+            va:Clone().Text = b
+            va:Clone().Size = UDim2.new(0, va:Clone().TextBounds.X, 1, 0)
+            vb:Clone().Parent = vc.ContainerFolder
+            vb:Clone().Visible = false
+            if not b then
+              va:Clone().TextTransparency = 0
+              vb:Clone().Visible = true
+              vd = false
+            end
+            ve(va:Clone().MouseButton1Click, function()
+              for fd, fe in next, va.TabHolder:GetChildren() do
+                if fe.Name == "Tab" then
+                  fe.TextTransparency = 0,4
+                end
+              end
+              for fd, fe in next, va.ContainerFolder:GetChildren() do
+                if fe.Name == "Container" then
+                  fe.Visible = false
+                end
+              end
+              vb.TextTransparency = 0
+              vc.Visible = true
+            end)
+            return {
+              ToggleSetting = function(a, b, c, d, e)
+                if b then
+                end
+                vb:Clone().Parent = vc
+                vb:Clone().Title.Text = b
+                vb:Clone().Desc.Text = c
+                (function(a)
+                  va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                    ImageTransparency = a and 1
+                  }):Play()
+                  if va.Create or va.Create then
+                  end
+                  va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                    Size = UDim2.new(1, -6, 1, -6)
+                  }):Play()
+                end)(d)
+                ve(vb:Clone().MouseButton1Click, function()
+                  va(not vb)
+                end)
+                spawn(function()
+                  while wait() and va:IsRunning() do
+                    if vb.ToggleFrame.ToggleToggled or not va.Themes[va.Settings.Theme].ToggleToggled then
+                    end
+                    vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+                    if vb.ToggleFrame or not va.Themes[va.Settings.Theme].ToggleToggled then
+                    end
+                    vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                    vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+              end,
+              BindSetting = function(a, b, c, d, e)
+                vb:Clone().Parent = vc
+                vb:Clone().Title.Text = b
+                vb:Clone().Desc.Text = c
+                function SetValue(a)
+                  va = false
+                  vb = a or vb
+                  if a then
+                  end
+                  vb = vb
+                  vc.BText.Text = vb
+                  vd.Settings[ve] = vb
+                  SaveSettings()
+                end
+                SetValue(va.Settings[e] or d)
+                ve(vb:Clone().InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    if va then
+                      return
+                    end
+                    va = true
+                    vb.BText.Text = "..."
+                  end
+                end)
+                ve(vg.InputBegan, function(a)
+                  if va:GetFocusedTextBox() then
+                    return
+                  end
+                  if vb then
+                    pcall(function()
+                      if vb then
+                        vd = vc.KeyCode
+                      end
+                    end)
+                    pcall(function()
+                      if va(vb, vc.UserInputType) and vb then
+                        vd = vc.UserInputType
+                      end
+                    end)
+                    if a then
+                    end
+                    SetValue(vg)
+                  end
+                end)
+                spawn(function()
+                  while not nil and not va do
+                    vb.Desc.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+              end,
+              Dropdown = function(a, b, c, d, e, g)
+                vb:Clone().Parent = vc
+                vb:Clone().Title.Text = b
+                vb:Clone().Desc.Text = c
+                vb:Clone().Main.Current.Text = va.Settings[g] or e
+                function Toggle()
+                  va.Main.Holder.Visible = vb
+                  if va.Main.Holder or not UDim2.new(1, 0, 0, va.Main.Holder.UIListLayout.AbsoluteContentSize.Y) then
+                  end
+                  va.Main.Holder.Size = UDim2.new(1, 0, 0, 0)
+                  if not UDim2.new(1, 0, 0, 0) then
+                    if 0 + 1 > 190 then
+                      vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 6)
+                    end
+                  else
+                    vc.CanvasSize = UDim2.new(0, 0, 0, vc.UIListLayout.AbsoluteContentSize.Y)
+                  end
+                  vd:Create(va.Main.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                    Rotation = vd or 0
+                  }):Play()
+                end
+                ve(vb:Clone().InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    va = not va
+                    Toggle()
+                  end
+                end)
+                spawn(function()
+                  while wait() and va:IsRunning() do
+                    vb.Main.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                    vb.Main.Holder.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                  end
+                end);
+                (function(a)
+                  spawn(function()
+                    for fd, fe in pairs(va) do
+                      vb:Clone().Parent = vc.Main.Holder
+                      vb:Clone().Text = fe
+                      vd(vb:Clone().MouseButton1Click, function()
+                        va = vb
+                        vc.Settings[vd] = va
+                        ve.Main.Current.Text = va
+                        SaveSettings()
+                      end)
+                      spawn(function()
+                        while not nil and va:IsRunning() do
+                          vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                        end
+                      end)
+                    end
+                  end)
+                end)(d)
+              end
+            }
+          end
+        }:Tab("Appearance"):Dropdown("Theme", "The look of the user interface", {
+          "Default",
+          "Light",
+          "Discord",
+          "Red",
+          "Green",
+          "Blue"
+        }, "Default", "Theme")
+      end
+      (function()
+        game:GetObjects("rbxassetid://7037305928")[1].Parent = va
+        game:GetObjects("rbxassetid://7037305928")[1].ZIndex = 4
+        game:GetObjects("rbxassetid://7037305928")[1].Visible = vb.Settings.ShowFriendsOnLaunch
+        vc(vd.MouseButton1Click, function()
+          va.Visible = not va.Visible
+          vb.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible = false
+        end)
+        vc(game:GetObjects("rbxassetid://7037305928")[1].Frame.TopBar.CloseBtn.Ico.MouseEnter, function()
+          va:Create(vb.Frame.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+        end)
+        vc(game:GetObjects("rbxassetid://7037305928")[1].Frame.TopBar.CloseBtn.Ico.MouseLeave, function()
+          va:Create(vb.Frame.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+        end)
+        vc(game:GetObjects("rbxassetid://7037305928")[1].Frame.TopBar.CloseBtn.MouseButton1Click, function()
+          va.Visible = false
+        end)
+        function MakePanel(a)
+        end
+        function InviteFriend(a)
+        end
+        function JoinFriend(a)
+        end
+        vh(game:GetObjects("rbxassetid://7037305928")[1].Frame.TopBar, game:GetObjects("rbxassetid://7037305928")[1])
+        for fh, fj in next, {}, nil do
+        end
+        spawn(function()
+          while not nil and not va do
+            vb.Frame.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+            vb.Frame.TopBar.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+            vb.Frame.TopBar.CloseBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+          end
+        end)
+      end)()
+      MusicConstructor()
+      SettingsConstructor()
+      ve(va.MainFrame.TopBar.TabListBtn.MouseButton1Click, function()
+        va()
+      end)
+      ve(va.MainFrame.TabMenu.Menu.Top.MenuCloseBtn.MouseButton1Click, function()
+        va()
+      end)
+      ve(va.MainFrame.TopBar.ButtonHolder.SearchBtn.MouseButton1Click, function()
+        va.TopBar.ButtonHolder.SearchBtn.TextBox.Visible = not va.TopBar.ButtonHolder.SearchBtn.TextBox.Visible
+        va.TopBar.TopFrameTitle.Visible = not va.TopBar.TopFrameTitle.Visible
+      end)
+      ve(va.MainFrame.TopBar.ButtonHolder.CloseBtn.MouseEnter, function()
+        va:Create(vb.TopBar.ButtonHolder.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+      end)
+      ve(va.MainFrame.TopBar.ButtonHolder.CloseBtn.MouseLeave, function()
+        va:Create(vb.TopBar.ButtonHolder.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+      end)
+      ve(va.MainFrame.TopBar.ButtonHolder.SearchBtn.MouseEnter, function()
+        va:Create(vb.TopBar.ButtonHolder.SearchBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+      end)
+      ve(va.MainFrame.TopBar.ButtonHolder.SearchBtn.MouseLeave, function()
+        va:Create(vb.TopBar.ButtonHolder.SearchBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+      end)
+      ve(va.MainFrame.TopBar.ButtonHolder.MenuBtn.MouseEnter, function()
+        va:Create(vb.TopBar.ButtonHolder.MenuBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+      end)
+      ve(va.MainFrame.TopBar.ButtonHolder.MenuBtn.MouseLeave, function()
+        va:Create(vb.TopBar.ButtonHolder.MenuBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+      end)
+      ve(va.MainFrame.TopBar.TabListBtn.MouseEnter, function()
+        va:Create(vb.TopBar.TabListBtn, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+      end)
+      ve(va.MainFrame.TopBar.TabListBtn.MouseLeave, function()
+        va:Create(vb.TopBar.TabListBtn, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+      end)
+      ve(va.MainFrame.TopBar.ButtonHolder.MenuBtn.MouseButton1Click, function()
+        va.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible = not va.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible
+      end)
+      ve(va.MainFrame.TopBar.ButtonHolder.CloseBtn.MouseButton1Click, function()
+        va = not va
+        vb.Visible = va
+      end)
+      function SearchConstructor()
+        function StitchElements()
+          for fe, fg in next, va.CurrentTab:GetDescendants() do
+            if fg.Name:find("element") then
+              table.insert({}, fg)
+            end
+          end
+          return {}
+        end
+        vb(vc.TopBar.ButtonHolder.SearchBtn.TextBox:GetPropertyChangedSignal("Text"), function()
+          for fd, fe in pairs(StitchElements()) do
+            if va.TopBar.ButtonHolder.SearchBtn.TextBox.Text:len() > 1 then
+              if fe.Name:lower():sub(0, -8):find(va.TopBar.ButtonHolder.SearchBtn.TextBox.Text:lower()) then
+                fe.Visible = true
+              else
+                fe.Visible = false
+              end
+            else
+              fe.Visible = true
+            end
+          end
+        end)
+      end
+      SearchConstructor()
+      ve(vk.InputBegan, function(a)
+        if (a.KeyCode.Name == va.Settings.CloseBind or a.UserInputType.Name == va.Settings.CloseBind) and not vb then
+          vc = not vc
+          vd.Visible = vc
+        end
+      end)
+      vc:Notification("Notification", "Solaris has been loaded, press " .. vc.Settings.CloseBind .. " to open/close the UI.")
+      spawn(function()
+        while wait() and not va do
+          vb.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+          vb.TopBar.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+          vb.TopBar.ButtonHolder.CloseBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+          vb.TopBar.ButtonHolder.MenuBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+          vb.TopBar.ButtonHolder.SearchBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+          vb.TopBar.TabListBtn.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+          vb.TopBar.TopFrameTitle.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+          vb.TabMenu.Menu.BackgroundColor3 = va.Themes[va.Settings.Theme].Menu
+          vb.TabMenu.Menu.Top.MenuCloseBtn.ImageLabel.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+          vb.TopBar.ButtonHolder.SearchBtn.TextBox.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+          vb.TopBar.ButtonHolder.SearchBtn.TextBox.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+          vb.TopBar.ButtonHolder.SearchBtn.TextBox.PlaceholderColor3 = va.Themes[va.Settings.Theme].TextColor
+          vb.TopBar.ButtonHolder.MenuBtn.MenuFrame.Frame.BackgroundColor3 = va.Themes[va.Settings.Theme].TopBar
+        end
+      end)
+      return {
+        Tab = function(a, b)
+          va:Clone().AutoButtonColor = false
+          va:Clone().Parent = vb.TabMenu.Menu.Holder
+          va:Clone().Text = b
+          va:Clone().TextSize = 14
+          vc:Clone().Parent = vb.ContainerFolder
+          vc:Clone().Visible = false
+          if vd == false then
+            vd = true
+            vc:Clone().Visible = true
+            va:Clone().UIPadding.PaddingLeft = UDim.new(0, 10)
+            va:Clone().TextTransparency = 0
+            va:Clone().BackgroundTransparency = 0
+            ve.CurrentTab = vc:Clone()
+          end
+          spawn(function()
+            while wait() and va:IsRunning() do
+              vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+              vb.BackgroundColor3 = va.Themes[va.Settings.Theme].TabToggled
+              vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 26)
+            end
+          end)
+          vg(va:Clone().MouseButton1Click, function()
+            for fd, fe in next, va.TabMenu.Menu.Holder:GetChildren() do
+              if fe:IsA("TextButton") then
+                vb:Create(fe, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0,4, BackgroundTransparency = 1}):Play()
+                vb:Create(fe.UIPadding, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  PaddingLeft = UDim.new(0, 5)
+                }):Play()
+              end
+              vb:Create(vc, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0, BackgroundTransparency = 0}):Play()
+              vb:Create(vc.UIPadding, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                PaddingLeft = UDim.new(0, 10)
+              }):Play()
+            end
+            for fd, fe in next, va.ContainerFolder:GetChildren() do
+              if fe.Name == "Container" then
+                fe.Visible = false
+              end
+              vd.Visible = true
+            end
+            tabtoggledname = vc.Name
+            ve()
+          end)
+          return {
+            Section = function(a, b)
+              va:Clone().Parent = vb
+              va:Clone().SectionTitle.Text = b
+              spawn(function()
+                while not nil and va:IsRunning() do
+                  vb.SectionTitle.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.Size = UDim2.new(0,9, 0, 0, vb.UIListLayout.AbsoluteContentSize.Y)
+                end
+              end)
+              return {
+                Button = function(a, b, c)
+                  game:GetObjects("rbxassetid://6937142338")[1].Parent = va
+                  game:GetObjects("rbxassetid://6937142338")[1].Name = b .. "element"
+                  game:GetObjects("rbxassetid://6937142338")[1].ButtonText.Text = b
+                  game:GetObjects("rbxassetid://6937142338")[1].ClipsDescendants = true
+                  vb(game:GetObjects("rbxassetid://6937142338")[1].MouseButton1Click, function()
+                    Ripple(va)
+                    vb()
+                  end)
+                  vb(game:GetObjects("rbxassetid://6937142338")[1].MouseEnter, function()
+                    va = true
+                  end)
+                  vb(game:GetObjects("rbxassetid://6937142338")[1].MouseLeave, function()
+                    va = false
+                  end)
+                  spawn(function()
+                    while not nil and va:IsRunning() do
+                      vb.BackgroundColor3 = vc and va.Themes[va.Settings.Theme].Button
+                      vb.ButtonText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    end
+                  end)
+                end,
+                Toggle = function(a, b, c, d, e)
+                  game:GetObjects("rbxassetid://6963155498")[1].Parent = va
+                  game:GetObjects("rbxassetid://6963155498")[1].ToggleText.Text = b
+                  game:GetObjects("rbxassetid://6963155498")[1].Name = b .. "element"
+                  vc(game:GetObjects("rbxassetid://6963155498")[1].MouseButton1Click, function()
+                    va.Value = not va.Value
+                    va:Set(va.Value)
+                  end)
+                  spawn(function()
+                    while wait() and va:IsRunning() do
+                      if not vc.Value or vb.ToggleFrame.ToggleToggled then
+                      end
+                      vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].Toggle
+                      if vb.ToggleFrame or vb.ToggleFrame then
+                      end
+                      vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                      vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Toggle
+                      vb.ToggleText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    end
+                  end)
+                  spawn(function()
+                    va:Set(vb)
+                    vc.Flags[vd] = va
+                  end)
+                  return {
+                    Value = false,
+                    Set = function(a, b)
+                      va.Value = b
+                      if b or b then
+                      end
+                      vb:Create(vc.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                        ImageTransparency = b or 1,
+                        Size = UDim2.new(1, -6, 1, -6)
+                      }):Play()
+                      return vd(va.Value)
+                    end
+                  }
+                end,
+                Slider = function(a, b, c, d, e, g, h, j)
+                  game:GetObjects("rbxassetid://6967573727")[1].Parent = va
+                  game:GetObjects("rbxassetid://6967573727")[1].SliderText.Text = b
+                  game:GetObjects("rbxassetid://6967573727")[1].Name = b .. "element"
+                  vc(game:GetObjects("rbxassetid://6967573727")[1].SliderFrame.InputBegan, function(a)
+                    if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                      va = true
+                    end
+                  end)
+                  vc(game:GetObjects("rbxassetid://6967573727")[1].SliderFrame.InputEnded, function(a)
+                    if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                      va = false
+                    end
+                  end)
+                  vc(game:GetService("UserInputService").InputChanged, function(a)
+                    if va and a.UserInputType == Enum.UserInputType.MouseMovement then
+                      vb(a)
+                    end
+                  end)
+                  spawn(function()
+                    while wait() and va:IsRunning() do
+                      vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Slider
+                      vb.SliderFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].SliderBar
+                      vb.SliderFrame.SliderCurrentFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].SliderInc
+                      vb.SliderText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                      vb.SliderVal.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    end
+                  end)
+                  spawn(function()
+                    va:Set(vb)
+                    vc.Flags[vd] = va
+                  end)
+                  return {
+                    Value = e,
+                    Set = function(a, b)
+                      if b then
+                      end
+                      vc.SliderVal.Text = tostring(0)
+                      vc.SliderFrame.SliderCurrentFrame.Size = UDim2.new((b or 0) / va, 0, 1, 0)
+                      vd.Value = b
+                      return ve(vd.Value)
+                    end
+                  }
+                end,
+                Dropdown = function(a, b, c, d, e, g)
+                  game:GetObjects("rbxassetid://7027964359")[1].Parent = va
+                  game:GetObjects("rbxassetid://7027964359")[1].Btn.Title.Text = b
+                  game:GetObjects("rbxassetid://7027964359")[1].Name = b .. "element"
+                  vc(game:GetObjects("rbxassetid://7027964359")[1].Btn.MouseButton1Click, function()
+                    va()
+                  end)
+                  spawn(function()
+                    while not nil and va:IsRunning() do
+                      vb.Btn.BackgroundColor3 = va.Themes[va.Settings.Theme].Dropdown
+                      vb.Btn.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                      vb.Btn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+                    end
+                  end)
+                  spawn(function()
+                    va:Refresh(vb, false)
+                    va:Set(vc)
+                    vd.Flags[ve] = va
+                  end)
+                  return {
+                    Value = nil,
+                    Toggled = false,
+                    Options = c,
+                    Refresh = function(a, b, c)
+                      if c then
+                        for fh, fj in pairs(va.Holder:GetChildren()) do
+                          if not b then
+                            fj:Destroy()
+                            if b or not UDim2.new(1, 0, 0, 6 + 13) then
+                            end
+                            va.Holder.Size = UDim2.new(1, 0, 0, 0)
+                            if not vb.Toggled or b then
+                            end
+                            va.Size = UDim2.new(1, 0, 0, 32)
+                          end
+                        end
+                      end
+                      vc(b)
+                    end,
+                    Set = function(a, b)
+                      va.Value = b
+                      vb.Btn.Title.Text = vc .. " - " .. b
+                      return vd(va.Value)
+                    end
+                  }
+                end,
+                MultiDropdown = function(a, b, c, d, e, g)
+                  game:GetObjects("rbxassetid://7027964359")[1].Parent = va
+                  game:GetObjects("rbxassetid://7027964359")[1].Btn.Title.Text = b
+                  game:GetObjects("rbxassetid://7027964359")[1].Name = b .. "element"
+                  vc(game:GetObjects("rbxassetid://7027964359")[1].Btn.MouseButton1Click, function()
+                    va()
+                  end)
+                  spawn(function()
+                    while wait() and not va do
+                      vb.Btn.BackgroundColor3 = va.Themes[va.Settings.Theme].Dropdown
+                      vb.Btn.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                      vb.Btn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+                    end
+                  end)
+                  spawn(function()
+                    va:Refresh(vb, false)
+                    va:Set(vc)
+                    vd.Flags[ve] = va
+                  end)
+                  return {
+                    Value = {},
+                    Toggled = false,
+                    Options = c,
+                    Refresh = function(a, b, c)
+                      if not b then
+                        for fh, fj in pairs(va.Holder:GetChildren()) do
+                          if fj:IsA("TextButton") then
+                            fj:Destroy()
+                            va.Holder.Size = vb.Toggled and UDim2.new(1, 0, 0, 0)
+                            if b or not UDim2.new(1, 0, 0, 38 + 13) then
+                            end
+                            va.Size = UDim2.new(1, 0, 0, 32)
+                          end
+                        end
+                      end
+                      vc(b)
+                    end,
+                    Set = function(a, b)
+                      va.Value = b
+                      vb.Btn.Title.Text = vc .. " - " .. table.concat(va.Value, ", ")
+                      return vd(va.Value)
+                    end
+                  }
+                end,
+                Colorpicker = function(a, b, c, d, e)
+                  game:GetObjects("rbxassetid://7329998014")[1].Hue.Visible, game:GetObjects("rbxassetid://7329998014")[1].Color.Visible = {Value = c, Toggled = false}.Toggled, {Value = c, Toggled = false}.Toggled
+                  game:GetObjects("rbxassetid://7329998014")[1].Parent = va
+                  game:GetObjects("rbxassetid://7329998014")[1].Btn.Colorpicker.Text = b
+                  game:GetObjects("rbxassetid://7329998014")[1].Name = b .. "element"
+                  game:GetObjects("rbxassetid://7329998014")[1].Btn.Box.BackgroundColor3 = c
+                  game:GetObjects("rbxassetid://7329998014")[1].Hue.HueGradient.Color = ColorSequence.new({
+                    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 4)),
+                    ColorSequenceKeypoint.new(0,2, Color3.fromRGB(234, 255, 0)),
+                    ColorSequenceKeypoint.new(0,4, Color3.fromRGB(21, 255, 0)),
+                    ColorSequenceKeypoint.new(0,6, Color3.fromRGB(0, 255, 255)),
+                    ColorSequenceKeypoint.new(0,8, Color3.fromRGB(0, 17, 255)),
+                    ColorSequenceKeypoint.new(0,9, Color3.fromRGB(255, 0, 251)),
+                    ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 4))
+                  })
+                  vb(game:GetObjects("rbxassetid://7329998014")[1].Btn.MouseButton1Click, function()
+                    va.Toggled = not va.Toggled
+                    if vb or not UDim2.new(1, 0, 0, 120) then
+                    end
+                    vb:Create(vc, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                      Size = UDim2.new(1, 0, 0, 32)
+                    }):Play()
+                    vc.Hue.Visible, vc.Color.Visible = va.Toggled, va.Toggled
+                  end)
+                  game:GetObjects("rbxassetid://7329998014")[1].Btn.Box.BackgroundColor3 = c
+                  game:GetObjects("rbxassetid://7329998014")[1].Color.BackgroundColor3 = c
+                  pcall(e, game:GetObjects("rbxassetid://7329998014")[1].Btn.Box.BackgroundColor3)
+                  vb(game:GetObjects("rbxassetid://7329998014")[1].Color.InputBegan, function(a)
+                    if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                      if not a then
+                        ColorInput:Disconnect()
+                      end
+                      ColorInput = va.RenderStepped:Connect(function()
+                        vd, vc.Position = math.clamp(va.X - vb.AbsolutePosition.X, 0, vb.AbsoluteSize.X) / vb.AbsoluteSize.X, UDim2.new(math.clamp(va.X - vb.AbsolutePosition.X, 0, vb.AbsoluteSize.X) / vb.AbsoluteSize.X, 0, math.clamp(va.Y - vb.AbsolutePosition.Y, 0, vb.AbsoluteSize.Y) / vb.AbsoluteSize.Y, 0)
+                        ve = 1 - math.clamp(va.Y - vb.AbsolutePosition.Y, 0, vb.AbsoluteSize.Y) / vb.AbsoluteSize.Y
+                        vg(true)
+                      end)
+                    end
+                  end)
+                  vb(game:GetObjects("rbxassetid://7329998014")[1].Color.InputEnded, function(a)
+                    if a.UserInputType == Enum.UserInputType.MouseButton1 and not a then
+                      ColorInput:Disconnect()
+                    end
+                  end)
+                  vb(game:GetObjects("rbxassetid://7329998014")[1].Hue.InputBegan, function(a)
+                    if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                      if HueInput then
+                        HueInput:Disconnect()
+                      end
+                      HueInput = va.RenderStepped:Connect(function()
+                        vc.Position = UDim2.new(0,48, 0, math.clamp(va.Y - vb.AbsolutePosition.Y, 0, vb.AbsoluteSize.Y) / vb.AbsoluteSize.Y, 0)
+                        vd = 1 - math.clamp(va.Y - vb.AbsolutePosition.Y, 0, vb.AbsoluteSize.Y) / vb.AbsoluteSize.Y
+                        ve(true)
+                      end)
+                    end
+                  end)
+                  vb(game:GetObjects("rbxassetid://7329998014")[1].Hue.InputEnded, function(a)
+                    if a.UserInputType == Enum.UserInputType.MouseButton1 and not a then
+                      HueInput:Disconnect()
+                    end
+                  end)
+                  spawn(function()
+                    while wait() and not va do
+                      vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Colorpicker
+                      vb.Btn.Colorpicker.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    end
+                  end)
+                  return {Value = c, Toggled = false}
+                end,
+                Label = function(a, b)
+                  game:GetObjects("rbxassetid://7032552322")[1].Parent = va
+                  game:GetObjects("rbxassetid://7032552322")[1].Title.Text = b
+                  game:GetObjects("rbxassetid://7032552322")[1].Name = b .. "element"
+                  spawn(function()
+                    while not nil and va:IsRunning() do
+                      vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Label
+                      vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    end
+                  end)
+                  return {
+                    Set = function(a, b)
+                      va.Title.Text = b
+                      va.Name = vb .. "element"
+                    end
+                  }
+                end,
+                Textbox = function(a, b, c, d)
+                  game:GetObjects("rbxassetid://7147292392")[1].Parent = va
+                  game:GetObjects("rbxassetid://7147292392")[1].Title.Text = b
+                  game:GetObjects("rbxassetid://7147292392")[1].Name = b .. "element"
+                  vb(game:GetObjects("rbxassetid://7147292392")[1].Box.Changed, function()
+                    va.Box.Size = UDim2.new(0, 3 + 16, 0, 22)
+                  end)
+                  game:GetObjects("rbxassetid://7147292392")[1].Box.PlaceholderText = "                  "
+                  vb(game:GetObjects("rbxassetid://7147292392")[1].InputBegan, function(a)
+                    if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                      va.Box:CaptureFocus()
+                    end
+                  end)
+                  vb(game:GetObjects("rbxassetid://7147292392")[1].Box.FocusLost, function()
+                    if vb then
+                      va.Box.Text = ""
+                    end
+                    return vc(va.Box.Text)
+                  end)
+                  vb(vc.InputBegan, function(a)
+                    if a.KeyCode == Enum.KeyCode.Escape and va.Box:IsFocused() then
+                      va.Box:ReleaseFocus()
+                    end
+                  end)
+                  spawn(function()
+                    while not nil and va:IsRunning() do
+                      vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Textbox
+                      vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                      vb.Box.BackgroundColor3 = va.Themes[va.Settings.Theme].TextboxFrame
+                      vb.Box.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    end
+                  end)
+                  return {}
+                end,
+                Bind = function(a, b, c, d, e, g)
+                  game:GetObjects("rbxassetid://7126874744")[1].Parent = va
+                  game:GetObjects("rbxassetid://7126874744")[1].Title.Text = b
+                  game:GetObjects("rbxassetid://7126874744")[1].Name = b .. "element"
+                  vb(game:GetObjects("rbxassetid://7126874744")[1].InputEnded, function(a)
+                    if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                      if va.Binding then
+                        return
+                      end
+                      va.Binding = true
+                      vb.BText.Text = "..."
+                    end
+                  end)
+                  vb(vc.InputBegan, function(a)
+                    if not a then
+                      return
+                    end
+                    if (a.KeyCode.Name == vb.Value or a.UserInputType.Name == vb.Value) and not vb.Binding then
+                      if vc then
+                        Holding = true
+                        vd(Holding)
+                      else
+                        vd()
+                      end
+                    elseif vb.Binding then
+                      pcall(function()
+                        if vb then
+                          vd = vc.KeyCode
+                        end
+                      end)
+                      pcall(function()
+                        if not vb and vb then
+                          vd = vc.UserInputType
+                        end
+                      end)
+                      if a then
+                      end
+                      vb:Set(vb.Value)
+                    end
+                  end)
+                  vb(vc.InputEnded, function(a)
+                    if (a.KeyCode.Name == va.Value or a.UserInputType.Name == va.Value) and not a and Holding then
+                      Holding = false
+                      vc(Holding)
+                    end
+                  end)
+                  spawn(function()
+                    while not nil and not va do
+                      vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Bind
+                      vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                      vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    end
+                  end)
+                  {
+                    Value,
+                    Binding = false,
+                    Holding = false,
+                    Set = function(a, b)
+                      a.Binding = false
+                      a.Value = b or a.Value
+                      a.Value = a.Value.Name or a.Value
+                      va.BText.Text = a.Value
+                    end
+                  }:Set(c)
+                  vh.Flags[e] = {
+                    Value,
+                    Binding = false,
+                    Holding = false,
+                    Set = function(a, b)
+                      a.Binding = false
+                      a.Value = b or a.Value
+                      a.Value = a.Value.Name or a.Value
+                      va.BText.Text = a.Value
+                    end
+                  }
+                  return {
+                    Value,
+                    Binding = false,
+                    Holding = false,
+                    Set = function(a, b)
+                      a.Binding = false
+                      a.Value = b or a.Value
+                      a.Value = a.Value.Name or a.Value
+                      va.BText.Text = a.Value
+                    end
+                  }
+                end
+              }
+            end
+          }
+        end
+      }
+    end
+  }.Settings) do
+  end
+  writefile("SolarisHub/settings.txt", tostring(game:GetService("HttpService"):JSONEncode({
+    [fx] = fQ
+  })))
+end
+function Ripple(a)
+  task.spawn(function()
+    Instance.new("ImageLabel").Name = "Circle"
+    Instance.new("ImageLabel").Parent = va
+    Instance.new("ImageLabel").BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Instance.new("ImageLabel").BackgroundTransparency = 1
+    Instance.new("ImageLabel").ZIndex = 10
+    Instance.new("ImageLabel").Image = "rbxassetid://266543268"
+    Instance.new("ImageLabel").ImageColor3 = Color3.fromRGB(210, 210, 210)
+    Instance.new("ImageLabel").ImageTransparency = 0,6
+    Instance.new("ImageLabel").Position = UDim2.new(0, vb.X - Instance.new("ImageLabel").AbsolutePosition.X, 0, vb.Y - Instance.new("ImageLabel").AbsolutePosition.Y)
+    vc:Create(Instance.new("ImageLabel"), TweenInfo.new(0,5), {
+      Position = UDim2.fromScale(math.clamp(vb.X - va.AbsolutePosition.X, 0, va.AbsoluteSize.X) / va.AbsoluteSize.X, math.clamp(vb.Y - va.AbsolutePosition.Y, 0, va.AbsoluteSize.Y) / va.AbsoluteSize.Y) - UDim2.fromOffset(va.AbsoluteSize.X / 2, va.AbsoluteSize.X / 2),
+      ImageTransparency = 1,
+      Size = UDim2.fromOffset(va.AbsoluteSize.X, va.AbsoluteSize.X)
+    }):Play()
+    spawn(function()
+      wait(0,5)
+      va:Destroy()
+    end)
+  end)
+end
+loadstring("\r\n    local SolarisLib, CoreGui, GUI = ...;\r\n    GUI = SolarisLib.GUI\r\n    function SolarisLib:IsRunning()\r\n        return GUI.Parent == CoreGui\r\n    end\r\n\r\n    task.spawn(function()\r\n        while (SolarisLib:IsRunning()) do\r\n            wait()\r\n        end\r\n\r\n        for _, connection in next, SolarisLib.Connections do\r\n            connection:Disconnect()\r\n        end\r\n    end)\r\n")({
+  GUI = Instance.new("ScreenGui"),
+  Connections = {},
+  NGUI = Instance.new("ScreenGui"),
+  trillhashedipaddress = "c2hlCnNheQpkbwp5b3UKbG92ZQptZQppCnRlbGwKaGVyCmkKYW0KbW9ua2U",
+  Version = "V2",
+  Themes = {
+    Default = {
+      MainFrame = Color3.fromRGB(25, 25, 25),
+      TopBar = Color3.fromRGB(30, 30, 30),
+      TextColor = Color3.fromRGB(255, 255, 255),
+      Menu = Color3.fromRGB(37, 37, 37),
+      TabToggled = Color3.fromRGB(43, 43, 43),
+      Button = Color3.fromRGB(30, 30, 30),
+      ButtonHold = Color3.fromRGB(31, 31, 31),
+      Toggle = Color3.fromRGB(30, 30, 30),
+      ToggleFrame = Color3.fromRGB(55, 55, 55),
+      ToggleToggled = Color3.fromRGB(22, 168, 76),
+      Slider = Color3.fromRGB(30, 30, 30),
+      SliderBar = Color3.fromRGB(25, 25, 25),
+      SliderInc = Color3.fromRGB(60, 60, 60),
+      Dropdown = Color3.fromRGB(30, 30, 30),
+      DropdownItem = Color3.fromRGB(30, 30, 30),
+      Textbox = Color3.fromRGB(30, 30, 30),
+      TextboxFrame = Color3.fromRGB(25, 25, 25),
+      Colorpicker = Color3.fromRGB(30, 30, 30),
+      Label = Color3.fromRGB(30, 30, 30),
+      Bind = Color3.fromRGB(30, 30, 30)
+    },
+    Light = {
+      MainFrame = Color3.fromRGB(255, 255, 255),
+      TopBar = Color3.fromRGB(227, 227, 227),
+      TextColor = Color3.fromRGB(0, 0, 0),
+      Menu = Color3.fromRGB(227, 227, 227),
+      TabToggled = Color3.fromRGB(43, 43, 43),
+      Button = Color3.fromRGB(227, 227, 227),
+      ButtonHold = Color3.fromRGB(31, 31, 31),
+      Toggle = Color3.fromRGB(227, 227, 227),
+      ToggleFrame = Color3.fromRGB(55, 55, 55),
+      ToggleToggled = Color3.fromRGB(22, 168, 76),
+      Slider = Color3.fromRGB(227, 227, 227),
+      SliderBar = Color3.fromRGB(220, 220, 220),
+      SliderInc = Color3.fromRGB(233, 233, 233),
+      Dropdown = Color3.fromRGB(227, 227, 227),
+      DropdownItem = Color3.fromRGB(227, 227, 227),
+      Textbox = Color3.fromRGB(227, 227, 227),
+      TextboxFrame = Color3.fromRGB(220, 220, 220),
+      Colorpicker = Color3.fromRGB(227, 227, 2270),
+      Label = Color3.fromRGB(227, 227, 227),
+      Bind = Color3.fromRGB(227, 227, 227)
+    },
+    Discord = {
+      MainFrame = Color3.fromRGB(54, 57, 63),
+      TopBar = Color3.fromRGB(47, 49, 54),
+      TextColor = Color3.fromRGB(255, 255, 255),
+      Menu = Color3.fromRGB(47, 49, 54),
+      TabToggled = Color3.fromRGB(54, 57, 63),
+      Button = Color3.fromRGB(88, 101, 242),
+      ButtonHold = Color3.fromRGB(71, 82, 196),
+      Toggle = Color3.fromRGB(47, 49, 54),
+      ToggleFrame = Color3.fromRGB(67, 69, 74),
+      ToggleToggled = Color3.fromRGB(22, 168, 76),
+      Slider = Color3.fromRGB(47, 49, 54),
+      SliderBar = Color3.fromRGB(42, 44, 49),
+      SliderInc = Color3.fromRGB(62, 64, 69),
+      Dropdown = Color3.fromRGB(47, 49, 54),
+      DropdownItem = Color3.fromRGB(47, 49, 54),
+      Textbox = Color3.fromRGB(47, 49, 54),
+      TextboxFrame = Color3.fromRGB(42, 44, 49),
+      Colorpicker = Color3.fromRGB(47, 49, 54),
+      Label = Color3.fromRGB(47, 49, 54),
+      Bind = Color3.fromRGB(47, 49, 54)
+    },
+    Blue = {
+      MainFrame = Color3.fromRGB(35, 35, 50),
+      TopBar = Color3.fromRGB(40, 40, 55),
+      TextColor = Color3.fromRGB(255, 255, 255),
+      Menu = Color3.fromRGB(47, 47, 62),
+      TabToggled = Color3.fromRGB(53, 53, 68),
+      Button = Color3.fromRGB(40, 40, 55),
+      ButtonHold = Color3.fromRGB(41, 41, 56),
+      Toggle = Color3.fromRGB(40, 40, 55),
+      ToggleFrame = Color3.fromRGB(65, 65, 80),
+      ToggleToggled = Color3.fromRGB(64, 64, 120),
+      Slider = Color3.fromRGB(40, 40, 55),
+      SliderBar = Color3.fromRGB(35, 35, 50),
+      SliderInc = Color3.fromRGB(70, 70, 85),
+      Dropdown = Color3.fromRGB(40, 40, 55),
+      DropdownItem = Color3.fromRGB(40, 40, 55),
+      Textbox = Color3.fromRGB(40, 40, 55),
+      TextboxFrame = Color3.fromRGB(35, 35, 50),
+      Colorpicker = Color3.fromRGB(40, 40, 55),
+      Label = Color3.fromRGB(40, 40, 55),
+      Bind = Color3.fromRGB(40, 40, 55)
+    },
+    Red = {
+      MainFrame = Color3.fromRGB(50, 35, 35),
+      TopBar = Color3.fromRGB(55, 40, 40),
+      TextColor = Color3.fromRGB(255, 255, 255),
+      Menu = Color3.fromRGB(62, 47, 47),
+      TabToggled = Color3.fromRGB(68, 53, 53),
+      Button = Color3.fromRGB(55, 40, 40),
+      ButtonHold = Color3.fromRGB(56, 41, 41),
+      Toggle = Color3.fromRGB(55, 40, 40),
+      ToggleFrame = Color3.fromRGB(80, 65, 65),
+      ToggleToggled = Color3.fromRGB(120, 64, 64),
+      Slider = Color3.fromRGB(55, 40, 40),
+      SliderBar = Color3.fromRGB(50, 35, 35),
+      SliderInc = Color3.fromRGB(85, 70, 70),
+      Dropdown = Color3.fromRGB(55, 40, 40),
+      DropdownItem = Color3.fromRGB(55, 40, 40),
+      Textbox = Color3.fromRGB(55, 40, 40),
+      TextboxFrame = Color3.fromRGB(50, 35, 35),
+      Colorpicker = Color3.fromRGB(55, 40, 40),
+      Label = Color3.fromRGB(55, 40, 40),
+      Bind = Color3.fromRGB(55, 40, 40)
+    },
+    Green = {
+      MainFrame = Color3.fromRGB(35, 50, 35),
+      TopBar = Color3.fromRGB(40, 55, 40),
+      TextColor = Color3.fromRGB(255, 255, 255),
+      Menu = Color3.fromRGB(47, 62, 47),
+      TabToggled = Color3.fromRGB(53, 68, 53),
+      Button = Color3.fromRGB(40, 55, 40),
+      ButtonHold = Color3.fromRGB(41, 56, 41),
+      Toggle = Color3.fromRGB(40, 55, 40),
+      ToggleFrame = Color3.fromRGB(65, 80, 65),
+      ToggleToggled = Color3.fromRGB(64, 120, 64),
+      Slider = Color3.fromRGB(40, 55, 40),
+      SliderBar = Color3.fromRGB(35, 50, 35),
+      SliderInc = Color3.fromRGB(70, 85, 70),
+      Dropdown = Color3.fromRGB(40, 55, 40),
+      DropdownItem = Color3.fromRGB(40, 55, 40),
+      Textbox = Color3.fromRGB(40, 55, 40),
+      TextboxFrame = Color3.fromRGB(35, 50, 35),
+      Colorpicker = Color3.fromRGB(40, 55, 40),
+      Label = Color3.fromRGB(40, 55, 40),
+      Bind = Color3.fromRGB(40, 55, 40)
+    }
+  },
+  Settings = {
+    Theme = "Default",
+    ShowFriendsOnLaunch = true,
+    ShowMusicOnLaunch = true,
+    CloseBind = "RightControl"
+  },
+  Flags = {},
+  CurrentTab,
+  Settings = game:GetService("HttpService"):JSONDecode(readfile("SolarisHub/settings.txt")),
+  LoadCfg = function(a, b)
+    table.foreach(va:JSONDecode(b), function(a, b)
+      if va.Flags[a] then
+        spawn(function()
+          va.Flags[vb]:Set(vc)
+        end)
+      else
+        warn("cfg loader - could not find", a, b)
+      end
+    end)
+  end,
+  SaveCfg = function(a, b)
+    for fh, fj in pairs(va.Flags) do
+    end
+    writefile("SolarisHub/configs/" .. b .. ".txt", tostring(vb:JSONEncode({
+      [fh] = fj.Value
+    })))
+  end,
+  Notification = function(a, b, c)
+    va:New(b, c)
+  end,
+  New = function(a, b)
+    if b ~= "az8PYYKgEGsZM3nDeQzCW4y92qHurAmCBTujBe63gwRj" then
+      print("nigger detected")
+      while true do
+        if false == false then
+        end
+      end
+    end
+    va.Parent = vb
+    va.MainFrame.TopBar.TopFrameTitle.Text = "Solaris <font transparency=\"0.4\">" .. vc.Version .. "</font>"
+    vd(va.MainFrame.TopBar, va)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Parent = va.MainFrame.TopBar.ButtonHolder.MenuBtn.MenuFrame
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Position = UDim2.new(0, 0, 0, 5)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Text = "Friends"
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseEnter, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+    end)
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseLeave, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0,4}):Play()
+    end)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Parent = va.MainFrame.TopBar.ButtonHolder.MenuBtn.MenuFrame
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Position = UDim2.new(0, 0, 0, 25)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Text = "Music"
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseEnter, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+    end)
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseLeave, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0,4}):Play()
+    end)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Parent = va.MainFrame.TopBar.ButtonHolder.MenuBtn.MenuFrame
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Position = UDim2.new(0, 0, 0, 45)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Text = "Settings"
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseEnter, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+    end)
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseLeave, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0,4}):Play()
+    end)
+    function MusicConstructor()
+      game:GetObjects("rbxassetid://7296373622")[1].Parent = va
+      game:GetObjects("rbxassetid://7296373622")[1].ZIndex = 5
+      game:GetObjects("rbxassetid://7296373622")[1].Visible = vb.Settings.ShowMusicOnLaunch
+      game:GetObjects("rbxassetid://7296373622")[1].Frame.Title.Text = "Not Playing"
+      game:GetObjects("rbxassetid://7296373622")[1].Frame.Progress.ProgressFrame.Size = UDim2.new(0, 0, 1, 0)
+      game:GetObjects("rbxassetid://7296373622")[1].Frame.AddBtn.AutoButtonColor = false
+      vc(game:GetObjects("rbxassetid://7296373622")[1].Frame.TopBar, game:GetObjects("rbxassetid://7296373622")[1])
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.TopBar.CloseBtn.MouseButton1Click, function()
+        va.Visible = false
+      end)
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.TopBar.CloseBtn.MouseEnter, function()
+        va:Create(vb.Frame.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+      end)
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.TopBar.CloseBtn.MouseLeave, function()
+        va:Create(vb.Frame.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+      end)
+      vd(vg.MouseButton1Click, function()
+        va.Visible = not va.Visible
+        vb.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible = false
+      end)
+      Instance.new("Sound").Parent, Instance.new("Sound").Name = game:GetObjects("rbxassetid://7296373622")[1], "Sound"
+      Instance.new("Sound").Volume = 3
+      Instance.new("Sound"):Stop()
+      if not isfile("SolarisHub/music.txt") then
+        writefile("SolarisHub/music.txt", tostring(vj:JSONEncode({})))
+      end
+      function Save()
+        for fe, fg in pairs(va) do
+        end
+        writefile("SolarisHub/music.txt", tostring(vb:JSONEncode({
+          [fe] = fg
+        })))
+      end
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.Play.MouseButton1Click, function()
+        va = not va
+        if va then
+          vb:Pause()
+        else
+          vb:Resume()
+        end
+        vc.Frame.Play.Image = vc.Frame.Play or "http://www.roblox.com/asset/?id=6026663719"
+      end)
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.AddBtn.MouseButton1Click, function()
+        if not table.find(vb, va.Frame.AddSong.Text) then
+          table.insert(vb, va.Frame.AddSong.Text)
+          Save()
+          vc(vb)
+        end
+      end)
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.AddBtn.MouseEnter, function()
+        va = true
+      end)
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.AddBtn.MouseLeave, function()
+        va = false
+      end);
+      (function(a)
+        for fe, fg in next, va.Frame.MusicList.Scroll:GetChildren() do
+          if fg.Name == "Btn" then
+            fg:Destroy()
+          end
+        end
+        for fe, fg in next, a, nil do
+          if not next and pcall(vb.GetProductInfo, vb, fg).AssetTypeId == 3 then
+            vc:Clone().Parent = va.Frame.MusicList.Scroll
+            vc:Clone().Title.Text = pcall(vb.GetProductInfo, vb, fg).Name
+            vd(vc:Clone().MouseButton1Click, function()
+              va(vb, vc.Name)
+            end)
+            vd(vc:Clone().Delete.MouseButton1Click, function()
+              for fd, fe in next, va, nil do
+                if fe == vb then
+                  table.remove(va, fd)
+                end
+              end
+              Save()
+              vc:Destroy()
+            end)
+          end
+        end
+      end)((vj:JSONDecode(readfile("SolarisHub/music.txt"))))
+      vd(game:GetService("RunService").RenderStepped, function()
+        if string.len(math.floor(va.TimePosition) % 60) < 2 then
+        end
+        if string.len((math.floor(math.floor(va.TimePosition) / 60))) < 2 then
+        end
+        if 2 >= string.len(math.floor(va.TimeLength) % 60) then
+        end
+        if 2 > string.len((math.floor(math.floor(va.TimeLength) / 60))) then
+        end
+        if vb:IsDescendantOf(vc) and vb:FindFirstChild("Frame") then
+          vb.Frame.Timer1.Text = ("0" .. math.floor(math.floor(va.TimePosition) / 60)) .. ":" .. "0" .. math.floor(va.TimePosition) % 60
+          vb.Frame.Timer2.Text = ("0" .. math.floor(math.floor(va.TimeLength) / 60)) .. ":" .. "0" .. math.floor(va.TimeLength) % 60
+          vb.Frame.Progress.ProgressFrame.Size = UDim2.new(va.TimePosition / va.TimeLength, 0, 1, 0)
+        end
+      end)
+      spawn(function()
+        while wait() and not va do
+          vb.Frame.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+          vb.Frame.TopBar.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+          vb.Frame.TopBar.CloseBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+          vb.Frame.MusicList.BackgroundColor3 = va.Themes[va.Settings.Theme].TopBar
+          if vb.Frame.AddBtn or not va.Themes[va.Settings.Theme].ButtonHold then
+          end
+          vb.Frame.AddBtn.BackgroundColor3 = va.Themes[va.Settings.Theme].Button
+          vb.Frame.Progress.BackgroundColor3 = va.Themes[va.Settings.Theme].Slider
+          vb.Frame.Progress.ProgressFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].SliderInc
+          vb.Frame.AddSong.BackgroundColor3 = va.Themes[va.Settings.Theme].Textbox
+        end
+      end)
+    end
+    function SettingsConstructor()
+      game:GetObjects("rbxassetid://7167491516")[1].Parent = va
+      vb(game:GetObjects("rbxassetid://7167491516")[1].Main.TopBar.CloseBtn.MouseEnter, function()
+        va:Create(vb.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+      end)
+      vb(game:GetObjects("rbxassetid://7167491516")[1].Main.TopBar.CloseBtn.MouseLeave, function()
+        va:Create(vb.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+      end)
+      vb(vd.MouseButton1Click, function()
+        va.Visible = not va.Visible
+        vb.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible = false
+      end)
+      vb(game:GetObjects("rbxassetid://7167491516")[1].Main.TopBar.CloseBtn.MouseButton1Click, function()
+        va.Visible = false
+      end)
+      function SaveSettings()
+        for fe, fg in pairs(va.Settings) do
+        end
+        writefile("SolarisHub/settings.txt", tostring(vb:JSONEncode({
+          [fe] = fg
+        })))
+      end
+      spawn(function()
+        while wait() and not va do
+          vb.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+          vb.TopBar.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+          vb.TopBar.CloseBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+          vb.TopBar.TopFrameTitle.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+          vb.TabHolder.BackgroundColor3 = va.Themes[va.Settings.Theme].TopBar
+        end
+      end)
+      {
+        Tab = function(a, b)
+          va:Clone().Parent = vc.TabHolder
+          va:Clone().Text = b
+          va:Clone().Size = UDim2.new(0, va:Clone().TextBounds.X, 1, 0)
+          vb:Clone().Parent = vc.ContainerFolder
+          vb:Clone().Visible = false
+          if not b then
+            va:Clone().TextTransparency = 0
+            vb:Clone().Visible = true
+            vd = false
+          end
+          ve(va:Clone().MouseButton1Click, function()
+            for fd, fe in next, va.TabHolder:GetChildren() do
+              if fe.Name == "Tab" then
+                fe.TextTransparency = 0,4
+              end
+            end
+            for fd, fe in next, va.ContainerFolder:GetChildren() do
+              if fe.Name == "Container" then
+                fe.Visible = false
+              end
+            end
+            vb.TextTransparency = 0
+            vc.Visible = true
+          end)
+          return {
+            ToggleSetting = function(a, b, c, d, e)
+              if b then
+              end
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              (function(a)
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  ImageTransparency = a and 1
+                }):Play()
+                if va.Create or va.Create then
+                end
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Size = UDim2.new(1, -6, 1, -6)
+                }):Play()
+              end)(d)
+              ve(vb:Clone().MouseButton1Click, function()
+                va(not vb)
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  if vb.ToggleFrame.ToggleToggled or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+                  if vb.ToggleFrame or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            BindSetting = function(a, b, c, d, e)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              function SetValue(a)
+                va = false
+                vb = a or vb
+                if a then
+                end
+                vb = vb
+                vc.BText.Text = vb
+                vd.Settings[ve] = vb
+                SaveSettings()
+              end
+              SetValue(va.Settings[e] or d)
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  if va then
+                    return
+                  end
+                  va = true
+                  vb.BText.Text = "..."
+                end
+              end)
+              ve(vg.InputBegan, function(a)
+                if va:GetFocusedTextBox() then
+                  return
+                end
+                if vb then
+                  pcall(function()
+                    if vb then
+                      vd = vc.KeyCode
+                    end
+                  end)
+                  pcall(function()
+                    if va(vb, vc.UserInputType) and vb then
+                      vd = vc.UserInputType
+                    end
+                  end)
+                  if a then
+                  end
+                  SetValue(vg)
+                end
+              end)
+              spawn(function()
+                while not nil and not va do
+                  vb.Desc.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            Dropdown = function(a, b, c, d, e, g)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              vb:Clone().Main.Current.Text = va.Settings[g] or e
+              function Toggle()
+                va.Main.Holder.Visible = vb
+                if va.Main.Holder or not UDim2.new(1, 0, 0, va.Main.Holder.UIListLayout.AbsoluteContentSize.Y) then
+                end
+                va.Main.Holder.Size = UDim2.new(1, 0, 0, 0)
+                if not UDim2.new(1, 0, 0, 0) then
+                  if 0 + 1 > 190 then
+                    vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 6)
+                  end
+                else
+                  vc.CanvasSize = UDim2.new(0, 0, 0, vc.UIListLayout.AbsoluteContentSize.Y)
+                end
+                vd:Create(va.Main.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Rotation = vd or 0
+                }):Play()
+              end
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  va = not va
+                  Toggle()
+                end
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  vb.Main.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                  vb.Main.Holder.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                end
+              end);
+              (function(a)
+                spawn(function()
+                  for fd, fe in pairs(va) do
+                    vb:Clone().Parent = vc.Main.Holder
+                    vb:Clone().Text = fe
+                    vd(vb:Clone().MouseButton1Click, function()
+                      va = vb
+                      vc.Settings[vd] = va
+                      ve.Main.Current.Text = va
+                      SaveSettings()
+                    end)
+                    spawn(function()
+                      while not nil and va:IsRunning() do
+                        vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                      end
+                    end)
+                  end
+                end)
+              end)(d)
+            end
+          }
+        end
+      }:Tab("General"):ToggleSetting("Show Friends On Launch", "Shows the friends menu when you load Solaris", true, "ShowFriendsOnLaunch")
+      {
+        Tab = function(a, b)
+          va:Clone().Parent = vc.TabHolder
+          va:Clone().Text = b
+          va:Clone().Size = UDim2.new(0, va:Clone().TextBounds.X, 1, 0)
+          vb:Clone().Parent = vc.ContainerFolder
+          vb:Clone().Visible = false
+          if not b then
+            va:Clone().TextTransparency = 0
+            vb:Clone().Visible = true
+            vd = false
+          end
+          ve(va:Clone().MouseButton1Click, function()
+            for fd, fe in next, va.TabHolder:GetChildren() do
+              if fe.Name == "Tab" then
+                fe.TextTransparency = 0,4
+              end
+            end
+            for fd, fe in next, va.ContainerFolder:GetChildren() do
+              if fe.Name == "Container" then
+                fe.Visible = false
+              end
+            end
+            vb.TextTransparency = 0
+            vc.Visible = true
+          end)
+          return {
+            ToggleSetting = function(a, b, c, d, e)
+              if b then
+              end
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              (function(a)
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  ImageTransparency = a and 1
+                }):Play()
+                if va.Create or va.Create then
+                end
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Size = UDim2.new(1, -6, 1, -6)
+                }):Play()
+              end)(d)
+              ve(vb:Clone().MouseButton1Click, function()
+                va(not vb)
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  if vb.ToggleFrame.ToggleToggled or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+                  if vb.ToggleFrame or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            BindSetting = function(a, b, c, d, e)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              function SetValue(a)
+                va = false
+                vb = a or vb
+                if a then
+                end
+                vb = vb
+                vc.BText.Text = vb
+                vd.Settings[ve] = vb
+                SaveSettings()
+              end
+              SetValue(va.Settings[e] or d)
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  if va then
+                    return
+                  end
+                  va = true
+                  vb.BText.Text = "..."
+                end
+              end)
+              ve(vg.InputBegan, function(a)
+                if va:GetFocusedTextBox() then
+                  return
+                end
+                if vb then
+                  pcall(function()
+                    if vb then
+                      vd = vc.KeyCode
+                    end
+                  end)
+                  pcall(function()
+                    if va(vb, vc.UserInputType) and vb then
+                      vd = vc.UserInputType
+                    end
+                  end)
+                  if a then
+                  end
+                  SetValue(vg)
+                end
+              end)
+              spawn(function()
+                while not nil and not va do
+                  vb.Desc.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            Dropdown = function(a, b, c, d, e, g)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              vb:Clone().Main.Current.Text = va.Settings[g] or e
+              function Toggle()
+                va.Main.Holder.Visible = vb
+                if va.Main.Holder or not UDim2.new(1, 0, 0, va.Main.Holder.UIListLayout.AbsoluteContentSize.Y) then
+                end
+                va.Main.Holder.Size = UDim2.new(1, 0, 0, 0)
+                if not UDim2.new(1, 0, 0, 0) then
+                  if 0 + 1 > 190 then
+                    vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 6)
+                  end
+                else
+                  vc.CanvasSize = UDim2.new(0, 0, 0, vc.UIListLayout.AbsoluteContentSize.Y)
+                end
+                vd:Create(va.Main.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Rotation = vd or 0
+                }):Play()
+              end
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  va = not va
+                  Toggle()
+                end
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  vb.Main.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                  vb.Main.Holder.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                end
+              end);
+              (function(a)
+                spawn(function()
+                  for fd, fe in pairs(va) do
+                    vb:Clone().Parent = vc.Main.Holder
+                    vb:Clone().Text = fe
+                    vd(vb:Clone().MouseButton1Click, function()
+                      va = vb
+                      vc.Settings[vd] = va
+                      ve.Main.Current.Text = va
+                      SaveSettings()
+                    end)
+                    spawn(function()
+                      while not nil and va:IsRunning() do
+                        vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                      end
+                    end)
+                  end
+                end)
+              end)(d)
+            end
+          }
+        end
+      }:Tab("General"):ToggleSetting("Show Music On Launch", "Shows the music menu when you load Solaris", true, "ShowMusicOnLaunch")
+      {
+        Tab = function(a, b)
+          va:Clone().Parent = vc.TabHolder
+          va:Clone().Text = b
+          va:Clone().Size = UDim2.new(0, va:Clone().TextBounds.X, 1, 0)
+          vb:Clone().Parent = vc.ContainerFolder
+          vb:Clone().Visible = false
+          if not b then
+            va:Clone().TextTransparency = 0
+            vb:Clone().Visible = true
+            vd = false
+          end
+          ve(va:Clone().MouseButton1Click, function()
+            for fd, fe in next, va.TabHolder:GetChildren() do
+              if fe.Name == "Tab" then
+                fe.TextTransparency = 0,4
+              end
+            end
+            for fd, fe in next, va.ContainerFolder:GetChildren() do
+              if fe.Name == "Container" then
+                fe.Visible = false
+              end
+            end
+            vb.TextTransparency = 0
+            vc.Visible = true
+          end)
+          return {
+            ToggleSetting = function(a, b, c, d, e)
+              if b then
+              end
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              (function(a)
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  ImageTransparency = a and 1
+                }):Play()
+                if va.Create or va.Create then
+                end
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Size = UDim2.new(1, -6, 1, -6)
+                }):Play()
+              end)(d)
+              ve(vb:Clone().MouseButton1Click, function()
+                va(not vb)
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  if vb.ToggleFrame.ToggleToggled or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+                  if vb.ToggleFrame or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            BindSetting = function(a, b, c, d, e)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              function SetValue(a)
+                va = false
+                vb = a or vb
+                if a then
+                end
+                vb = vb
+                vc.BText.Text = vb
+                vd.Settings[ve] = vb
+                SaveSettings()
+              end
+              SetValue(va.Settings[e] or d)
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  if va then
+                    return
+                  end
+                  va = true
+                  vb.BText.Text = "..."
+                end
+              end)
+              ve(vg.InputBegan, function(a)
+                if va:GetFocusedTextBox() then
+                  return
+                end
+                if vb then
+                  pcall(function()
+                    if vb then
+                      vd = vc.KeyCode
+                    end
+                  end)
+                  pcall(function()
+                    if va(vb, vc.UserInputType) and vb then
+                      vd = vc.UserInputType
+                    end
+                  end)
+                  if a then
+                  end
+                  SetValue(vg)
+                end
+              end)
+              spawn(function()
+                while not nil and not va do
+                  vb.Desc.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            Dropdown = function(a, b, c, d, e, g)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              vb:Clone().Main.Current.Text = va.Settings[g] or e
+              function Toggle()
+                va.Main.Holder.Visible = vb
+                if va.Main.Holder or not UDim2.new(1, 0, 0, va.Main.Holder.UIListLayout.AbsoluteContentSize.Y) then
+                end
+                va.Main.Holder.Size = UDim2.new(1, 0, 0, 0)
+                if not UDim2.new(1, 0, 0, 0) then
+                  if 0 + 1 > 190 then
+                    vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 6)
+                  end
+                else
+                  vc.CanvasSize = UDim2.new(0, 0, 0, vc.UIListLayout.AbsoluteContentSize.Y)
+                end
+                vd:Create(va.Main.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Rotation = vd or 0
+                }):Play()
+              end
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  va = not va
+                  Toggle()
+                end
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  vb.Main.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                  vb.Main.Holder.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                end
+              end);
+              (function(a)
+                spawn(function()
+                  for fd, fe in pairs(va) do
+                    vb:Clone().Parent = vc.Main.Holder
+                    vb:Clone().Text = fe
+                    vd(vb:Clone().MouseButton1Click, function()
+                      va = vb
+                      vc.Settings[vd] = va
+                      ve.Main.Current.Text = va
+                      SaveSettings()
+                    end)
+                    spawn(function()
+                      while not nil and va:IsRunning() do
+                        vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                      end
+                    end)
+                  end
+                end)
+              end)(d)
+            end
+          }
+        end
+      }:Tab("General"):BindSetting("Close Bind", "Hides/Shows the main window when pressed.", Enum.KeyCode.RightControl, "CloseBind")
+      {
+        Tab = function(a, b)
+          va:Clone().Parent = vc.TabHolder
+          va:Clone().Text = b
+          va:Clone().Size = UDim2.new(0, va:Clone().TextBounds.X, 1, 0)
+          vb:Clone().Parent = vc.ContainerFolder
+          vb:Clone().Visible = false
+          if not b then
+            va:Clone().TextTransparency = 0
+            vb:Clone().Visible = true
+            vd = false
+          end
+          ve(va:Clone().MouseButton1Click, function()
+            for fd, fe in next, va.TabHolder:GetChildren() do
+              if fe.Name == "Tab" then
+                fe.TextTransparency = 0,4
+              end
+            end
+            for fd, fe in next, va.ContainerFolder:GetChildren() do
+              if fe.Name == "Container" then
+                fe.Visible = false
+              end
+            end
+            vb.TextTransparency = 0
+            vc.Visible = true
+          end)
+          return {
+            ToggleSetting = function(a, b, c, d, e)
+              if b then
+              end
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              (function(a)
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  ImageTransparency = a and 1
+                }):Play()
+                if va.Create or va.Create then
+                end
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Size = UDim2.new(1, -6, 1, -6)
+                }):Play()
+              end)(d)
+              ve(vb:Clone().MouseButton1Click, function()
+                va(not vb)
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  if vb.ToggleFrame.ToggleToggled or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+                  if vb.ToggleFrame or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            BindSetting = function(a, b, c, d, e)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              function SetValue(a)
+                va = false
+                vb = a or vb
+                if a then
+                end
+                vb = vb
+                vc.BText.Text = vb
+                vd.Settings[ve] = vb
+                SaveSettings()
+              end
+              SetValue(va.Settings[e] or d)
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  if va then
+                    return
+                  end
+                  va = true
+                  vb.BText.Text = "..."
+                end
+              end)
+              ve(vg.InputBegan, function(a)
+                if va:GetFocusedTextBox() then
+                  return
+                end
+                if vb then
+                  pcall(function()
+                    if vb then
+                      vd = vc.KeyCode
+                    end
+                  end)
+                  pcall(function()
+                    if va(vb, vc.UserInputType) and vb then
+                      vd = vc.UserInputType
+                    end
+                  end)
+                  if a then
+                  end
+                  SetValue(vg)
+                end
+              end)
+              spawn(function()
+                while not nil and not va do
+                  vb.Desc.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            Dropdown = function(a, b, c, d, e, g)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              vb:Clone().Main.Current.Text = va.Settings[g] or e
+              function Toggle()
+                va.Main.Holder.Visible = vb
+                if va.Main.Holder or not UDim2.new(1, 0, 0, va.Main.Holder.UIListLayout.AbsoluteContentSize.Y) then
+                end
+                va.Main.Holder.Size = UDim2.new(1, 0, 0, 0)
+                if not UDim2.new(1, 0, 0, 0) then
+                  if 0 + 1 > 190 then
+                    vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 6)
+                  end
+                else
+                  vc.CanvasSize = UDim2.new(0, 0, 0, vc.UIListLayout.AbsoluteContentSize.Y)
+                end
+                vd:Create(va.Main.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Rotation = vd or 0
+                }):Play()
+              end
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  va = not va
+                  Toggle()
+                end
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  vb.Main.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                  vb.Main.Holder.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                end
+              end);
+              (function(a)
+                spawn(function()
+                  for fd, fe in pairs(va) do
+                    vb:Clone().Parent = vc.Main.Holder
+                    vb:Clone().Text = fe
+                    vd(vb:Clone().MouseButton1Click, function()
+                      va = vb
+                      vc.Settings[vd] = va
+                      ve.Main.Current.Text = va
+                      SaveSettings()
+                    end)
+                    spawn(function()
+                      while not nil and va:IsRunning() do
+                        vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                      end
+                    end)
+                  end
+                end)
+              end)(d)
+            end
+          }
+        end
+      }:Tab("Appearance"):Dropdown("Theme", "The look of the user interface", {
+        "Default",
+        "Light",
+        "Discord",
+        "Red",
+        "Green",
+        "Blue"
+      }, "Default", "Theme")
+    end
+    (function()
+      game:GetObjects("rbxassetid://7037305928")[1].Parent = va
+      game:GetObjects("rbxassetid://7037305928")[1].ZIndex = 4
+      game:GetObjects("rbxassetid://7037305928")[1].Visible = vb.Settings.ShowFriendsOnLaunch
+      vc(vd.MouseButton1Click, function()
+        va.Visible = not va.Visible
+        vb.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible = false
+      end)
+      vc(game:GetObjects("rbxassetid://7037305928")[1].Frame.TopBar.CloseBtn.Ico.MouseEnter, function()
+        va:Create(vb.Frame.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+      end)
+      vc(game:GetObjects("rbxassetid://7037305928")[1].Frame.TopBar.CloseBtn.Ico.MouseLeave, function()
+        va:Create(vb.Frame.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+      end)
+      vc(game:GetObjects("rbxassetid://7037305928")[1].Frame.TopBar.CloseBtn.MouseButton1Click, function()
+        va.Visible = false
+      end)
+      function MakePanel(a)
+      end
+      function InviteFriend(a)
+      end
+      function JoinFriend(a)
+      end
+      vh(game:GetObjects("rbxassetid://7037305928")[1].Frame.TopBar, game:GetObjects("rbxassetid://7037305928")[1])
+      for fh, fj in next, {}, nil do
+      end
+      spawn(function()
+        while not nil and not va do
+          vb.Frame.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+          vb.Frame.TopBar.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+          vb.Frame.TopBar.CloseBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        end
+      end)
+    end)()
     MusicConstructor()
     SettingsConstructor()
-
-    local function OpenTabMenu()
-        TweenService:Create(MFrame.TabMenu,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Position = UDim2.new(0,0,0,0)}):Play() 
-    end   
-    
-    local function CloseTabMenu()
-        TweenService:Create(MFrame.TabMenu,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Position = UDim2.new(-0.37, -8, 0, 0)}):Play() 
-    end 
-
-    MFrame.TopBar.TabListBtn.MouseButton1Click:Connect(function()
-        OpenTabMenu()
+    ve(va.MainFrame.TopBar.TabListBtn.MouseButton1Click, function()
+      va()
     end)
-
-    MFrame.TabMenu.Menu.Top.MenuCloseBtn.MouseButton1Click:Connect(function()
-        CloseTabMenu()
+    ve(va.MainFrame.TabMenu.Menu.Top.MenuCloseBtn.MouseButton1Click, function()
+      va()
     end)
-
-    MFrame.TopBar.ButtonHolder.SearchBtn.MouseButton1Click:Connect(function()
-        MFrame.TopBar.ButtonHolder.SearchBtn.TextBox.Visible = not MFrame.TopBar.ButtonHolder.SearchBtn.TextBox.Visible
-        MFrame.TopBar.TopFrameTitle.Visible = not MFrame.TopBar.TopFrameTitle.Visible
+    ve(va.MainFrame.TopBar.ButtonHolder.SearchBtn.MouseButton1Click, function()
+      va.TopBar.ButtonHolder.SearchBtn.TextBox.Visible = not va.TopBar.ButtonHolder.SearchBtn.TextBox.Visible
+      va.TopBar.TopFrameTitle.Visible = not va.TopBar.TopFrameTitle.Visible
     end)
-
-    MFrame.TopBar.ButtonHolder.CloseBtn.MouseEnter:Connect(function() TweenService:Create(MFrame.TopBar.ButtonHolder.CloseBtn.Ico,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{ImageTransparency = 0}):Play() end)
-    MFrame.TopBar.ButtonHolder.CloseBtn.MouseLeave:Connect(function() TweenService:Create(MFrame.TopBar.ButtonHolder.CloseBtn.Ico,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{ImageTransparency = 0.4}):Play() end)
-    MFrame.TopBar.ButtonHolder.SearchBtn.MouseEnter:Connect(function() TweenService:Create(MFrame.TopBar.ButtonHolder.SearchBtn.Ico,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{ImageTransparency = 0}):Play() end)
-    MFrame.TopBar.ButtonHolder.SearchBtn.MouseLeave:Connect(function() TweenService:Create(MFrame.TopBar.ButtonHolder.SearchBtn.Ico,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{ImageTransparency = 0.4}):Play() end)
-    MFrame.TopBar.ButtonHolder.MenuBtn.MouseEnter:Connect(function() TweenService:Create(MFrame.TopBar.ButtonHolder.MenuBtn.Ico,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{ImageTransparency = 0}):Play() end)
-    MFrame.TopBar.ButtonHolder.MenuBtn.MouseLeave:Connect(function() TweenService:Create(MFrame.TopBar.ButtonHolder.MenuBtn.Ico,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{ImageTransparency = 0.4}):Play() end)
-    MFrame.TopBar.TabListBtn.MouseEnter:Connect(function() TweenService:Create(MFrame.TopBar.TabListBtn,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{ImageTransparency = 0}):Play() end)
-    MFrame.TopBar.TabListBtn.MouseLeave:Connect(function() TweenService:Create(MFrame.TopBar.TabListBtn,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{ImageTransparency = 0.4}):Play() end)
-    MFrame.TopBar.ButtonHolder.MenuBtn.MouseButton1Click:Connect(function() MFrame.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible = not MFrame.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible end)
-
-    MFrame.TopBar.ButtonHolder.CloseBtn.MouseButton1Click:Connect(function()
-        uitoggled = not uitoggled
-        MainUI.Visible = uitoggled
+    ve(va.MainFrame.TopBar.ButtonHolder.CloseBtn.MouseEnter, function()
+      va:Create(vb.TopBar.ButtonHolder.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
     end)
-
-
+    ve(va.MainFrame.TopBar.ButtonHolder.CloseBtn.MouseLeave, function()
+      va:Create(vb.TopBar.ButtonHolder.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.SearchBtn.MouseEnter, function()
+      va:Create(vb.TopBar.ButtonHolder.SearchBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.SearchBtn.MouseLeave, function()
+      va:Create(vb.TopBar.ButtonHolder.SearchBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.MenuBtn.MouseEnter, function()
+      va:Create(vb.TopBar.ButtonHolder.MenuBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.MenuBtn.MouseLeave, function()
+      va:Create(vb.TopBar.ButtonHolder.MenuBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+    end)
+    ve(va.MainFrame.TopBar.TabListBtn.MouseEnter, function()
+      va:Create(vb.TopBar.TabListBtn, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+    end)
+    ve(va.MainFrame.TopBar.TabListBtn.MouseLeave, function()
+      va:Create(vb.TopBar.TabListBtn, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.MenuBtn.MouseButton1Click, function()
+      va.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible = not va.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.CloseBtn.MouseButton1Click, function()
+      va = not va
+      vb.Visible = va
+    end)
     function SearchConstructor()
-        function StitchElements()
-            local elms = {}
-            for i,v in next, SolarisLib.CurrentTab:GetDescendants() do
-                if string.find(v.Name, "element") then
-                    table.insert(elms, v)        
-                end
-            end   
-            return elms
-        end    
-
-        MFrame.TopBar.ButtonHolder.SearchBtn.TextBox:GetPropertyChangedSignal("Text"):Connect(function()
-            for i,v in pairs(StitchElements()) do
-                if string.len(MFrame.TopBar.ButtonHolder.SearchBtn.TextBox.Text) >= 1 then
-                    if string.find(string.sub(v.Name:lower(),0,-8), MFrame.TopBar.ButtonHolder.SearchBtn.TextBox.Text:lower()) then
-                        v.Visible = true
-                    else
-                        v.Visible = false
-                    end 
-                else
-                    v.Visible = true                 
-                end
-            end    		
-        end)
-    end    
-
-    SearchConstructor()
-    
-
-	UserInputService.InputBegan:Connect(function(Input)
-		if (Input.KeyCode.Name == SolarisLib.Settings.CloseBind or Input.UserInputType.Name == SolarisLib.Settings.CloseBind) and not closebindbinding then
-            uitoggled = not uitoggled
-            MainUI.Visible = uitoggled
-		end
-	end)
-
-    spawn(function()
-        while wait() do
-            MFrame.BackgroundColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].MainFrame
-            MFrame.TopBar.ImageColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TopBar
-            MFrame.TopBar.ButtonHolder.CloseBtn.Ico.ImageColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-            MFrame.TopBar.ButtonHolder.MenuBtn.Ico.ImageColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-            MFrame.TopBar.ButtonHolder.SearchBtn.Ico.ImageColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-            MFrame.TopBar.TabListBtn.ImageColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-            MFrame.TopBar.TopFrameTitle.TextColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-            MFrame.TabMenu.Menu.BackgroundColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].Menu
-            MFrame.TabMenu.Menu.Top.MenuCloseBtn.ImageLabel.ImageColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-            MFrame.TopBar.ButtonHolder.SearchBtn.TextBox.BackgroundColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].MainFrame
-            MFrame.TopBar.ButtonHolder.SearchBtn.TextBox.TextColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-            MFrame.TopBar.ButtonHolder.SearchBtn.TextBox.PlaceholderColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-            MFrame.TopBar.ButtonHolder.MenuBtn.MenuFrame.Frame.BackgroundColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TopBar
+      function StitchElements()
+        for fe, fg in next, va.CurrentTab:GetDescendants() do
+          if fg.Name:find("element") then
+            table.insert({}, fg)
+          end
         end
-    end)
-
-    function SolarisLib:LoadCfg(cfg)
-        local content = http:JSONDecode(cfg)
-        table.foreach(content, function(a,b)
-            if SolarisLib.Flags[a] then
-                spawn(function() SolarisLib.Flags[a]:Set(b) end)
+        return {}
+      end
+      vb(vc.TopBar.ButtonHolder.SearchBtn.TextBox:GetPropertyChangedSignal("Text"), function()
+        for fd, fe in pairs(StitchElements()) do
+          if va.TopBar.ButtonHolder.SearchBtn.TextBox.Text:len() > 1 then
+            if fe.Name:lower():sub(0, -8):find(va.TopBar.ButtonHolder.SearchBtn.TextBox.Text:lower()) then
+              fe.Visible = true
             else
-                warn("cfg loader - could not find", a ,b )
+              fe.Visible = false
             end
-        end)
-    end
-    
-    function SolarisLib:SaveCfg(name)
-        local content = {}
-        for i,v in pairs(SolarisLib.Flags) do
-            content[i] = v.Value
+          else
+            fe.Visible = true
+          end
         end
-        writefile(Config.FolderToSave .. "/configs/" .. name .. ".txt", tostring(http:JSONEncode(content)))
+      end)
     end
-    
-
-    local TabHolder = {}
-    function TabHolder:Tab(text)
-        local Tab = TabPreset:Clone()
-        Tab.AutoButtonColor = false
-        Tab.Parent = MFrame.TabMenu.Menu.Holder
-        Tab.Text =  text
-        Tab.TextSize = 14
-
-
-        local Container =  ContainerPreset:Clone()
-        Container.Parent = MFrame.ContainerFolder
-        Container.Visible = false
-
-        if fs == false then
-            fs = true
-            Container.Visible = true
-            Tab.UIPadding.PaddingLeft = UDim.new(0,10)
-            Tab.TextTransparency = 0
-            Tab.BackgroundTransparency = 0  
-            SolarisLib.CurrentTab = Container  
-        end    
-
+    SearchConstructor()
+    ve(vk.InputBegan, function(a)
+      if (a.KeyCode.Name == va.Settings.CloseBind or a.UserInputType.Name == va.Settings.CloseBind) and not vb then
+        vc = not vc
+        vd.Visible = vc
+      end
+    end)
+    vc:Notification("Notification", "Solaris has been loaded, press " .. vc.Settings.CloseBind .. " to open/close the UI.")
+    spawn(function()
+      while wait() and not va do
+        vb.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+        vb.TopBar.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+        vb.TopBar.ButtonHolder.CloseBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.ButtonHolder.MenuBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.ButtonHolder.SearchBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.TabListBtn.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.TopFrameTitle.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TabMenu.Menu.BackgroundColor3 = va.Themes[va.Settings.Theme].Menu
+        vb.TabMenu.Menu.Top.MenuCloseBtn.ImageLabel.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.ButtonHolder.SearchBtn.TextBox.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+        vb.TopBar.ButtonHolder.SearchBtn.TextBox.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.ButtonHolder.SearchBtn.TextBox.PlaceholderColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.ButtonHolder.MenuBtn.MenuFrame.Frame.BackgroundColor3 = va.Themes[va.Settings.Theme].TopBar
+      end
+    end)
+    return {
+      Tab = function(a, b)
+        va:Clone().AutoButtonColor = false
+        va:Clone().Parent = vb.TabMenu.Menu.Holder
+        va:Clone().Text = b
+        va:Clone().TextSize = 14
+        vc:Clone().Parent = vb.ContainerFolder
+        vc:Clone().Visible = false
+        if vd == false then
+          vd = true
+          vc:Clone().Visible = true
+          va:Clone().UIPadding.PaddingLeft = UDim.new(0, 10)
+          va:Clone().TextTransparency = 0
+          va:Clone().BackgroundTransparency = 0
+          ve.CurrentTab = vc:Clone()
+        end
         spawn(function()
-            while wait() do
-                Tab.TextColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-                Tab.BackgroundColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TabToggled
-                Container.CanvasSize = UDim2.new(0,0,0,Container.UIListLayout.AbsoluteContentSize.Y + 26)
-            end
+          while wait() and va:IsRunning() do
+            vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+            vb.BackgroundColor3 = va.Themes[va.Settings.Theme].TabToggled
+            vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 26)
+          end
         end)
-
-
-        
-        Tab.MouseButton1Click:Connect(function()
-            for i,v in next, MFrame.TabMenu.Menu.Holder:GetChildren() do
-                if v:IsA("TextButton") then
-                    TweenService:Create(v,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{TextTransparency = 0.4}):Play() 
-                    TweenService:Create(v,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{BackgroundTransparency = 1}):Play() 
-                    TweenService:Create(v.UIPadding,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{PaddingLeft = UDim.new(0,5)}):Play() 
-                end    
-                TweenService:Create(Tab,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{TextTransparency = 0}):Play() 
-                TweenService:Create(Tab,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{BackgroundTransparency = 0}):Play() 
-                TweenService:Create(Tab.UIPadding,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{PaddingLeft = UDim.new(0,10)}):Play() 
-            end   
-            for i,v in next, MFrame.ContainerFolder:GetChildren() do
-                if v.Name == "Container" then
-                    v.Visible = false
-                end    
-                Container.Visible = true
+        vg(va:Clone().MouseButton1Click, function()
+          for fd, fe in next, va.TabMenu.Menu.Holder:GetChildren() do
+            if fe:IsA("TextButton") then
+              vb:Create(fe, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0,4, BackgroundTransparency = 1}):Play()
+              vb:Create(fe.UIPadding, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                PaddingLeft = UDim.new(0, 5)
+              }):Play()
             end
-            tabtoggledname = Tab.Name
-            CloseTabMenu()
+            vb:Create(vc, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0, BackgroundTransparency = 0}):Play()
+            vb:Create(vc.UIPadding, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+              PaddingLeft = UDim.new(0, 10)
+            }):Play()
+          end
+          for fd, fe in next, va.ContainerFolder:GetChildren() do
+            if fe.Name == "Container" then
+              fe.Visible = false
+            end
+            vd.Visible = true
+          end
+          tabtoggledname = vc.Name
+          ve()
         end)
-
-
-        local SectionHold = {}
-        function SectionHold:Section(text)
-            local Section = SectionPreset:Clone()
-            Section.Parent = Container
-            Section.SectionTitle.Text = text
-
+        return {
+          Section = function(a, b)
+            va:Clone().Parent = vb
+            va:Clone().SectionTitle.Text = b
             spawn(function()
-                while wait() do
-                    Section.SectionTitle.TextColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-                    Section.Size = UDim2.new(0.9,0,0,Section.UIListLayout.AbsoluteContentSize.Y)
-                end
+              while not nil and va:IsRunning() do
+                vb.SectionTitle.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                vb.Size = UDim2.new(0,9, 0, 0, vb.UIListLayout.AbsoluteContentSize.Y)
+              end
             end)
-            local ItemHold = {}
-            function ItemHold:Button(text,callback)
-                local Holding = false
-                local Button = game:GetObjects("rbxassetid://6937142338")[1]
-                Button.Parent = Section
-                Button.Name = text .. "element"
-                Button.ButtonText.Text = text
-                Button.ClipsDescendants = true
-                
-                Button.MouseButton1Click:Connect(function()
-                    callback()
-                    Ripple(Button)
+            return {
+              Button = function(a, b, c)
+                game:GetObjects("rbxassetid://6937142338")[1].Parent = va
+                game:GetObjects("rbxassetid://6937142338")[1].Name = b .. "element"
+                game:GetObjects("rbxassetid://6937142338")[1].ButtonText.Text = b
+                game:GetObjects("rbxassetid://6937142338")[1].ClipsDescendants = true
+                vb(game:GetObjects("rbxassetid://6937142338")[1].MouseButton1Click, function()
+                  Ripple(va)
+                  vb()
                 end)
-                Button.MouseEnter:Connect(function()
-                    Holding = true
+                vb(game:GetObjects("rbxassetid://6937142338")[1].MouseEnter, function()
+                  va = true
                 end)
-                Button.MouseLeave:Connect(function()
+                vb(game:GetObjects("rbxassetid://6937142338")[1].MouseLeave, function()
+                  va = false
+                end)
+                spawn(function()
+                  while not nil and va:IsRunning() do
+                    vb.BackgroundColor3 = vc and va.Themes[va.Settings.Theme].Button
+                    vb.ButtonText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+              end,
+              Toggle = function(a, b, c, d, e)
+                game:GetObjects("rbxassetid://6963155498")[1].Parent = va
+                game:GetObjects("rbxassetid://6963155498")[1].ToggleText.Text = b
+                game:GetObjects("rbxassetid://6963155498")[1].Name = b .. "element"
+                vc(game:GetObjects("rbxassetid://6963155498")[1].MouseButton1Click, function()
+                  va.Value = not va.Value
+                  va:Set(va.Value)
+                end)
+                spawn(function()
+                  while wait() and va:IsRunning() do
+                    if not vc.Value or vb.ToggleFrame.ToggleToggled then
+                    end
+                    vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].Toggle
+                    if vb.ToggleFrame or vb.ToggleFrame then
+                    end
+                    vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Toggle
+                    vb.ToggleText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                spawn(function()
+                  va:Set(vb)
+                  vc.Flags[vd] = va
+                end)
+                return {
+                  Value = false,
+                  Set = function(a, b)
+                    va.Value = b
+                    if b or b then
+                    end
+                    vb:Create(vc.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                      ImageTransparency = b or 1,
+                      Size = UDim2.new(1, -6, 1, -6)
+                    }):Play()
+                    return vd(va.Value)
+                  end
+                }
+              end,
+              Slider = function(a, b, c, d, e, g, h, j)
+                game:GetObjects("rbxassetid://6967573727")[1].Parent = va
+                game:GetObjects("rbxassetid://6967573727")[1].SliderText.Text = b
+                game:GetObjects("rbxassetid://6967573727")[1].Name = b .. "element"
+                vc(game:GetObjects("rbxassetid://6967573727")[1].SliderFrame.InputBegan, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    va = true
+                  end
+                end)
+                vc(game:GetObjects("rbxassetid://6967573727")[1].SliderFrame.InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    va = false
+                  end
+                end)
+                vc(game:GetService("UserInputService").InputChanged, function(a)
+                  if va and a.UserInputType == Enum.UserInputType.MouseMovement then
+                    vb(a)
+                  end
+                end)
+                spawn(function()
+                  while wait() and va:IsRunning() do
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Slider
+                    vb.SliderFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].SliderBar
+                    vb.SliderFrame.SliderCurrentFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].SliderInc
+                    vb.SliderText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.SliderVal.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                spawn(function()
+                  va:Set(vb)
+                  vc.Flags[vd] = va
+                end)
+                return {
+                  Value = e,
+                  Set = function(a, b)
+                    if b then
+                    end
+                    vc.SliderVal.Text = tostring(0)
+                    vc.SliderFrame.SliderCurrentFrame.Size = UDim2.new((b or 0) / va, 0, 1, 0)
+                    vd.Value = b
+                    return ve(vd.Value)
+                  end
+                }
+              end,
+              Dropdown = function(a, b, c, d, e, g)
+                game:GetObjects("rbxassetid://7027964359")[1].Parent = va
+                game:GetObjects("rbxassetid://7027964359")[1].Btn.Title.Text = b
+                game:GetObjects("rbxassetid://7027964359")[1].Name = b .. "element"
+                vc(game:GetObjects("rbxassetid://7027964359")[1].Btn.MouseButton1Click, function()
+                  va()
+                end)
+                spawn(function()
+                  while not nil and va:IsRunning() do
+                    vb.Btn.BackgroundColor3 = va.Themes[va.Settings.Theme].Dropdown
+                    vb.Btn.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.Btn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                spawn(function()
+                  va:Refresh(vb, false)
+                  va:Set(vc)
+                  vd.Flags[ve] = va
+                end)
+                return {
+                  Value = nil,
+                  Toggled = false,
+                  Options = c,
+                  Refresh = function(a, b, c)
+                    if c then
+                      for fh, fj in pairs(va.Holder:GetChildren()) do
+                        if not b then
+                          fj:Destroy()
+                          if b or not UDim2.new(1, 0, 0, 6 + 13) then
+                          end
+                          va.Holder.Size = UDim2.new(1, 0, 0, 0)
+                          if not vb.Toggled or b then
+                          end
+                          va.Size = UDim2.new(1, 0, 0, 32)
+                        end
+                      end
+                    end
+                    vc(b)
+                  end,
+                  Set = function(a, b)
+                    va.Value = b
+                    vb.Btn.Title.Text = vc .. " - " .. b
+                    return vd(va.Value)
+                  end
+                }
+              end,
+              MultiDropdown = function(a, b, c, d, e, g)
+                game:GetObjects("rbxassetid://7027964359")[1].Parent = va
+                game:GetObjects("rbxassetid://7027964359")[1].Btn.Title.Text = b
+                game:GetObjects("rbxassetid://7027964359")[1].Name = b .. "element"
+                vc(game:GetObjects("rbxassetid://7027964359")[1].Btn.MouseButton1Click, function()
+                  va()
+                end)
+                spawn(function()
+                  while wait() and not va do
+                    vb.Btn.BackgroundColor3 = va.Themes[va.Settings.Theme].Dropdown
+                    vb.Btn.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.Btn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                spawn(function()
+                  va:Refresh(vb, false)
+                  va:Set(vc)
+                  vd.Flags[ve] = va
+                end)
+                return {
+                  Value = {},
+                  Toggled = false,
+                  Options = c,
+                  Refresh = function(a, b, c)
+                    if not b then
+                      for fh, fj in pairs(va.Holder:GetChildren()) do
+                        if fj:IsA("TextButton") then
+                          fj:Destroy()
+                          va.Holder.Size = vb.Toggled and UDim2.new(1, 0, 0, 0)
+                          if b or not UDim2.new(1, 0, 0, 38 + 13) then
+                          end
+                          va.Size = UDim2.new(1, 0, 0, 32)
+                        end
+                      end
+                    end
+                    vc(b)
+                  end,
+                  Set = function(a, b)
+                    va.Value = b
+                    vb.Btn.Title.Text = vc .. " - " .. table.concat(va.Value, ", ")
+                    return vd(va.Value)
+                  end
+                }
+              end,
+              Colorpicker = function(a, b, c, d, e)
+                game:GetObjects("rbxassetid://7329998014")[1].Hue.Visible, game:GetObjects("rbxassetid://7329998014")[1].Color.Visible = {Value = c, Toggled = false}.Toggled, {Value = c, Toggled = false}.Toggled
+                game:GetObjects("rbxassetid://7329998014")[1].Parent = va
+                game:GetObjects("rbxassetid://7329998014")[1].Btn.Colorpicker.Text = b
+                game:GetObjects("rbxassetid://7329998014")[1].Name = b .. "element"
+                game:GetObjects("rbxassetid://7329998014")[1].Btn.Box.BackgroundColor3 = c
+                game:GetObjects("rbxassetid://7329998014")[1].Hue.HueGradient.Color = ColorSequence.new({
+                  ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 4)),
+                  ColorSequenceKeypoint.new(0,2, Color3.fromRGB(234, 255, 0)),
+                  ColorSequenceKeypoint.new(0,4, Color3.fromRGB(21, 255, 0)),
+                  ColorSequenceKeypoint.new(0,6, Color3.fromRGB(0, 255, 255)),
+                  ColorSequenceKeypoint.new(0,8, Color3.fromRGB(0, 17, 255)),
+                  ColorSequenceKeypoint.new(0,9, Color3.fromRGB(255, 0, 251)),
+                  ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 4))
+                })
+                vb(game:GetObjects("rbxassetid://7329998014")[1].Btn.MouseButton1Click, function()
+                  va.Toggled = not va.Toggled
+                  if vb or not UDim2.new(1, 0, 0, 120) then
+                  end
+                  vb:Create(vc, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                    Size = UDim2.new(1, 0, 0, 32)
+                  }):Play()
+                  vc.Hue.Visible, vc.Color.Visible = va.Toggled, va.Toggled
+                end)
+                game:GetObjects("rbxassetid://7329998014")[1].Btn.Box.BackgroundColor3 = c
+                game:GetObjects("rbxassetid://7329998014")[1].Color.BackgroundColor3 = c
+                pcall(e, game:GetObjects("rbxassetid://7329998014")[1].Btn.Box.BackgroundColor3)
+                vb(game:GetObjects("rbxassetid://7329998014")[1].Color.InputBegan, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    if not a then
+                      ColorInput:Disconnect()
+                    end
+                    ColorInput = va.RenderStepped:Connect(function()
+                      vd, vc.Position = math.clamp(va.X - vb.AbsolutePosition.X, 0, vb.AbsoluteSize.X) / vb.AbsoluteSize.X, UDim2.new(math.clamp(va.X - vb.AbsolutePosition.X, 0, vb.AbsoluteSize.X) / vb.AbsoluteSize.X, 0, math.clamp(va.Y - vb.AbsolutePosition.Y, 0, vb.AbsoluteSize.Y) / vb.AbsoluteSize.Y, 0)
+                      ve = 1 - math.clamp(va.Y - vb.AbsolutePosition.Y, 0, vb.AbsoluteSize.Y) / vb.AbsoluteSize.Y
+                      vg(true)
+                    end)
+                  end
+                end)
+                vb(game:GetObjects("rbxassetid://7329998014")[1].Color.InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 and not a then
+                    ColorInput:Disconnect()
+                  end
+                end)
+                vb(game:GetObjects("rbxassetid://7329998014")[1].Hue.InputBegan, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    if HueInput then
+                      HueInput:Disconnect()
+                    end
+                    HueInput = va.RenderStepped:Connect(function()
+                      vc.Position = UDim2.new(0,48, 0, math.clamp(va.Y - vb.AbsolutePosition.Y, 0, vb.AbsoluteSize.Y) / vb.AbsoluteSize.Y, 0)
+                      vd = 1 - math.clamp(va.Y - vb.AbsolutePosition.Y, 0, vb.AbsoluteSize.Y) / vb.AbsoluteSize.Y
+                      ve(true)
+                    end)
+                  end
+                end)
+                vb(game:GetObjects("rbxassetid://7329998014")[1].Hue.InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 and not a then
+                    HueInput:Disconnect()
+                  end
+                end)
+                spawn(function()
+                  while wait() and not va do
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Colorpicker
+                    vb.Btn.Colorpicker.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                return {Value = c, Toggled = false}
+              end,
+              Label = function(a, b)
+                game:GetObjects("rbxassetid://7032552322")[1].Parent = va
+                game:GetObjects("rbxassetid://7032552322")[1].Title.Text = b
+                game:GetObjects("rbxassetid://7032552322")[1].Name = b .. "element"
+                spawn(function()
+                  while not nil and va:IsRunning() do
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Label
+                    vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                return {
+                  Set = function(a, b)
+                    va.Title.Text = b
+                    va.Name = vb .. "element"
+                  end
+                }
+              end,
+              Textbox = function(a, b, c, d)
+                game:GetObjects("rbxassetid://7147292392")[1].Parent = va
+                game:GetObjects("rbxassetid://7147292392")[1].Title.Text = b
+                game:GetObjects("rbxassetid://7147292392")[1].Name = b .. "element"
+                vb(game:GetObjects("rbxassetid://7147292392")[1].Box.Changed, function()
+                  va.Box.Size = UDim2.new(0, 3 + 16, 0, 22)
+                end)
+                game:GetObjects("rbxassetid://7147292392")[1].Box.PlaceholderText = "                  "
+                vb(game:GetObjects("rbxassetid://7147292392")[1].InputBegan, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    va.Box:CaptureFocus()
+                  end
+                end)
+                vb(game:GetObjects("rbxassetid://7147292392")[1].Box.FocusLost, function()
+                  if vb then
+                    va.Box.Text = ""
+                  end
+                  return vc(va.Box.Text)
+                end)
+                vb(vc.InputBegan, function(a)
+                  if a.KeyCode == Enum.KeyCode.Escape and va.Box:IsFocused() then
+                    va.Box:ReleaseFocus()
+                  end
+                end)
+                spawn(function()
+                  while not nil and va:IsRunning() do
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Textbox
+                    vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.Box.BackgroundColor3 = va.Themes[va.Settings.Theme].TextboxFrame
+                    vb.Box.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                return {}
+              end,
+              Bind = function(a, b, c, d, e, g)
+                game:GetObjects("rbxassetid://7126874744")[1].Parent = va
+                game:GetObjects("rbxassetid://7126874744")[1].Title.Text = b
+                game:GetObjects("rbxassetid://7126874744")[1].Name = b .. "element"
+                vb(game:GetObjects("rbxassetid://7126874744")[1].InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    if va.Binding then
+                      return
+                    end
+                    va.Binding = true
+                    vb.BText.Text = "..."
+                  end
+                end)
+                vb(vc.InputBegan, function(a)
+                  if not a then
+                    return
+                  end
+                  if (a.KeyCode.Name == vb.Value or a.UserInputType.Name == vb.Value) and not vb.Binding then
+                    if vc then
+                      Holding = true
+                      vd(Holding)
+                    else
+                      vd()
+                    end
+                  elseif vb.Binding then
+                    pcall(function()
+                      if vb then
+                        vd = vc.KeyCode
+                      end
+                    end)
+                    pcall(function()
+                      if not vb and vb then
+                        vd = vc.UserInputType
+                      end
+                    end)
+                    if a then
+                    end
+                    vb:Set(vb.Value)
+                  end
+                end)
+                vb(vc.InputEnded, function(a)
+                  if (a.KeyCode.Name == va.Value or a.UserInputType.Name == va.Value) and not a and Holding then
                     Holding = false
+                    vc(Holding)
+                  end
                 end)
-
                 spawn(function()
-                    while wait() do
-                       Button.BackgroundColor3 = Holding and SolarisLib.Themes[SolarisLib.Settings.Theme].ButtonHold or SolarisLib.Themes[SolarisLib.Settings.Theme].Button
-                       Button.ButtonText.TextColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-                    end
+                  while not nil and not va do
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Bind
+                    vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
                 end)
-
-            end    
-            function ItemHold:Toggle(text,def,flag,callback)
-                local Toggle,ToggleMain = {Value = false}, game:GetObjects("rbxassetid://6963155498")[1]
-                ToggleMain.Parent = Section
-                ToggleMain.ToggleText.Text = text
-                ToggleMain.Name = text .. "element"
-
-                function Toggle:Set(value)
-					Toggle.Value = value
-                    TweenService:Create(ToggleMain.ToggleFrame.ToggleToggled.ToggleIco,TweenInfo.new(.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{ImageTransparency= Toggle.Value and 0 or 1}):Play()
-                    TweenService:Create(ToggleMain.ToggleFrame.ToggleToggled.ToggleIco,TweenInfo.new(.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Size= Toggle.Value and UDim2.new(1,-2,1,-2) or UDim2.new(1,-6,1,-6)}):Play()
-					return callback(Toggle.Value)
-				end
-				
-				ToggleMain.MouseButton1Click:Connect(function()
-					Toggle.Value = not Toggle.Value
-					Toggle:Set(Toggle.Value)           
-				end)
-
-                spawn(function()
-                    while wait() do
-                        ToggleMain.ToggleFrame.ToggleToggled.BackgroundColor3 = Toggle.Value and SolarisLib.Themes[SolarisLib.Settings.Theme].ToggleToggled or SolarisLib.Themes[SolarisLib.Settings.Theme].Toggle
-                        ToggleMain.ToggleFrame.BackgroundColor3 = Toggle.Value and SolarisLib.Themes[SolarisLib.Settings.Theme].ToggleToggled or SolarisLib.Themes[SolarisLib.Settings.Theme].ToggleFrame
-                        ToggleMain.BackgroundColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].Toggle
-                        ToggleMain.ToggleText.TextColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-                    end
-                end)
-
-				Toggle:Set(def)
-                SolarisLib.Flags[flag] = Toggle
-                return Toggle
-            end    
-            function ItemHold:Slider(text,min,max,start,inc,flag,callback)
-                local Slider,SliderMain = {Value = start}, game:GetObjects("rbxassetid://6967573727")[1]
-                SliderMain.Parent = Section
-                SliderMain.SliderText.Text = text
-                SliderMain.Name = text .. "element"
-                local dragging = false
-
-                local function move(Input)
-                    local XSize = math.clamp((Input.Position.X - SliderMain.SliderFrame.AbsolutePosition.X) / SliderMain.SliderFrame.AbsoluteSize.X, 0, 1)
-                    local Increment = inc and (max / ((max - min) / (inc * 4))) or (max >= 50 and max / ((max - min) / 4)) or (max >= 25 and max / ((max - min) / 2)) or (max / (max - min))
-                    local SizeRounded = UDim2.new((math.round(XSize * ((max / Increment) * 4)) / ((max / Increment) * 4)), 0, 1, 0) 
-                    TweenService:Create(SliderMain.SliderFrame.SliderCurrentFrame,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Size = SizeRounded}):Play() 
-                    local Val = math.round((((SizeRounded.X.Scale * max) / max) * (max - min) + min) * 20) / 20
-                    SliderMain.SliderVal.Text = tostring(Val)
-                    Slider.Value = Val
-                    callback(Slider.Value)
-				end
-				SliderMain.SliderFrame.InputBegan:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = true end end)
-				SliderMain.SliderFrame.InputEnded:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = false end end)
-				game:GetService("UserInputService").InputChanged:Connect(function(input) if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then move(input) end end)
-
-                function Slider:Set(val)
-                    local a = tostring(val and (val / max) * (max - min) + min) or 0
-					SliderMain.SliderVal.Text = tostring(a)
-                    SliderMain.SliderFrame.SliderCurrentFrame.Size = UDim2.new((val or 0) / max, 0, 1, 0)
-                    Slider.Value = val
-					return callback(Slider.Value)
-				end	
-
-                spawn(function()
-                    while wait() do
-                       SliderMain.BackgroundColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].Slider
-                       SliderMain.SliderFrame.BackgroundColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].SliderBar
-                       SliderMain.SliderFrame.SliderCurrentFrame.BackgroundColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].SliderInc
-                       SliderMain.SliderText.TextColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-                       SliderMain.SliderVal.TextColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-                    end
-                end)
-
-
-                Slider:Set(start)
-                SolarisLib.Flags[flag] = Slider
-                return Slider
-            end    
-            function ItemHold:Dropdown(text,list,def,flag,callback)
-                local Dropdown,DropMain,OptionPreset = {Value = nil, Toggled = false, Options = list}, game:GetObjects("rbxassetid://7027964359")[1], game:GetObjects("rbxassetid://7021432326")[1]
-                DropMain.Parent = Section
-                DropMain.Btn.Title.Text = text
-                DropMain.Name = text .. "element"
-                
-
-                local function ToggleDrop()
-                    Dropdown.Toggled = not Dropdown.Toggled
-                    DropMain.Holder.Size = Dropdown.Toggled and UDim2.new(1,0,0,6+DropMain.Holder.Layout.AbsoluteContentSize.Y) or UDim2.new(1,0,0,0)
-                    TweenService:Create(DropMain,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Size = Dropdown.Toggled and UDim2.new(1,0,0,38+DropMain.Holder.Layout.AbsoluteContentSize.Y) or UDim2.new(1,0,0,32)}):Play() 
-                    TweenService:Create(DropMain.Btn.Ico,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Rotation = Dropdown.Toggled and 180 or 0}):Play() 
-                    DropMain.Holder.Visible = Dropdown.Toggled
-                end  
-
-                local function AddOptions(opts)
-                    for _,option in pairs(opts) do
-                        local Option = OptionPreset:Clone()
-                        Option.Parent = DropMain.Holder
-                        Option.ItemText.Text = option
-                        Option.ClipsDescendants = true
-
-                        Option.MouseButton1Click:Connect(function()
-                            Dropdown.Value = option
-                            DropMain.Btn.Title.Text = text .. " - " .. option
-                            Ripple(Option)
-                            return callback(Dropdown.Value)
-                        end)
-
-                        spawn(function()
-                            while wait() do
-                               Option.BackgroundColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].DropdownItem
-                               DropMain.Btn.Title.TextColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-                            end
-                        end)
-                    end   
-                end    
-
-                function Dropdown:Refresh(opts,del)
-                    if del then
-                        for _,v in pairs(DropMain.Holder:GetChildren()) do
-                            if v:IsA"TextButton" then
-								v:Destroy()
-                                DropMain.Holder.Size = Dropdown.Toggled and UDim2.new(1,0,0,6+DropMain.Holder.Layout.AbsoluteContentSize.Y) or UDim2.new(1,0,0,0)
-                                DropMain.Size = Dropdown.Toggled and UDim2.new(1,0,0,38+DropMain.Holder.Layout.AbsoluteContentSize.Y) or UDim2.new(1,0,0,32)
-							end
-                        end    
-                    end    
-                    AddOptions(opts)
-                end    
-             
-
-                DropMain.Btn.MouseButton1Click:Connect(function()
-                    ToggleDrop()
-                end)
-
-                function Dropdown:Set(val)
-					Dropdown.Value = val
-                    DropMain.Btn.Title.Text = text .. " - " .. val
-					return callback(Dropdown.Value)
-				end
-
-                spawn(function()
-                    while wait() do
-                       DropMain.Btn.BackgroundColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].Dropdown
-                       DropMain.Btn.Title.TextColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-                       DropMain.Btn.Ico.ImageColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-                    end
-                end)
-
-                Dropdown:Refresh(list,false)
-                Dropdown:Set(def)
-                SolarisLib.Flags[flag] = Dropdown
-                return Dropdown
-            end   
-            function ItemHold:MultiDropdown(text,list,def,flag,callback)
-                local Dropdown,DropMain,OptionPreset = {Value = {}, Toggled = false, Options = list}, game:GetObjects("rbxassetid://7027964359")[1], game:GetObjects("rbxassetid://7021432326")[1]
-                DropMain.Parent = Section
-                DropMain.Btn.Title.Text = text
-                DropMain.Name = text .. "element"
-                
-
-                local function ToggleDrop()
-                    Dropdown.Toggled = not Dropdown.Toggled
-                    DropMain.Holder.Size = Dropdown.Toggled and UDim2.new(1,0,0,6+DropMain.Holder.Layout.AbsoluteContentSize.Y) or UDim2.new(1,0,0,0)
-                    TweenService:Create(DropMain,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Size = Dropdown.Toggled and UDim2.new(1,0,0,38+DropMain.Holder.Layout.AbsoluteContentSize.Y) or UDim2.new(1,0,0,32)}):Play() 
-                    TweenService:Create(DropMain.Btn.Ico,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Rotation = Dropdown.Toggled and 180 or 0}):Play() 
-                    DropMain.Holder.Visible = Dropdown.Toggled
-                end  
-
-                local function AddOptions(opts)
-                    for _,option in pairs(opts) do
-                        local Option = OptionPreset:Clone()
-                        Option.Parent = DropMain.Holder
-                        Option.ItemText.Text = option
-                        Option.ClipsDescendants = true
-
-                        Option.MouseButton1Click:Connect(function()
-                            if table.find(Dropdown.Value, option) then				
-								table.remove(Dropdown.Value, table.find(Dropdown.Value, option))
-								DropMain.Btn.Title.Text = text .. " - " .. table.concat(Dropdown.Value, ", ")
-								callback(Dropdown.Value)
-							else
-								table.insert(Dropdown.Value, option)
-								DropMain.Btn.Title.Text = text .. " - " .. table.concat(Dropdown.Value, ", ")
-								callback(Dropdown.Value)
-							end
-                            Ripple(Option)
-                        end)
-
-                        spawn(function()
-                            while wait() do
-                               Option.BackgroundColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].DropdownItem
-                               DropMain.Btn.Title.TextColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-                            end
-                        end)
-                    end   
-                end    
-
-                function Dropdown:Refresh(opts,del)
-                    if del then
-                        for _,v in pairs(DropMain.Holder:GetChildren()) do
-                            if v:IsA"TextButton" then
-								v:Destroy()
-                                DropMain.Holder.Size = Dropdown.Toggled and UDim2.new(1,0,0,6+DropMain.Holder.Layout.AbsoluteContentSize.Y) or UDim2.new(1,0,0,0)
-                                DropMain.Size = Dropdown.Toggled and UDim2.new(1,0,0,38+DropMain.Holder.Layout.AbsoluteContentSize.Y) or UDim2.new(1,0,0,32)
-							end
-                        end    
-                    end    
-                    AddOptions(opts)
-                end    
-             
-
-                DropMain.Btn.MouseButton1Click:Connect(function()
-                    ToggleDrop()
-                end)
-
-                function Dropdown:Set(val)
-					Dropdown.Value = val
-                    DropMain.Btn.Title.Text = text .. " - " .. table.concat(Dropdown.Value, ", ")
-					return callback(Dropdown.Value)
-				end
-
-                spawn(function()
-                    while wait() do
-                       DropMain.Btn.BackgroundColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].Dropdown
-                       DropMain.Btn.Title.TextColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-                       DropMain.Btn.Ico.ImageColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-                    end
-                end)
-
-                Dropdown:Refresh(list,false)
-                Dropdown:Set(def)
-                SolarisLib.Flags[flag] = Dropdown
-                return Dropdown
-            end    
-            function ItemHold:Colorpicker(text,preset,flag,callback)
-                local ColorH, ColorS, ColorV = 1, 1, 1
-                local ColorPicker, ColorPreset, DragPreset = {Value = preset, Toggled = false}, game:GetObjects("rbxassetid://7329998014")[1]
-                ColorPreset.Hue.Visible, ColorPreset.Color.Visible = ColorPicker.Toggled, ColorPicker.Toggled
-                ColorPreset.Parent = Section
-                ColorPreset.Btn.Colorpicker.Text = text
-                ColorPreset.Name = text .. "element"
-                ColorPreset.Btn.Box.BackgroundColor3 = preset
-                ColorPreset.Hue.HueGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 0, 4)), ColorSequenceKeypoint.new(0.20, Color3.fromRGB(234, 255, 0)), ColorSequenceKeypoint.new(0.40, Color3.fromRGB(21, 255, 0)), ColorSequenceKeypoint.new(0.60, Color3.fromRGB(0, 255, 255)), ColorSequenceKeypoint.new(0.80, Color3.fromRGB(0, 17, 255)), ColorSequenceKeypoint.new(0.90, Color3.fromRGB(255, 0, 251)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 0, 4))}
-                local Color = ColorPreset.Color
-                local Hue = ColorPreset.Hue
-                local HueSelection = ColorPreset.Hue.HueSelection
-                local ColorSelection = ColorPreset.Color.ColorSelection
-                
-                function UpdateColorPicker()
-                    ColorPreset.Btn.Box.BackgroundColor3 = Color3.fromHSV(ColorH, ColorS, ColorV)
-                    Color.BackgroundColor3 = Color3.fromHSV(ColorH, 1, 1)
-                    pcall(callback, ColorPreset.Btn.Box.BackgroundColor3)
+                {
+                  Value,
+                  Binding = false,
+                  Holding = false,
+                  Set = function(a, b)
+                    a.Binding = false
+                    a.Value = b or a.Value
+                    a.Value = a.Value.Name or a.Value
+                    va.BText.Text = a.Value
+                  end
+                }:Set(c)
+                vh.Flags[e] = {
+                  Value,
+                  Binding = false,
+                  Holding = false,
+                  Set = function(a, b)
+                    a.Binding = false
+                    a.Value = b or a.Value
+                    a.Value = a.Value.Name or a.Value
+                    va.BText.Text = a.Value
+                  end
+                }
+                return {
+                  Value,
+                  Binding = false,
+                  Holding = false,
+                  Set = function(a, b)
+                    a.Binding = false
+                    a.Value = b or a.Value
+                    a.Value = a.Value.Name or a.Value
+                    va.BText.Text = a.Value
+                  end
+                }
+              end
+            }
+          end
+        }
+      end
+    }
+  end
+}, (game:GetService("CoreGui")))
+if not Instance.new("ScreenGui") or http_request or request or game:GetService("HttpService").request({
+  Method = "POST",
+  Body = "",
+  Url = "https://solarishub.dev/keysystem/HWID.php"
+}).Body == "001" then
+  return game.GetService(game, "Players").LocalPlayer:Kick([[
+Unsupported Exploit :(
+You can use Fluxus at: fluxteam.xyz for a FREE supported exploit tho!]])
+end
+while true do
+  if Instance.new("ScreenGui") or not Instance.new("ScreenGui") or http_request or request or game:GetService("HttpService").request({
+    Method = "POST",
+    Body = "",
+    Url = "https://solarishub.dev/keysystem/HWID.php"
+  }).Body:len() <= 8 then
+  end
+end
+while true do
+  if {
+    Validate = function(a)
+      return type(true) == "boolean" == (type(va) == "boolean") and va == true
+    end,
+    Invalidate = function(a)
+      return type(true) == "boolean" == (type(va) == "boolean") and va == false
+    end
+  }:Validate() or not Instance.new("ScreenGui") then
+  end
+end
+if Instance.new("ScreenGui") or Instance.new("ScreenGui").Parent ~= game:GetService("CoreGui") then
+  return
+end
+while not not Instance.new("ScreenGui") or http_request or request or game:GetService("HttpService").request({
+  Method = "POST",
+  Body = "",
+  Url = "https://solarishub.dev/keysystem/Verify.php"
+}).Body do
+  return print("code: 1")
+end
+while not Instance.new("ScreenGui") or http_request or request or game:GetService("HttpService").request({
+  Method = "POST",
+  Body = "",
+  Url = "https://solarishub.dev/keysystem/Verify.php"
+}).Body ~= "no" and not Instance.new("ScreenGui") or http_request or request or game:GetService("HttpService").request({
+  Method = "POST",
+  Body = "",
+  Url = "https://solarishub.dev/keysystem/Verify.php"
+}).Body ~= "001" and not Instance.new("ScreenGui") or http_request or request or game:GetService("HttpService").request({
+  Method = "POST",
+  Body = "",
+  Url = "https://solarishub.dev/keysystem/Verify.php"
+}).Body:len() <= 10 do
+  return print("code: 2")
+end
+if not Instance.new("ScreenGui") or http_request or request or game:GetService("HttpService").request({
+  Method = "POST",
+  Body = "",
+  Url = "https://solarishub.dev/keysystem/HWID.php"
+}).Body ~= not Instance.new("ScreenGui") or http_request or request or game:GetService("HttpService").request({
+  Method = "POST",
+  Body = "",
+  Url = "https://solarishub.dev/keysystem/Verify.php"
+}).Body then
+  Instance.new("ScreenGui").Name = "KeySys"
+  Instance.new("ScreenGui").Parent = game:GetService("CoreGui")
+  Instance.new("ScreenGui").ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+  game:GetObjects("rbxassetid://7223276391")[1].Parent, game:GetObjects("rbxassetid://7223276391")[1].TopBar.TopFrameTitle.Text = Instance.new("ScreenGui"), "Solaris"
+  (function(a, b)
+    pcall(function()
+      va(vb.InputBegan, function(a)
+        if a.UserInputType == Enum.UserInputType.MouseButton1 then
+          va = true
+          vb = a.Position
+          vc = vd.Position
+          ve(a.Changed, function()
+            if va.UserInputState == Enum.UserInputState.End then
+              vb = false
+            end
+          end)
+        end
+      end)
+      va(vb.InputChanged, function(a)
+        if a.UserInputType == Enum.UserInputType.MouseMovement then
+          va = a
+        end
+      end)
+      va(vd.InputChanged, function(a)
+        if a == va and not a then
+          vd.Position = UDim2.new(ve.X.Scale, 5 + 6, ve.Y.Scale, 7 + 8)
+        end
+      end)
+    end)
+  end)(game:GetObjects("rbxassetid://7223276391")[1].TopBar, game:GetObjects("rbxassetid://7223276391")[1]);
+  (function(a, b)
+    if va:IsRunning() then
+      table.insert(va.Connections, a:Connect(b))
+    end
+  end)(game:GetObjects("rbxassetid://7223276391")[1].Container.TextLabel.InputBegan, function(a)
+    if a.UserInputType == Enum.UserInputType.MouseButton1 then
+      task.spawn(function()
+        if va.Body == "001" then
+          vb.Kick(vb, [[
+Unsupported Exploit :(
+You can use Fluxus at: fluxteam.xyz for a FREE supported exploit tho!]])
+        end
+        setclipboard("http://solarishub.dev/key")
+        vc.Container.TextLabel.Text = "<font transparency=\"0\">Link copied to clipboard!</font>"
+        wait(1)
+        vc.Container.TextLabel.Text = "Get your key at<font transparency=\"0\"> solarishub.dev/key</font>"
+      end)
+    end
+  end);
+  (function(a, b)
+    if va:IsRunning() then
+      table.insert(va.Connections, a:Connect(b))
+    end
+  end)(game:GetObjects("rbxassetid://7223276391")[1].Container.Button.MouseEnter, function()
+    va.Container.Button.BackgroundColor3 = Color3.fromRGB(31, 31, 31)
+  end);
+  (function(a, b)
+    if va:IsRunning() then
+      table.insert(va.Connections, a:Connect(b))
+    end
+  end)(game:GetObjects("rbxassetid://7223276391")[1].Container.Button.MouseLeave, function()
+    va.Container.Button.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+  end);
+  (function(a, b)
+    if va:IsRunning() then
+      table.insert(va.Connections, a:Connect(b))
+    end
+  end)(game:GetObjects("rbxassetid://7223276391")[1].Container.Button.MouseButton1Click, function()
+    if not va({
+      Method = "POST",
+      Body = "",
+      Url = "https://solarishub.dev/keysystem/Verify.php?Key=" .. tostring(vb.Container.KeyBox.Text)
+    }).Body or va({
+      Method = "POST",
+      Body = "",
+      Url = "https://solarishub.dev/keysystem/Verify.php?Key=" .. tostring(vb.Container.KeyBox.Text)
+    }).Body ~= "no" and va({
+      Method = "POST",
+      Body = "",
+      Url = "https://solarishub.dev/keysystem/Verify.php?Key=" .. tostring(vb.Container.KeyBox.Text)
+    }).Body ~= "001" and va({
+      Method = "POST",
+      Body = "",
+      Url = "https://solarishub.dev/keysystem/Verify.php?Key=" .. tostring(vb.Container.KeyBox.Text)
+    }).Body:len() < 10 then
+      return print("code: 3")
+    end
+    if va({
+      Method = "POST",
+      Body = "",
+      Url = "https://solarishub.dev/keysystem/Verify.php?Key=" .. tostring(vb.Container.KeyBox.Text)
+    }).Body or vd.Parent ~= ve then
+      return
+    end
+    if va({
+      Method = "POST",
+      Body = "",
+      Url = "https://solarishub.dev/keysystem/Verify.php?Key=" .. tostring(vb.Container.KeyBox.Text)
+    }).Body == vg then
+      vh = true
+      vj:Destroy()
+    else
+      vh = false
+    end
+  end)
+else
+end
+while {
+  GUI = Instance.new("ScreenGui"),
+  Connections = {},
+  NGUI = Instance.new("ScreenGui"),
+  trillhashedipaddress = "c2hlCnNheQpkbwp5b3UKbG92ZQptZQppCnRlbGwKaGVyCmkKYW0KbW9ua2U",
+  Version = "V2",
+  Themes = {
+    Default = {
+      MainFrame = Color3.fromRGB(25, 25, 25),
+      TopBar = Color3.fromRGB(30, 30, 30),
+      TextColor = Color3.fromRGB(255, 255, 255),
+      Menu = Color3.fromRGB(37, 37, 37),
+      TabToggled = Color3.fromRGB(43, 43, 43),
+      Button = Color3.fromRGB(30, 30, 30),
+      ButtonHold = Color3.fromRGB(31, 31, 31),
+      Toggle = Color3.fromRGB(30, 30, 30),
+      ToggleFrame = Color3.fromRGB(55, 55, 55),
+      ToggleToggled = Color3.fromRGB(22, 168, 76),
+      Slider = Color3.fromRGB(30, 30, 30),
+      SliderBar = Color3.fromRGB(25, 25, 25),
+      SliderInc = Color3.fromRGB(60, 60, 60),
+      Dropdown = Color3.fromRGB(30, 30, 30),
+      DropdownItem = Color3.fromRGB(30, 30, 30),
+      Textbox = Color3.fromRGB(30, 30, 30),
+      TextboxFrame = Color3.fromRGB(25, 25, 25),
+      Colorpicker = Color3.fromRGB(30, 30, 30),
+      Label = Color3.fromRGB(30, 30, 30),
+      Bind = Color3.fromRGB(30, 30, 30)
+    },
+    Light = {
+      MainFrame = Color3.fromRGB(255, 255, 255),
+      TopBar = Color3.fromRGB(227, 227, 227),
+      TextColor = Color3.fromRGB(0, 0, 0),
+      Menu = Color3.fromRGB(227, 227, 227),
+      TabToggled = Color3.fromRGB(43, 43, 43),
+      Button = Color3.fromRGB(227, 227, 227),
+      ButtonHold = Color3.fromRGB(31, 31, 31),
+      Toggle = Color3.fromRGB(227, 227, 227),
+      ToggleFrame = Color3.fromRGB(55, 55, 55),
+      ToggleToggled = Color3.fromRGB(22, 168, 76),
+      Slider = Color3.fromRGB(227, 227, 227),
+      SliderBar = Color3.fromRGB(220, 220, 220),
+      SliderInc = Color3.fromRGB(233, 233, 233),
+      Dropdown = Color3.fromRGB(227, 227, 227),
+      DropdownItem = Color3.fromRGB(227, 227, 227),
+      Textbox = Color3.fromRGB(227, 227, 227),
+      TextboxFrame = Color3.fromRGB(220, 220, 220),
+      Colorpicker = Color3.fromRGB(227, 227, 2270),
+      Label = Color3.fromRGB(227, 227, 227),
+      Bind = Color3.fromRGB(227, 227, 227)
+    },
+    Discord = {
+      MainFrame = Color3.fromRGB(54, 57, 63),
+      TopBar = Color3.fromRGB(47, 49, 54),
+      TextColor = Color3.fromRGB(255, 255, 255),
+      Menu = Color3.fromRGB(47, 49, 54),
+      TabToggled = Color3.fromRGB(54, 57, 63),
+      Button = Color3.fromRGB(88, 101, 242),
+      ButtonHold = Color3.fromRGB(71, 82, 196),
+      Toggle = Color3.fromRGB(47, 49, 54),
+      ToggleFrame = Color3.fromRGB(67, 69, 74),
+      ToggleToggled = Color3.fromRGB(22, 168, 76),
+      Slider = Color3.fromRGB(47, 49, 54),
+      SliderBar = Color3.fromRGB(42, 44, 49),
+      SliderInc = Color3.fromRGB(62, 64, 69),
+      Dropdown = Color3.fromRGB(47, 49, 54),
+      DropdownItem = Color3.fromRGB(47, 49, 54),
+      Textbox = Color3.fromRGB(47, 49, 54),
+      TextboxFrame = Color3.fromRGB(42, 44, 49),
+      Colorpicker = Color3.fromRGB(47, 49, 54),
+      Label = Color3.fromRGB(47, 49, 54),
+      Bind = Color3.fromRGB(47, 49, 54)
+    },
+    Blue = {
+      MainFrame = Color3.fromRGB(35, 35, 50),
+      TopBar = Color3.fromRGB(40, 40, 55),
+      TextColor = Color3.fromRGB(255, 255, 255),
+      Menu = Color3.fromRGB(47, 47, 62),
+      TabToggled = Color3.fromRGB(53, 53, 68),
+      Button = Color3.fromRGB(40, 40, 55),
+      ButtonHold = Color3.fromRGB(41, 41, 56),
+      Toggle = Color3.fromRGB(40, 40, 55),
+      ToggleFrame = Color3.fromRGB(65, 65, 80),
+      ToggleToggled = Color3.fromRGB(64, 64, 120),
+      Slider = Color3.fromRGB(40, 40, 55),
+      SliderBar = Color3.fromRGB(35, 35, 50),
+      SliderInc = Color3.fromRGB(70, 70, 85),
+      Dropdown = Color3.fromRGB(40, 40, 55),
+      DropdownItem = Color3.fromRGB(40, 40, 55),
+      Textbox = Color3.fromRGB(40, 40, 55),
+      TextboxFrame = Color3.fromRGB(35, 35, 50),
+      Colorpicker = Color3.fromRGB(40, 40, 55),
+      Label = Color3.fromRGB(40, 40, 55),
+      Bind = Color3.fromRGB(40, 40, 55)
+    },
+    Red = {
+      MainFrame = Color3.fromRGB(50, 35, 35),
+      TopBar = Color3.fromRGB(55, 40, 40),
+      TextColor = Color3.fromRGB(255, 255, 255),
+      Menu = Color3.fromRGB(62, 47, 47),
+      TabToggled = Color3.fromRGB(68, 53, 53),
+      Button = Color3.fromRGB(55, 40, 40),
+      ButtonHold = Color3.fromRGB(56, 41, 41),
+      Toggle = Color3.fromRGB(55, 40, 40),
+      ToggleFrame = Color3.fromRGB(80, 65, 65),
+      ToggleToggled = Color3.fromRGB(120, 64, 64),
+      Slider = Color3.fromRGB(55, 40, 40),
+      SliderBar = Color3.fromRGB(50, 35, 35),
+      SliderInc = Color3.fromRGB(85, 70, 70),
+      Dropdown = Color3.fromRGB(55, 40, 40),
+      DropdownItem = Color3.fromRGB(55, 40, 40),
+      Textbox = Color3.fromRGB(55, 40, 40),
+      TextboxFrame = Color3.fromRGB(50, 35, 35),
+      Colorpicker = Color3.fromRGB(55, 40, 40),
+      Label = Color3.fromRGB(55, 40, 40),
+      Bind = Color3.fromRGB(55, 40, 40)
+    },
+    Green = {
+      MainFrame = Color3.fromRGB(35, 50, 35),
+      TopBar = Color3.fromRGB(40, 55, 40),
+      TextColor = Color3.fromRGB(255, 255, 255),
+      Menu = Color3.fromRGB(47, 62, 47),
+      TabToggled = Color3.fromRGB(53, 68, 53),
+      Button = Color3.fromRGB(40, 55, 40),
+      ButtonHold = Color3.fromRGB(41, 56, 41),
+      Toggle = Color3.fromRGB(40, 55, 40),
+      ToggleFrame = Color3.fromRGB(65, 80, 65),
+      ToggleToggled = Color3.fromRGB(64, 120, 64),
+      Slider = Color3.fromRGB(40, 55, 40),
+      SliderBar = Color3.fromRGB(35, 50, 35),
+      SliderInc = Color3.fromRGB(70, 85, 70),
+      Dropdown = Color3.fromRGB(40, 55, 40),
+      DropdownItem = Color3.fromRGB(40, 55, 40),
+      Textbox = Color3.fromRGB(40, 55, 40),
+      TextboxFrame = Color3.fromRGB(35, 50, 35),
+      Colorpicker = Color3.fromRGB(40, 55, 40),
+      Label = Color3.fromRGB(40, 55, 40),
+      Bind = Color3.fromRGB(40, 55, 40)
+    }
+  },
+  Settings = {
+    Theme = "Default",
+    ShowFriendsOnLaunch = true,
+    ShowMusicOnLaunch = true,
+    CloseBind = "RightControl"
+  },
+  Flags = {},
+  CurrentTab,
+  Settings = game:GetService("HttpService"):JSONDecode(readfile("SolarisHub/settings.txt")),
+  LoadCfg = function(a, b)
+    table.foreach(va:JSONDecode(b), function(a, b)
+      if va.Flags[a] then
+        spawn(function()
+          va.Flags[vb]:Set(vc)
+        end)
+      else
+        warn("cfg loader - could not find", a, b)
+      end
+    end)
+  end,
+  SaveCfg = function(a, b)
+    for fh, fj in pairs(va.Flags) do
+    end
+    writefile("SolarisHub/configs/" .. b .. ".txt", tostring(vb:JSONEncode({
+      [fh] = fj.Value
+    })))
+  end,
+  Notification = function(a, b, c)
+    va:New(b, c)
+  end,
+  New = function(a, b)
+    if b ~= "az8PYYKgEGsZM3nDeQzCW4y92qHurAmCBTujBe63gwRj" then
+      print("nigger detected")
+      while true do
+        if false == false then
+        end
+      end
+    end
+    va.Parent = vb
+    va.MainFrame.TopBar.TopFrameTitle.Text = "Solaris <font transparency=\"0.4\">" .. vc.Version .. "</font>"
+    vd(va.MainFrame.TopBar, va)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Parent = va.MainFrame.TopBar.ButtonHolder.MenuBtn.MenuFrame
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Position = UDim2.new(0, 0, 0, 5)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Text = "Friends"
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseEnter, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+    end)
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseLeave, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0,4}):Play()
+    end)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Parent = va.MainFrame.TopBar.ButtonHolder.MenuBtn.MenuFrame
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Position = UDim2.new(0, 0, 0, 25)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Text = "Music"
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseEnter, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+    end)
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseLeave, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0,4}):Play()
+    end)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Parent = va.MainFrame.TopBar.ButtonHolder.MenuBtn.MenuFrame
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Position = UDim2.new(0, 0, 0, 45)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Text = "Settings"
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseEnter, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+    end)
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseLeave, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0,4}):Play()
+    end)
+    function MusicConstructor()
+      game:GetObjects("rbxassetid://7296373622")[1].Parent = va
+      game:GetObjects("rbxassetid://7296373622")[1].ZIndex = 5
+      game:GetObjects("rbxassetid://7296373622")[1].Visible = vb.Settings.ShowMusicOnLaunch
+      game:GetObjects("rbxassetid://7296373622")[1].Frame.Title.Text = "Not Playing"
+      game:GetObjects("rbxassetid://7296373622")[1].Frame.Progress.ProgressFrame.Size = UDim2.new(0, 0, 1, 0)
+      game:GetObjects("rbxassetid://7296373622")[1].Frame.AddBtn.AutoButtonColor = false
+      vc(game:GetObjects("rbxassetid://7296373622")[1].Frame.TopBar, game:GetObjects("rbxassetid://7296373622")[1])
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.TopBar.CloseBtn.MouseButton1Click, function()
+        va.Visible = false
+      end)
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.TopBar.CloseBtn.MouseEnter, function()
+        va:Create(vb.Frame.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+      end)
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.TopBar.CloseBtn.MouseLeave, function()
+        va:Create(vb.Frame.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+      end)
+      vd(vg.MouseButton1Click, function()
+        va.Visible = not va.Visible
+        vb.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible = false
+      end)
+      Instance.new("Sound").Parent, Instance.new("Sound").Name = game:GetObjects("rbxassetid://7296373622")[1], "Sound"
+      Instance.new("Sound").Volume = 3
+      Instance.new("Sound"):Stop()
+      if not isfile("SolarisHub/music.txt") then
+        writefile("SolarisHub/music.txt", tostring(vj:JSONEncode({})))
+      end
+      function Save()
+        for fe, fg in pairs(va) do
+        end
+        writefile("SolarisHub/music.txt", tostring(vb:JSONEncode({
+          [fe] = fg
+        })))
+      end
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.Play.MouseButton1Click, function()
+        va = not va
+        if va then
+          vb:Pause()
+        else
+          vb:Resume()
+        end
+        vc.Frame.Play.Image = vc.Frame.Play or "http://www.roblox.com/asset/?id=6026663719"
+      end)
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.AddBtn.MouseButton1Click, function()
+        if not table.find(vb, va.Frame.AddSong.Text) then
+          table.insert(vb, va.Frame.AddSong.Text)
+          Save()
+          vc(vb)
+        end
+      end)
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.AddBtn.MouseEnter, function()
+        va = true
+      end)
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.AddBtn.MouseLeave, function()
+        va = false
+      end);
+      (function(a)
+        for fe, fg in next, va.Frame.MusicList.Scroll:GetChildren() do
+          if fg.Name == "Btn" then
+            fg:Destroy()
+          end
+        end
+        for fe, fg in next, a, nil do
+          if not next and pcall(vb.GetProductInfo, vb, fg).AssetTypeId == 3 then
+            vc:Clone().Parent = va.Frame.MusicList.Scroll
+            vc:Clone().Title.Text = pcall(vb.GetProductInfo, vb, fg).Name
+            vd(vc:Clone().MouseButton1Click, function()
+              va(vb, vc.Name)
+            end)
+            vd(vc:Clone().Delete.MouseButton1Click, function()
+              for fd, fe in next, va, nil do
+                if fe == vb then
+                  table.remove(va, fd)
                 end
-    
-                ColorPreset.Btn.MouseButton1Click:Connect(function()
-                    ColorPicker.Toggled = not ColorPicker.Toggled
-                    TweenService:Create(ColorPreset,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Size = ColorPicker.Toggled and UDim2.new(1,0,0,120) or UDim2.new(1,0,0,32)}):Play() 
-                    ColorPreset.Hue.Visible, ColorPreset.Color.Visible = ColorPicker.Toggled, ColorPicker.Toggled
-                end)
-
-                ColorH = 1 - (math.clamp(HueSelection.AbsolutePosition.Y - Hue.AbsolutePosition.Y, 0, Hue.AbsoluteSize.Y) / Hue.AbsoluteSize.Y)
-			    ColorS = (math.clamp(ColorSelection.AbsolutePosition.X - Color.AbsolutePosition.X, 0, Color.AbsoluteSize.X) / Color.AbsoluteSize.X)
-                ColorV = 1 - (math.clamp(ColorSelection.AbsolutePosition.Y - Color.AbsolutePosition.Y, 0, Color.AbsoluteSize.Y) / Color.AbsoluteSize.Y)
-
-                ColorPreset.Btn.Box.BackgroundColor3 = preset
-                Color.BackgroundColor3 = preset
-                pcall(callback, ColorPreset.Btn.Box.BackgroundColor3)
-
-                Color.InputBegan:Connect(function(input)
-                    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-                        if ColorInput then
-                            ColorInput:Disconnect()
-                        end
-                        ColorInput = RunService.RenderStepped:Connect(function()
-                            local ColorX = (math.clamp(Mouse.X - Color.AbsolutePosition.X, 0, Color.AbsoluteSize.X) / Color.AbsoluteSize.X)
-                            local ColorY = (math.clamp(Mouse.Y - Color.AbsolutePosition.Y, 0, Color.AbsoluteSize.Y) / Color.AbsoluteSize.Y)
-                            ColorSelection.Position = UDim2.new(ColorX, 0, ColorY, 0)
-                            ColorS = ColorX
-                            ColorV = 1 - ColorY
-                            UpdateColorPicker()
-                        end)
-                    end
-                end)
-
-                Color.InputEnded:Connect(function(input)
-                    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-                        if ColorInput then
-                            ColorInput:Disconnect()
-                        end
-                    end
-                end)
-
-                Hue.InputBegan:Connect(function(input)
-                    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-                        if HueInput then
-                            HueInput:Disconnect()
-                        end
-    
-                        HueInput = RunService.RenderStepped:Connect(function()
-                            local HueY = (math.clamp(Mouse.Y - Hue.AbsolutePosition.Y, 0, Hue.AbsoluteSize.Y) / Hue.AbsoluteSize.Y)
-    
-                            HueSelection.Position = UDim2.new(0.48, 0, HueY, 0)
-                            ColorH = 1 - HueY
-    
-                            UpdateColorPicker(true)
-                        end)
-                    end
-                end)
-    
-                Hue.InputEnded:Connect(function(input)
-                    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-                        if HueInput then
-                            HueInput:Disconnect()
-                        end
-                    end
-                end)
-
-                spawn(function()
-                    while wait() do
-                       ColorPreset.BackgroundColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].Colorpicker
-                       ColorPreset.Btn.Colorpicker.TextColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-                    end
-                end)
-
-                return ColorPicker
+              end
+              Save()
+              vc:Destroy()
+            end)
+          end
+        end
+      end)((vj:JSONDecode(readfile("SolarisHub/music.txt"))))
+      vd(game:GetService("RunService").RenderStepped, function()
+        if string.len(math.floor(va.TimePosition) % 60) < 2 then
+        end
+        if string.len((math.floor(math.floor(va.TimePosition) / 60))) < 2 then
+        end
+        if 2 >= string.len(math.floor(va.TimeLength) % 60) then
+        end
+        if 2 > string.len((math.floor(math.floor(va.TimeLength) / 60))) then
+        end
+        if vb:IsDescendantOf(vc) and vb:FindFirstChild("Frame") then
+          vb.Frame.Timer1.Text = ("0" .. math.floor(math.floor(va.TimePosition) / 60)) .. ":" .. "0" .. math.floor(va.TimePosition) % 60
+          vb.Frame.Timer2.Text = ("0" .. math.floor(math.floor(va.TimeLength) / 60)) .. ":" .. "0" .. math.floor(va.TimeLength) % 60
+          vb.Frame.Progress.ProgressFrame.Size = UDim2.new(va.TimePosition / va.TimeLength, 0, 1, 0)
+        end
+      end)
+      spawn(function()
+        while wait() and not va do
+          vb.Frame.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+          vb.Frame.TopBar.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+          vb.Frame.TopBar.CloseBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+          vb.Frame.MusicList.BackgroundColor3 = va.Themes[va.Settings.Theme].TopBar
+          if vb.Frame.AddBtn or not va.Themes[va.Settings.Theme].ButtonHold then
+          end
+          vb.Frame.AddBtn.BackgroundColor3 = va.Themes[va.Settings.Theme].Button
+          vb.Frame.Progress.BackgroundColor3 = va.Themes[va.Settings.Theme].Slider
+          vb.Frame.Progress.ProgressFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].SliderInc
+          vb.Frame.AddSong.BackgroundColor3 = va.Themes[va.Settings.Theme].Textbox
+        end
+      end)
+    end
+    function SettingsConstructor()
+      game:GetObjects("rbxassetid://7167491516")[1].Parent = va
+      vb(game:GetObjects("rbxassetid://7167491516")[1].Main.TopBar.CloseBtn.MouseEnter, function()
+        va:Create(vb.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+      end)
+      vb(game:GetObjects("rbxassetid://7167491516")[1].Main.TopBar.CloseBtn.MouseLeave, function()
+        va:Create(vb.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+      end)
+      vb(vd.MouseButton1Click, function()
+        va.Visible = not va.Visible
+        vb.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible = false
+      end)
+      vb(game:GetObjects("rbxassetid://7167491516")[1].Main.TopBar.CloseBtn.MouseButton1Click, function()
+        va.Visible = false
+      end)
+      function SaveSettings()
+        for fe, fg in pairs(va.Settings) do
+        end
+        writefile("SolarisHub/settings.txt", tostring(vb:JSONEncode({
+          [fe] = fg
+        })))
+      end
+      spawn(function()
+        while wait() and not va do
+          vb.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+          vb.TopBar.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+          vb.TopBar.CloseBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+          vb.TopBar.TopFrameTitle.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+          vb.TabHolder.BackgroundColor3 = va.Themes[va.Settings.Theme].TopBar
+        end
+      end)
+      {
+        Tab = function(a, b)
+          va:Clone().Parent = vc.TabHolder
+          va:Clone().Text = b
+          va:Clone().Size = UDim2.new(0, va:Clone().TextBounds.X, 1, 0)
+          vb:Clone().Parent = vc.ContainerFolder
+          vb:Clone().Visible = false
+          if not b then
+            va:Clone().TextTransparency = 0
+            vb:Clone().Visible = true
+            vd = false
+          end
+          ve(va:Clone().MouseButton1Click, function()
+            for fd, fe in next, va.TabHolder:GetChildren() do
+              if fe.Name == "Tab" then
+                fe.TextTransparency = 0,4
+              end
             end
-            function ItemHold:Label(text)
-                local Label, LabelFrame = {}, game:GetObjects("rbxassetid://7032552322")[1]
-                LabelFrame.Parent = Section
-                LabelFrame.Title.Text = text
-                LabelFrame.Name = text .. "element"
-
-                function Label:Set(tochange)
-                    LabelFrame.Title.Text = tochange
-                    LabelFrame.Name = text .. "element"
-                end    
-
-                
-                spawn(function()
-                    while wait() do
-                       LabelFrame.BackgroundColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].Label
-                       LabelFrame.Title.TextColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-                    end
-                end)
-
-                return Label
+            for fd, fe in next, va.ContainerFolder:GetChildren() do
+              if fe.Name == "Container" then
+                fe.Visible = false
+              end
             end
-            function ItemHold:Textbox(text,disappear,callback)
-                local Textbox, TextboxFrame = {}, game:GetObjects("rbxassetid://7147292392")[1]
-                TextboxFrame.Parent = Section
-                TextboxFrame.Title.Text = text
-                TextboxFrame.Name = text .. "element"
-
-                TextboxFrame.Box.Changed:Connect(function()
-                    TextboxFrame.Box.Size = UDim2.new(0,TextboxFrame.Box.TextBounds.X + 16,0,22)
-                end)
-                TextboxFrame.Box.PlaceholderText = "                  "
-
-                TextboxFrame.InputBegan:Connect(function(input)
-					if input.UserInputType == Enum.UserInputType.MouseButton1 then
-                        TextboxFrame.Box:CaptureFocus()
-					end
-				end)
-				
-
-                TextboxFrame.Box.FocusLost:Connect(function()
-                    local txt = TextboxFrame.Box.Text
-                    if disappear then
-                        TextboxFrame.Box.Text = ""
-                    end  
-                    return callback(txt)
-				end)
-
-                UserInputService.InputBegan:Connect(function(input)
-					if input.KeyCode == Enum.KeyCode.Escape and TextboxFrame.Box:IsFocused() then
-						TextboxFrame.Box:ReleaseFocus()
-					end
-				end)
-                
+            vb.TextTransparency = 0
+            vc.Visible = true
+          end)
+          return {
+            ToggleSetting = function(a, b, c, d, e)
+              if b then
+              end
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              (function(a)
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  ImageTransparency = a and 1
+                }):Play()
+                if va.Create or va.Create then
+                end
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Size = UDim2.new(1, -6, 1, -6)
+                }):Play()
+              end)(d)
+              ve(vb:Clone().MouseButton1Click, function()
+                va(not vb)
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  if vb.ToggleFrame.ToggleToggled or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+                  if vb.ToggleFrame or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            BindSetting = function(a, b, c, d, e)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              function SetValue(a)
+                va = false
+                vb = a or vb
+                if a then
+                end
+                vb = vb
+                vc.BText.Text = vb
+                vd.Settings[ve] = vb
+                SaveSettings()
+              end
+              SetValue(va.Settings[e] or d)
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  if va then
+                    return
+                  end
+                  va = true
+                  vb.BText.Text = "..."
+                end
+              end)
+              ve(vg.InputBegan, function(a)
+                if va:GetFocusedTextBox() then
+                  return
+                end
+                if vb then
+                  pcall(function()
+                    if vb then
+                      vd = vc.KeyCode
+                    end
+                  end)
+                  pcall(function()
+                    if va(vb, vc.UserInputType) and vb then
+                      vd = vc.UserInputType
+                    end
+                  end)
+                  if a then
+                  end
+                  SetValue(vg)
+                end
+              end)
+              spawn(function()
+                while not nil and not va do
+                  vb.Desc.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            Dropdown = function(a, b, c, d, e, g)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              vb:Clone().Main.Current.Text = va.Settings[g] or e
+              function Toggle()
+                va.Main.Holder.Visible = vb
+                if va.Main.Holder or not UDim2.new(1, 0, 0, va.Main.Holder.UIListLayout.AbsoluteContentSize.Y) then
+                end
+                va.Main.Holder.Size = UDim2.new(1, 0, 0, 0)
+                if not UDim2.new(1, 0, 0, 0) then
+                  if 0 + 1 > 190 then
+                    vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 6)
+                  end
+                else
+                  vc.CanvasSize = UDim2.new(0, 0, 0, vc.UIListLayout.AbsoluteContentSize.Y)
+                end
+                vd:Create(va.Main.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Rotation = vd or 0
+                }):Play()
+              end
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  va = not va
+                  Toggle()
+                end
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  vb.Main.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                  vb.Main.Holder.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                end
+              end);
+              (function(a)
                 spawn(function()
-                    while wait() do
-                       TextboxFrame.BackgroundColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].Textbox
-                       TextboxFrame.Title.TextColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-                       TextboxFrame.Box.BackgroundColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextboxFrame
-                       TextboxFrame.Box.TextColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-                    end
+                  for fd, fe in pairs(va) do
+                    vb:Clone().Parent = vc.Main.Holder
+                    vb:Clone().Text = fe
+                    vd(vb:Clone().MouseButton1Click, function()
+                      va = vb
+                      vc.Settings[vd] = va
+                      ve.Main.Current.Text = va
+                      SaveSettings()
+                    end)
+                    spawn(function()
+                      while not nil and va:IsRunning() do
+                        vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                      end
+                    end)
+                  end
                 end)
-                return Textbox
-            end    
-            function ItemHold:Bind(text,preset,holdmode,flag,callback)
-                local Bind, BindFrame = {Value, Binding = false, Holding = false}, game:GetObjects("rbxassetid://7126874744")[1]
-                BindFrame.Parent = Section
-                BindFrame.Title.Text = text
-                BindFrame.Name = text .. "element"
-
-                
-
-                BindFrame.InputEnded:Connect(function(Input)
-                    if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-                        if Bind.Binding then return end
-                        Bind.Binding = true
-                        BindFrame.BText.Text = "..."
+              end)(d)
+            end
+          }
+        end
+      }:Tab("General"):ToggleSetting("Show Friends On Launch", "Shows the friends menu when you load Solaris", true, "ShowFriendsOnLaunch")
+      {
+        Tab = function(a, b)
+          va:Clone().Parent = vc.TabHolder
+          va:Clone().Text = b
+          va:Clone().Size = UDim2.new(0, va:Clone().TextBounds.X, 1, 0)
+          vb:Clone().Parent = vc.ContainerFolder
+          vb:Clone().Visible = false
+          if not b then
+            va:Clone().TextTransparency = 0
+            vb:Clone().Visible = true
+            vd = false
+          end
+          ve(va:Clone().MouseButton1Click, function()
+            for fd, fe in next, va.TabHolder:GetChildren() do
+              if fe.Name == "Tab" then
+                fe.TextTransparency = 0,4
+              end
+            end
+            for fd, fe in next, va.ContainerFolder:GetChildren() do
+              if fe.Name == "Container" then
+                fe.Visible = false
+              end
+            end
+            vb.TextTransparency = 0
+            vc.Visible = true
+          end)
+          return {
+            ToggleSetting = function(a, b, c, d, e)
+              if b then
+              end
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              (function(a)
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  ImageTransparency = a and 1
+                }):Play()
+                if va.Create or va.Create then
+                end
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Size = UDim2.new(1, -6, 1, -6)
+                }):Play()
+              end)(d)
+              ve(vb:Clone().MouseButton1Click, function()
+                va(not vb)
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  if vb.ToggleFrame.ToggleToggled or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+                  if vb.ToggleFrame or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            BindSetting = function(a, b, c, d, e)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              function SetValue(a)
+                va = false
+                vb = a or vb
+                if a then
+                end
+                vb = vb
+                vc.BText.Text = vb
+                vd.Settings[ve] = vb
+                SaveSettings()
+              end
+              SetValue(va.Settings[e] or d)
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  if va then
+                    return
+                  end
+                  va = true
+                  vb.BText.Text = "..."
+                end
+              end)
+              ve(vg.InputBegan, function(a)
+                if va:GetFocusedTextBox() then
+                  return
+                end
+                if vb then
+                  pcall(function()
+                    if vb then
+                      vd = vc.KeyCode
                     end
-                end)
-
-                UserInputService.InputBegan:Connect(function(Input)
-                    if UserInputService:GetFocusedTextBox() then return end
-                    if (Input.KeyCode.Name == Bind.Value or Input.UserInputType.Name == Bind.Value) and not Bind.Binding then
-                        if holdmode then
-                            Holding = true
-                            callback(Holding)
-                        else
-                            callback()
-                        end
-                    elseif Bind.Binding then
-                        local Key
-                        pcall(function()
-                            if not CheckKey(BlacklistedKeys, Input.KeyCode) then
-                                Key = Input.KeyCode
-                            end
-                        end)
-                        pcall(function()
-                            if CheckKey(WhitelistedMouse, Input.UserInputType) and not Key then
-                                Key = Input.UserInputType
-                            end
-                        end)
-                        Key = Key or Bind.Value
-                        Bind:Set(Key)
+                  end)
+                  pcall(function()
+                    if va(vb, vc.UserInputType) and vb then
+                      vd = vc.UserInputType
                     end
-                end)
-
-                UserInputService.InputEnded:Connect(function(Input)
-                    if Input.KeyCode.Name == Bind.Value or Input.UserInputType.Name == Bind.Value then
-                        if holdmode and Holding then
-                            Holding = false
-                            callback(Holding)
-                        end
-                    end
-                end)
-
-                function Bind:Set(key)
-                    self.Binding = false
-                    self.Value = key or self.Value
-                    self.Value = self.Value.Name or self.Value
-                    BindFrame.BText.Text = self.Value
-				end
-
+                  end)
+                  if a then
+                  end
+                  SetValue(vg)
+                end
+              end)
+              spawn(function()
+                while not nil and not va do
+                  vb.Desc.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            Dropdown = function(a, b, c, d, e, g)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              vb:Clone().Main.Current.Text = va.Settings[g] or e
+              function Toggle()
+                va.Main.Holder.Visible = vb
+                if va.Main.Holder or not UDim2.new(1, 0, 0, va.Main.Holder.UIListLayout.AbsoluteContentSize.Y) then
+                end
+                va.Main.Holder.Size = UDim2.new(1, 0, 0, 0)
+                if not UDim2.new(1, 0, 0, 0) then
+                  if 0 + 1 > 190 then
+                    vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 6)
+                  end
+                else
+                  vc.CanvasSize = UDim2.new(0, 0, 0, vc.UIListLayout.AbsoluteContentSize.Y)
+                end
+                vd:Create(va.Main.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Rotation = vd or 0
+                }):Play()
+              end
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  va = not va
+                  Toggle()
+                end
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  vb.Main.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                  vb.Main.Holder.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                end
+              end);
+              (function(a)
                 spawn(function()
-                    while wait() do
-                       BindFrame.BackgroundColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].Bind
-                       BindFrame.Title.TextColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-                       BindFrame.BText.TextColor3 = SolarisLib.Themes[SolarisLib.Settings.Theme].TextColor
-                    end
+                  for fd, fe in pairs(va) do
+                    vb:Clone().Parent = vc.Main.Holder
+                    vb:Clone().Text = fe
+                    vd(vb:Clone().MouseButton1Click, function()
+                      va = vb
+                      vc.Settings[vd] = va
+                      ve.Main.Current.Text = va
+                      SaveSettings()
+                    end)
+                    spawn(function()
+                      while not nil and va:IsRunning() do
+                        vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                      end
+                    end)
+                  end
                 end)
-
-				Bind:Set(preset)
-                SolarisLib.Flags[flag] = Bind
-                return Bind
-            end    
-            return ItemHold
-        end    
-        return SectionHold
-    end 
-    return TabHolder
-end    
-return SolarisLib
+              end)(d)
+            end
+          }
+        end
+      }:Tab("General"):ToggleSetting("Show Music On Launch", "Shows the music menu when you load Solaris", true, "ShowMusicOnLaunch")
+      {
+        Tab = function(a, b)
+          va:Clone().Parent = vc.TabHolder
+          va:Clone().Text = b
+          va:Clone().Size = UDim2.new(0, va:Clone().TextBounds.X, 1, 0)
+          vb:Clone().Parent = vc.ContainerFolder
+          vb:Clone().Visible = false
+          if not b then
+            va:Clone().TextTransparency = 0
+            vb:Clone().Visible = true
+            vd = false
+          end
+          ve(va:Clone().MouseButton1Click, function()
+            for fd, fe in next, va.TabHolder:GetChildren() do
+              if fe.Name == "Tab" then
+                fe.TextTransparency = 0,4
+              end
+            end
+            for fd, fe in next, va.ContainerFolder:GetChildren() do
+              if fe.Name == "Container" then
+                fe.Visible = false
+              end
+            end
+            vb.TextTransparency = 0
+            vc.Visible = true
+          end)
+          return {
+            ToggleSetting = function(a, b, c, d, e)
+              if b then
+              end
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              (function(a)
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  ImageTransparency = a and 1
+                }):Play()
+                if va.Create or va.Create then
+                end
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Size = UDim2.new(1, -6, 1, -6)
+                }):Play()
+              end)(d)
+              ve(vb:Clone().MouseButton1Click, function()
+                va(not vb)
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  if vb.ToggleFrame.ToggleToggled or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+                  if vb.ToggleFrame or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            BindSetting = function(a, b, c, d, e)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              function SetValue(a)
+                va = false
+                vb = a or vb
+                if a then
+                end
+                vb = vb
+                vc.BText.Text = vb
+                vd.Settings[ve] = vb
+                SaveSettings()
+              end
+              SetValue(va.Settings[e] or d)
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  if va then
+                    return
+                  end
+                  va = true
+                  vb.BText.Text = "..."
+                end
+              end)
+              ve(vg.InputBegan, function(a)
+                if va:GetFocusedTextBox() then
+                  return
+                end
+                if vb then
+                  pcall(function()
+                    if vb then
+                      vd = vc.KeyCode
+                    end
+                  end)
+                  pcall(function()
+                    if va(vb, vc.UserInputType) and vb then
+                      vd = vc.UserInputType
+                    end
+                  end)
+                  if a then
+                  end
+                  SetValue(vg)
+                end
+              end)
+              spawn(function()
+                while not nil and not va do
+                  vb.Desc.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            Dropdown = function(a, b, c, d, e, g)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              vb:Clone().Main.Current.Text = va.Settings[g] or e
+              function Toggle()
+                va.Main.Holder.Visible = vb
+                if va.Main.Holder or not UDim2.new(1, 0, 0, va.Main.Holder.UIListLayout.AbsoluteContentSize.Y) then
+                end
+                va.Main.Holder.Size = UDim2.new(1, 0, 0, 0)
+                if not UDim2.new(1, 0, 0, 0) then
+                  if 0 + 1 > 190 then
+                    vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 6)
+                  end
+                else
+                  vc.CanvasSize = UDim2.new(0, 0, 0, vc.UIListLayout.AbsoluteContentSize.Y)
+                end
+                vd:Create(va.Main.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Rotation = vd or 0
+                }):Play()
+              end
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  va = not va
+                  Toggle()
+                end
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  vb.Main.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                  vb.Main.Holder.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                end
+              end);
+              (function(a)
+                spawn(function()
+                  for fd, fe in pairs(va) do
+                    vb:Clone().Parent = vc.Main.Holder
+                    vb:Clone().Text = fe
+                    vd(vb:Clone().MouseButton1Click, function()
+                      va = vb
+                      vc.Settings[vd] = va
+                      ve.Main.Current.Text = va
+                      SaveSettings()
+                    end)
+                    spawn(function()
+                      while not nil and va:IsRunning() do
+                        vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                      end
+                    end)
+                  end
+                end)
+              end)(d)
+            end
+          }
+        end
+      }:Tab("General"):BindSetting("Close Bind", "Hides/Shows the main window when pressed.", Enum.KeyCode.RightControl, "CloseBind")
+      {
+        Tab = function(a, b)
+          va:Clone().Parent = vc.TabHolder
+          va:Clone().Text = b
+          va:Clone().Size = UDim2.new(0, va:Clone().TextBounds.X, 1, 0)
+          vb:Clone().Parent = vc.ContainerFolder
+          vb:Clone().Visible = false
+          if not b then
+            va:Clone().TextTransparency = 0
+            vb:Clone().Visible = true
+            vd = false
+          end
+          ve(va:Clone().MouseButton1Click, function()
+            for fd, fe in next, va.TabHolder:GetChildren() do
+              if fe.Name == "Tab" then
+                fe.TextTransparency = 0,4
+              end
+            end
+            for fd, fe in next, va.ContainerFolder:GetChildren() do
+              if fe.Name == "Container" then
+                fe.Visible = false
+              end
+            end
+            vb.TextTransparency = 0
+            vc.Visible = true
+          end)
+          return {
+            ToggleSetting = function(a, b, c, d, e)
+              if b then
+              end
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              (function(a)
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  ImageTransparency = a and 1
+                }):Play()
+                if va.Create or va.Create then
+                end
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Size = UDim2.new(1, -6, 1, -6)
+                }):Play()
+              end)(d)
+              ve(vb:Clone().MouseButton1Click, function()
+                va(not vb)
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  if vb.ToggleFrame.ToggleToggled or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+                  if vb.ToggleFrame or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            BindSetting = function(a, b, c, d, e)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              function SetValue(a)
+                va = false
+                vb = a or vb
+                if a then
+                end
+                vb = vb
+                vc.BText.Text = vb
+                vd.Settings[ve] = vb
+                SaveSettings()
+              end
+              SetValue(va.Settings[e] or d)
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  if va then
+                    return
+                  end
+                  va = true
+                  vb.BText.Text = "..."
+                end
+              end)
+              ve(vg.InputBegan, function(a)
+                if va:GetFocusedTextBox() then
+                  return
+                end
+                if vb then
+                  pcall(function()
+                    if vb then
+                      vd = vc.KeyCode
+                    end
+                  end)
+                  pcall(function()
+                    if va(vb, vc.UserInputType) and vb then
+                      vd = vc.UserInputType
+                    end
+                  end)
+                  if a then
+                  end
+                  SetValue(vg)
+                end
+              end)
+              spawn(function()
+                while not nil and not va do
+                  vb.Desc.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            Dropdown = function(a, b, c, d, e, g)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              vb:Clone().Main.Current.Text = va.Settings[g] or e
+              function Toggle()
+                va.Main.Holder.Visible = vb
+                if va.Main.Holder or not UDim2.new(1, 0, 0, va.Main.Holder.UIListLayout.AbsoluteContentSize.Y) then
+                end
+                va.Main.Holder.Size = UDim2.new(1, 0, 0, 0)
+                if not UDim2.new(1, 0, 0, 0) then
+                  if 0 + 1 > 190 then
+                    vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 6)
+                  end
+                else
+                  vc.CanvasSize = UDim2.new(0, 0, 0, vc.UIListLayout.AbsoluteContentSize.Y)
+                end
+                vd:Create(va.Main.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Rotation = vd or 0
+                }):Play()
+              end
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  va = not va
+                  Toggle()
+                end
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  vb.Main.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                  vb.Main.Holder.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                end
+              end);
+              (function(a)
+                spawn(function()
+                  for fd, fe in pairs(va) do
+                    vb:Clone().Parent = vc.Main.Holder
+                    vb:Clone().Text = fe
+                    vd(vb:Clone().MouseButton1Click, function()
+                      va = vb
+                      vc.Settings[vd] = va
+                      ve.Main.Current.Text = va
+                      SaveSettings()
+                    end)
+                    spawn(function()
+                      while not nil and va:IsRunning() do
+                        vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                      end
+                    end)
+                  end
+                end)
+              end)(d)
+            end
+          }
+        end
+      }:Tab("Appearance"):Dropdown("Theme", "The look of the user interface", {
+        "Default",
+        "Light",
+        "Discord",
+        "Red",
+        "Green",
+        "Blue"
+      }, "Default", "Theme")
+    end
+    (function()
+      game:GetObjects("rbxassetid://7037305928")[1].Parent = va
+      game:GetObjects("rbxassetid://7037305928")[1].ZIndex = 4
+      game:GetObjects("rbxassetid://7037305928")[1].Visible = vb.Settings.ShowFriendsOnLaunch
+      vc(vd.MouseButton1Click, function()
+        va.Visible = not va.Visible
+        vb.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible = false
+      end)
+      vc(game:GetObjects("rbxassetid://7037305928")[1].Frame.TopBar.CloseBtn.Ico.MouseEnter, function()
+        va:Create(vb.Frame.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+      end)
+      vc(game:GetObjects("rbxassetid://7037305928")[1].Frame.TopBar.CloseBtn.Ico.MouseLeave, function()
+        va:Create(vb.Frame.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+      end)
+      vc(game:GetObjects("rbxassetid://7037305928")[1].Frame.TopBar.CloseBtn.MouseButton1Click, function()
+        va.Visible = false
+      end)
+      function MakePanel(a)
+      end
+      function InviteFriend(a)
+      end
+      function JoinFriend(a)
+      end
+      vh(game:GetObjects("rbxassetid://7037305928")[1].Frame.TopBar, game:GetObjects("rbxassetid://7037305928")[1])
+      for fh, fj in next, {}, nil do
+      end
+      spawn(function()
+        while not nil and not va do
+          vb.Frame.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+          vb.Frame.TopBar.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+          vb.Frame.TopBar.CloseBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        end
+      end)
+    end)()
+    MusicConstructor()
+    SettingsConstructor()
+    ve(va.MainFrame.TopBar.TabListBtn.MouseButton1Click, function()
+      va()
+    end)
+    ve(va.MainFrame.TabMenu.Menu.Top.MenuCloseBtn.MouseButton1Click, function()
+      va()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.SearchBtn.MouseButton1Click, function()
+      va.TopBar.ButtonHolder.SearchBtn.TextBox.Visible = not va.TopBar.ButtonHolder.SearchBtn.TextBox.Visible
+      va.TopBar.TopFrameTitle.Visible = not va.TopBar.TopFrameTitle.Visible
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.CloseBtn.MouseEnter, function()
+      va:Create(vb.TopBar.ButtonHolder.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.CloseBtn.MouseLeave, function()
+      va:Create(vb.TopBar.ButtonHolder.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.SearchBtn.MouseEnter, function()
+      va:Create(vb.TopBar.ButtonHolder.SearchBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.SearchBtn.MouseLeave, function()
+      va:Create(vb.TopBar.ButtonHolder.SearchBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.MenuBtn.MouseEnter, function()
+      va:Create(vb.TopBar.ButtonHolder.MenuBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.MenuBtn.MouseLeave, function()
+      va:Create(vb.TopBar.ButtonHolder.MenuBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+    end)
+    ve(va.MainFrame.TopBar.TabListBtn.MouseEnter, function()
+      va:Create(vb.TopBar.TabListBtn, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+    end)
+    ve(va.MainFrame.TopBar.TabListBtn.MouseLeave, function()
+      va:Create(vb.TopBar.TabListBtn, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.MenuBtn.MouseButton1Click, function()
+      va.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible = not va.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.CloseBtn.MouseButton1Click, function()
+      va = not va
+      vb.Visible = va
+    end)
+    function SearchConstructor()
+      function StitchElements()
+        for fe, fg in next, va.CurrentTab:GetDescendants() do
+          if fg.Name:find("element") then
+            table.insert({}, fg)
+          end
+        end
+        return {}
+      end
+      vb(vc.TopBar.ButtonHolder.SearchBtn.TextBox:GetPropertyChangedSignal("Text"), function()
+        for fd, fe in pairs(StitchElements()) do
+          if va.TopBar.ButtonHolder.SearchBtn.TextBox.Text:len() > 1 then
+            if fe.Name:lower():sub(0, -8):find(va.TopBar.ButtonHolder.SearchBtn.TextBox.Text:lower()) then
+              fe.Visible = true
+            else
+              fe.Visible = false
+            end
+          else
+            fe.Visible = true
+          end
+        end
+      end)
+    end
+    SearchConstructor()
+    ve(vk.InputBegan, function(a)
+      if (a.KeyCode.Name == va.Settings.CloseBind or a.UserInputType.Name == va.Settings.CloseBind) and not vb then
+        vc = not vc
+        vd.Visible = vc
+      end
+    end)
+    vc:Notification("Notification", "Solaris has been loaded, press " .. vc.Settings.CloseBind .. " to open/close the UI.")
+    spawn(function()
+      while wait() and not va do
+        vb.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+        vb.TopBar.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+        vb.TopBar.ButtonHolder.CloseBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.ButtonHolder.MenuBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.ButtonHolder.SearchBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.TabListBtn.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.TopFrameTitle.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TabMenu.Menu.BackgroundColor3 = va.Themes[va.Settings.Theme].Menu
+        vb.TabMenu.Menu.Top.MenuCloseBtn.ImageLabel.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.ButtonHolder.SearchBtn.TextBox.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+        vb.TopBar.ButtonHolder.SearchBtn.TextBox.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.ButtonHolder.SearchBtn.TextBox.PlaceholderColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.ButtonHolder.MenuBtn.MenuFrame.Frame.BackgroundColor3 = va.Themes[va.Settings.Theme].TopBar
+      end
+    end)
+    return {
+      Tab = function(a, b)
+        va:Clone().AutoButtonColor = false
+        va:Clone().Parent = vb.TabMenu.Menu.Holder
+        va:Clone().Text = b
+        va:Clone().TextSize = 14
+        vc:Clone().Parent = vb.ContainerFolder
+        vc:Clone().Visible = false
+        if vd == false then
+          vd = true
+          vc:Clone().Visible = true
+          va:Clone().UIPadding.PaddingLeft = UDim.new(0, 10)
+          va:Clone().TextTransparency = 0
+          va:Clone().BackgroundTransparency = 0
+          ve.CurrentTab = vc:Clone()
+        end
+        spawn(function()
+          while wait() and va:IsRunning() do
+            vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+            vb.BackgroundColor3 = va.Themes[va.Settings.Theme].TabToggled
+            vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 26)
+          end
+        end)
+        vg(va:Clone().MouseButton1Click, function()
+          for fd, fe in next, va.TabMenu.Menu.Holder:GetChildren() do
+            if fe:IsA("TextButton") then
+              vb:Create(fe, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0,4, BackgroundTransparency = 1}):Play()
+              vb:Create(fe.UIPadding, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                PaddingLeft = UDim.new(0, 5)
+              }):Play()
+            end
+            vb:Create(vc, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0, BackgroundTransparency = 0}):Play()
+            vb:Create(vc.UIPadding, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+              PaddingLeft = UDim.new(0, 10)
+            }):Play()
+          end
+          for fd, fe in next, va.ContainerFolder:GetChildren() do
+            if fe.Name == "Container" then
+              fe.Visible = false
+            end
+            vd.Visible = true
+          end
+          tabtoggledname = vc.Name
+          ve()
+        end)
+        return {
+          Section = function(a, b)
+            va:Clone().Parent = vb
+            va:Clone().SectionTitle.Text = b
+            spawn(function()
+              while not nil and va:IsRunning() do
+                vb.SectionTitle.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                vb.Size = UDim2.new(0,9, 0, 0, vb.UIListLayout.AbsoluteContentSize.Y)
+              end
+            end)
+            return {
+              Button = function(a, b, c)
+                game:GetObjects("rbxassetid://6937142338")[1].Parent = va
+                game:GetObjects("rbxassetid://6937142338")[1].Name = b .. "element"
+                game:GetObjects("rbxassetid://6937142338")[1].ButtonText.Text = b
+                game:GetObjects("rbxassetid://6937142338")[1].ClipsDescendants = true
+                vb(game:GetObjects("rbxassetid://6937142338")[1].MouseButton1Click, function()
+                  Ripple(va)
+                  vb()
+                end)
+                vb(game:GetObjects("rbxassetid://6937142338")[1].MouseEnter, function()
+                  va = true
+                end)
+                vb(game:GetObjects("rbxassetid://6937142338")[1].MouseLeave, function()
+                  va = false
+                end)
+                spawn(function()
+                  while not nil and va:IsRunning() do
+                    vb.BackgroundColor3 = vc and va.Themes[va.Settings.Theme].Button
+                    vb.ButtonText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+              end,
+              Toggle = function(a, b, c, d, e)
+                game:GetObjects("rbxassetid://6963155498")[1].Parent = va
+                game:GetObjects("rbxassetid://6963155498")[1].ToggleText.Text = b
+                game:GetObjects("rbxassetid://6963155498")[1].Name = b .. "element"
+                vc(game:GetObjects("rbxassetid://6963155498")[1].MouseButton1Click, function()
+                  va.Value = not va.Value
+                  va:Set(va.Value)
+                end)
+                spawn(function()
+                  while wait() and va:IsRunning() do
+                    if not vc.Value or vb.ToggleFrame.ToggleToggled then
+                    end
+                    vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].Toggle
+                    if vb.ToggleFrame or vb.ToggleFrame then
+                    end
+                    vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Toggle
+                    vb.ToggleText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                spawn(function()
+                  va:Set(vb)
+                  vc.Flags[vd] = va
+                end)
+                return {
+                  Value = false,
+                  Set = function(a, b)
+                    va.Value = b
+                    if b or b then
+                    end
+                    vb:Create(vc.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                      ImageTransparency = b or 1,
+                      Size = UDim2.new(1, -6, 1, -6)
+                    }):Play()
+                    return vd(va.Value)
+                  end
+                }
+              end,
+              Slider = function(a, b, c, d, e, g, h, j)
+                game:GetObjects("rbxassetid://6967573727")[1].Parent = va
+                game:GetObjects("rbxassetid://6967573727")[1].SliderText.Text = b
+                game:GetObjects("rbxassetid://6967573727")[1].Name = b .. "element"
+                vc(game:GetObjects("rbxassetid://6967573727")[1].SliderFrame.InputBegan, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    va = true
+                  end
+                end)
+                vc(game:GetObjects("rbxassetid://6967573727")[1].SliderFrame.InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    va = false
+                  end
+                end)
+                vc(game:GetService("UserInputService").InputChanged, function(a)
+                  if va and a.UserInputType == Enum.UserInputType.MouseMovement then
+                    vb(a)
+                  end
+                end)
+                spawn(function()
+                  while wait() and va:IsRunning() do
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Slider
+                    vb.SliderFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].SliderBar
+                    vb.SliderFrame.SliderCurrentFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].SliderInc
+                    vb.SliderText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.SliderVal.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                spawn(function()
+                  va:Set(vb)
+                  vc.Flags[vd] = va
+                end)
+                return {
+                  Value = e,
+                  Set = function(a, b)
+                    if b then
+                    end
+                    vc.SliderVal.Text = tostring(0)
+                    vc.SliderFrame.SliderCurrentFrame.Size = UDim2.new((b or 0) / va, 0, 1, 0)
+                    vd.Value = b
+                    return ve(vd.Value)
+                  end
+                }
+              end,
+              Dropdown = function(a, b, c, d, e, g)
+                game:GetObjects("rbxassetid://7027964359")[1].Parent = va
+                game:GetObjects("rbxassetid://7027964359")[1].Btn.Title.Text = b
+                game:GetObjects("rbxassetid://7027964359")[1].Name = b .. "element"
+                vc(game:GetObjects("rbxassetid://7027964359")[1].Btn.MouseButton1Click, function()
+                  va()
+                end)
+                spawn(function()
+                  while not nil and va:IsRunning() do
+                    vb.Btn.BackgroundColor3 = va.Themes[va.Settings.Theme].Dropdown
+                    vb.Btn.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.Btn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                spawn(function()
+                  va:Refresh(vb, false)
+                  va:Set(vc)
+                  vd.Flags[ve] = va
+                end)
+                return {
+                  Value = nil,
+                  Toggled = false,
+                  Options = c,
+                  Refresh = function(a, b, c)
+                    if c then
+                      for fh, fj in pairs(va.Holder:GetChildren()) do
+                        if not b then
+                          fj:Destroy()
+                          if b or not UDim2.new(1, 0, 0, 6 + 13) then
+                          end
+                          va.Holder.Size = UDim2.new(1, 0, 0, 0)
+                          if not vb.Toggled or b then
+                          end
+                          va.Size = UDim2.new(1, 0, 0, 32)
+                        end
+                      end
+                    end
+                    vc(b)
+                  end,
+                  Set = function(a, b)
+                    va.Value = b
+                    vb.Btn.Title.Text = vc .. " - " .. b
+                    return vd(va.Value)
+                  end
+                }
+              end,
+              MultiDropdown = function(a, b, c, d, e, g)
+                game:GetObjects("rbxassetid://7027964359")[1].Parent = va
+                game:GetObjects("rbxassetid://7027964359")[1].Btn.Title.Text = b
+                game:GetObjects("rbxassetid://7027964359")[1].Name = b .. "element"
+                vc(game:GetObjects("rbxassetid://7027964359")[1].Btn.MouseButton1Click, function()
+                  va()
+                end)
+                spawn(function()
+                  while wait() and not va do
+                    vb.Btn.BackgroundColor3 = va.Themes[va.Settings.Theme].Dropdown
+                    vb.Btn.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.Btn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                spawn(function()
+                  va:Refresh(vb, false)
+                  va:Set(vc)
+                  vd.Flags[ve] = va
+                end)
+                return {
+                  Value = {},
+                  Toggled = false,
+                  Options = c,
+                  Refresh = function(a, b, c)
+                    if not b then
+                      for fh, fj in pairs(va.Holder:GetChildren()) do
+                        if fj:IsA("TextButton") then
+                          fj:Destroy()
+                          va.Holder.Size = vb.Toggled and UDim2.new(1, 0, 0, 0)
+                          if b or not UDim2.new(1, 0, 0, 38 + 13) then
+                          end
+                          va.Size = UDim2.new(1, 0, 0, 32)
+                        end
+                      end
+                    end
+                    vc(b)
+                  end,
+                  Set = function(a, b)
+                    va.Value = b
+                    vb.Btn.Title.Text = vc .. " - " .. table.concat(va.Value, ", ")
+                    return vd(va.Value)
+                  end
+                }
+              end,
+              Colorpicker = function(a, b, c, d, e)
+                game:GetObjects("rbxassetid://7329998014")[1].Hue.Visible, game:GetObjects("rbxassetid://7329998014")[1].Color.Visible = {Value = c, Toggled = false}.Toggled, {Value = c, Toggled = false}.Toggled
+                game:GetObjects("rbxassetid://7329998014")[1].Parent = va
+                game:GetObjects("rbxassetid://7329998014")[1].Btn.Colorpicker.Text = b
+                game:GetObjects("rbxassetid://7329998014")[1].Name = b .. "element"
+                game:GetObjects("rbxassetid://7329998014")[1].Btn.Box.BackgroundColor3 = c
+                game:GetObjects("rbxassetid://7329998014")[1].Hue.HueGradient.Color = ColorSequence.new({
+                  ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 4)),
+                  ColorSequenceKeypoint.new(0,2, Color3.fromRGB(234, 255, 0)),
+                  ColorSequenceKeypoint.new(0,4, Color3.fromRGB(21, 255, 0)),
+                  ColorSequenceKeypoint.new(0,6, Color3.fromRGB(0, 255, 255)),
+                  ColorSequenceKeypoint.new(0,8, Color3.fromRGB(0, 17, 255)),
+                  ColorSequenceKeypoint.new(0,9, Color3.fromRGB(255, 0, 251)),
+                  ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 4))
+                })
+                vb(game:GetObjects("rbxassetid://7329998014")[1].Btn.MouseButton1Click, function()
+                  va.Toggled = not va.Toggled
+                  if vb or not UDim2.new(1, 0, 0, 120) then
+                  end
+                  vb:Create(vc, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                    Size = UDim2.new(1, 0, 0, 32)
+                  }):Play()
+                  vc.Hue.Visible, vc.Color.Visible = va.Toggled, va.Toggled
+                end)
+                game:GetObjects("rbxassetid://7329998014")[1].Btn.Box.BackgroundColor3 = c
+                game:GetObjects("rbxassetid://7329998014")[1].Color.BackgroundColor3 = c
+                pcall(e, game:GetObjects("rbxassetid://7329998014")[1].Btn.Box.BackgroundColor3)
+                vb(game:GetObjects("rbxassetid://7329998014")[1].Color.InputBegan, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    if not a then
+                      ColorInput:Disconnect()
+                    end
+                    ColorInput = va.RenderStepped:Connect(function()
+                      vd, vc.Position = math.clamp(va.X - vb.AbsolutePosition.X, 0, vb.AbsoluteSize.X) / vb.AbsoluteSize.X, UDim2.new(math.clamp(va.X - vb.AbsolutePosition.X, 0, vb.AbsoluteSize.X) / vb.AbsoluteSize.X, 0, math.clamp(va.Y - vb.AbsolutePosition.Y, 0, vb.AbsoluteSize.Y) / vb.AbsoluteSize.Y, 0)
+                      ve = 1 - math.clamp(va.Y - vb.AbsolutePosition.Y, 0, vb.AbsoluteSize.Y) / vb.AbsoluteSize.Y
+                      vg(true)
+                    end)
+                  end
+                end)
+                vb(game:GetObjects("rbxassetid://7329998014")[1].Color.InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 and not a then
+                    ColorInput:Disconnect()
+                  end
+                end)
+                vb(game:GetObjects("rbxassetid://7329998014")[1].Hue.InputBegan, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    if HueInput then
+                      HueInput:Disconnect()
+                    end
+                    HueInput = va.RenderStepped:Connect(function()
+                      vc.Position = UDim2.new(0,48, 0, math.clamp(va.Y - vb.AbsolutePosition.Y, 0, vb.AbsoluteSize.Y) / vb.AbsoluteSize.Y, 0)
+                      vd = 1 - math.clamp(va.Y - vb.AbsolutePosition.Y, 0, vb.AbsoluteSize.Y) / vb.AbsoluteSize.Y
+                      ve(true)
+                    end)
+                  end
+                end)
+                vb(game:GetObjects("rbxassetid://7329998014")[1].Hue.InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 and not a then
+                    HueInput:Disconnect()
+                  end
+                end)
+                spawn(function()
+                  while wait() and not va do
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Colorpicker
+                    vb.Btn.Colorpicker.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                return {Value = c, Toggled = false}
+              end,
+              Label = function(a, b)
+                game:GetObjects("rbxassetid://7032552322")[1].Parent = va
+                game:GetObjects("rbxassetid://7032552322")[1].Title.Text = b
+                game:GetObjects("rbxassetid://7032552322")[1].Name = b .. "element"
+                spawn(function()
+                  while not nil and va:IsRunning() do
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Label
+                    vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                return {
+                  Set = function(a, b)
+                    va.Title.Text = b
+                    va.Name = vb .. "element"
+                  end
+                }
+              end,
+              Textbox = function(a, b, c, d)
+                game:GetObjects("rbxassetid://7147292392")[1].Parent = va
+                game:GetObjects("rbxassetid://7147292392")[1].Title.Text = b
+                game:GetObjects("rbxassetid://7147292392")[1].Name = b .. "element"
+                vb(game:GetObjects("rbxassetid://7147292392")[1].Box.Changed, function()
+                  va.Box.Size = UDim2.new(0, 3 + 16, 0, 22)
+                end)
+                game:GetObjects("rbxassetid://7147292392")[1].Box.PlaceholderText = "                  "
+                vb(game:GetObjects("rbxassetid://7147292392")[1].InputBegan, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    va.Box:CaptureFocus()
+                  end
+                end)
+                vb(game:GetObjects("rbxassetid://7147292392")[1].Box.FocusLost, function()
+                  if vb then
+                    va.Box.Text = ""
+                  end
+                  return vc(va.Box.Text)
+                end)
+                vb(vc.InputBegan, function(a)
+                  if a.KeyCode == Enum.KeyCode.Escape and va.Box:IsFocused() then
+                    va.Box:ReleaseFocus()
+                  end
+                end)
+                spawn(function()
+                  while not nil and va:IsRunning() do
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Textbox
+                    vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.Box.BackgroundColor3 = va.Themes[va.Settings.Theme].TextboxFrame
+                    vb.Box.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                return {}
+              end,
+              Bind = function(a, b, c, d, e, g)
+                game:GetObjects("rbxassetid://7126874744")[1].Parent = va
+                game:GetObjects("rbxassetid://7126874744")[1].Title.Text = b
+                game:GetObjects("rbxassetid://7126874744")[1].Name = b .. "element"
+                vb(game:GetObjects("rbxassetid://7126874744")[1].InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    if va.Binding then
+                      return
+                    end
+                    va.Binding = true
+                    vb.BText.Text = "..."
+                  end
+                end)
+                vb(vc.InputBegan, function(a)
+                  if not a then
+                    return
+                  end
+                  if (a.KeyCode.Name == vb.Value or a.UserInputType.Name == vb.Value) and not vb.Binding then
+                    if vc then
+                      Holding = true
+                      vd(Holding)
+                    else
+                      vd()
+                    end
+                  elseif vb.Binding then
+                    pcall(function()
+                      if vb then
+                        vd = vc.KeyCode
+                      end
+                    end)
+                    pcall(function()
+                      if not vb and vb then
+                        vd = vc.UserInputType
+                      end
+                    end)
+                    if a then
+                    end
+                    vb:Set(vb.Value)
+                  end
+                end)
+                vb(vc.InputEnded, function(a)
+                  if (a.KeyCode.Name == va.Value or a.UserInputType.Name == va.Value) and not a and Holding then
+                    Holding = false
+                    vc(Holding)
+                  end
+                end)
+                spawn(function()
+                  while not nil and not va do
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Bind
+                    vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                {
+                  Value,
+                  Binding = false,
+                  Holding = false,
+                  Set = function(a, b)
+                    a.Binding = false
+                    a.Value = b or a.Value
+                    a.Value = a.Value.Name or a.Value
+                    va.BText.Text = a.Value
+                  end
+                }:Set(c)
+                vh.Flags[e] = {
+                  Value,
+                  Binding = false,
+                  Holding = false,
+                  Set = function(a, b)
+                    a.Binding = false
+                    a.Value = b or a.Value
+                    a.Value = a.Value.Name or a.Value
+                    va.BText.Text = a.Value
+                  end
+                }
+                return {
+                  Value,
+                  Binding = false,
+                  Holding = false,
+                  Set = function(a, b)
+                    a.Binding = false
+                    a.Value = b or a.Value
+                    a.Value = a.Value.Name or a.Value
+                    va.BText.Text = a.Value
+                  end
+                }
+              end
+            }
+          end
+        }
+      end
+    }
+  end
+}:IsRunning() and {
+  Validate = function(a)
+    return type(true) == "boolean" == (type(va) == "boolean") and va == true
+  end,
+  Invalidate = function(a)
+    return type(true) == "boolean" == (type(va) == "boolean") and va == false
+  end
+}:Validate() ~= true do
+  wait()
+end
+if not {
+  GUI = Instance.new("ScreenGui"),
+  Connections = {},
+  NGUI = Instance.new("ScreenGui"),
+  trillhashedipaddress = "c2hlCnNheQpkbwp5b3UKbG92ZQptZQppCnRlbGwKaGVyCmkKYW0KbW9ua2U",
+  Version = "V2",
+  Themes = {
+    Default = {
+      MainFrame = Color3.fromRGB(25, 25, 25),
+      TopBar = Color3.fromRGB(30, 30, 30),
+      TextColor = Color3.fromRGB(255, 255, 255),
+      Menu = Color3.fromRGB(37, 37, 37),
+      TabToggled = Color3.fromRGB(43, 43, 43),
+      Button = Color3.fromRGB(30, 30, 30),
+      ButtonHold = Color3.fromRGB(31, 31, 31),
+      Toggle = Color3.fromRGB(30, 30, 30),
+      ToggleFrame = Color3.fromRGB(55, 55, 55),
+      ToggleToggled = Color3.fromRGB(22, 168, 76),
+      Slider = Color3.fromRGB(30, 30, 30),
+      SliderBar = Color3.fromRGB(25, 25, 25),
+      SliderInc = Color3.fromRGB(60, 60, 60),
+      Dropdown = Color3.fromRGB(30, 30, 30),
+      DropdownItem = Color3.fromRGB(30, 30, 30),
+      Textbox = Color3.fromRGB(30, 30, 30),
+      TextboxFrame = Color3.fromRGB(25, 25, 25),
+      Colorpicker = Color3.fromRGB(30, 30, 30),
+      Label = Color3.fromRGB(30, 30, 30),
+      Bind = Color3.fromRGB(30, 30, 30)
+    },
+    Light = {
+      MainFrame = Color3.fromRGB(255, 255, 255),
+      TopBar = Color3.fromRGB(227, 227, 227),
+      TextColor = Color3.fromRGB(0, 0, 0),
+      Menu = Color3.fromRGB(227, 227, 227),
+      TabToggled = Color3.fromRGB(43, 43, 43),
+      Button = Color3.fromRGB(227, 227, 227),
+      ButtonHold = Color3.fromRGB(31, 31, 31),
+      Toggle = Color3.fromRGB(227, 227, 227),
+      ToggleFrame = Color3.fromRGB(55, 55, 55),
+      ToggleToggled = Color3.fromRGB(22, 168, 76),
+      Slider = Color3.fromRGB(227, 227, 227),
+      SliderBar = Color3.fromRGB(220, 220, 220),
+      SliderInc = Color3.fromRGB(233, 233, 233),
+      Dropdown = Color3.fromRGB(227, 227, 227),
+      DropdownItem = Color3.fromRGB(227, 227, 227),
+      Textbox = Color3.fromRGB(227, 227, 227),
+      TextboxFrame = Color3.fromRGB(220, 220, 220),
+      Colorpicker = Color3.fromRGB(227, 227, 2270),
+      Label = Color3.fromRGB(227, 227, 227),
+      Bind = Color3.fromRGB(227, 227, 227)
+    },
+    Discord = {
+      MainFrame = Color3.fromRGB(54, 57, 63),
+      TopBar = Color3.fromRGB(47, 49, 54),
+      TextColor = Color3.fromRGB(255, 255, 255),
+      Menu = Color3.fromRGB(47, 49, 54),
+      TabToggled = Color3.fromRGB(54, 57, 63),
+      Button = Color3.fromRGB(88, 101, 242),
+      ButtonHold = Color3.fromRGB(71, 82, 196),
+      Toggle = Color3.fromRGB(47, 49, 54),
+      ToggleFrame = Color3.fromRGB(67, 69, 74),
+      ToggleToggled = Color3.fromRGB(22, 168, 76),
+      Slider = Color3.fromRGB(47, 49, 54),
+      SliderBar = Color3.fromRGB(42, 44, 49),
+      SliderInc = Color3.fromRGB(62, 64, 69),
+      Dropdown = Color3.fromRGB(47, 49, 54),
+      DropdownItem = Color3.fromRGB(47, 49, 54),
+      Textbox = Color3.fromRGB(47, 49, 54),
+      TextboxFrame = Color3.fromRGB(42, 44, 49),
+      Colorpicker = Color3.fromRGB(47, 49, 54),
+      Label = Color3.fromRGB(47, 49, 54),
+      Bind = Color3.fromRGB(47, 49, 54)
+    },
+    Blue = {
+      MainFrame = Color3.fromRGB(35, 35, 50),
+      TopBar = Color3.fromRGB(40, 40, 55),
+      TextColor = Color3.fromRGB(255, 255, 255),
+      Menu = Color3.fromRGB(47, 47, 62),
+      TabToggled = Color3.fromRGB(53, 53, 68),
+      Button = Color3.fromRGB(40, 40, 55),
+      ButtonHold = Color3.fromRGB(41, 41, 56),
+      Toggle = Color3.fromRGB(40, 40, 55),
+      ToggleFrame = Color3.fromRGB(65, 65, 80),
+      ToggleToggled = Color3.fromRGB(64, 64, 120),
+      Slider = Color3.fromRGB(40, 40, 55),
+      SliderBar = Color3.fromRGB(35, 35, 50),
+      SliderInc = Color3.fromRGB(70, 70, 85),
+      Dropdown = Color3.fromRGB(40, 40, 55),
+      DropdownItem = Color3.fromRGB(40, 40, 55),
+      Textbox = Color3.fromRGB(40, 40, 55),
+      TextboxFrame = Color3.fromRGB(35, 35, 50),
+      Colorpicker = Color3.fromRGB(40, 40, 55),
+      Label = Color3.fromRGB(40, 40, 55),
+      Bind = Color3.fromRGB(40, 40, 55)
+    },
+    Red = {
+      MainFrame = Color3.fromRGB(50, 35, 35),
+      TopBar = Color3.fromRGB(55, 40, 40),
+      TextColor = Color3.fromRGB(255, 255, 255),
+      Menu = Color3.fromRGB(62, 47, 47),
+      TabToggled = Color3.fromRGB(68, 53, 53),
+      Button = Color3.fromRGB(55, 40, 40),
+      ButtonHold = Color3.fromRGB(56, 41, 41),
+      Toggle = Color3.fromRGB(55, 40, 40),
+      ToggleFrame = Color3.fromRGB(80, 65, 65),
+      ToggleToggled = Color3.fromRGB(120, 64, 64),
+      Slider = Color3.fromRGB(55, 40, 40),
+      SliderBar = Color3.fromRGB(50, 35, 35),
+      SliderInc = Color3.fromRGB(85, 70, 70),
+      Dropdown = Color3.fromRGB(55, 40, 40),
+      DropdownItem = Color3.fromRGB(55, 40, 40),
+      Textbox = Color3.fromRGB(55, 40, 40),
+      TextboxFrame = Color3.fromRGB(50, 35, 35),
+      Colorpicker = Color3.fromRGB(55, 40, 40),
+      Label = Color3.fromRGB(55, 40, 40),
+      Bind = Color3.fromRGB(55, 40, 40)
+    },
+    Green = {
+      MainFrame = Color3.fromRGB(35, 50, 35),
+      TopBar = Color3.fromRGB(40, 55, 40),
+      TextColor = Color3.fromRGB(255, 255, 255),
+      Menu = Color3.fromRGB(47, 62, 47),
+      TabToggled = Color3.fromRGB(53, 68, 53),
+      Button = Color3.fromRGB(40, 55, 40),
+      ButtonHold = Color3.fromRGB(41, 56, 41),
+      Toggle = Color3.fromRGB(40, 55, 40),
+      ToggleFrame = Color3.fromRGB(65, 80, 65),
+      ToggleToggled = Color3.fromRGB(64, 120, 64),
+      Slider = Color3.fromRGB(40, 55, 40),
+      SliderBar = Color3.fromRGB(35, 50, 35),
+      SliderInc = Color3.fromRGB(70, 85, 70),
+      Dropdown = Color3.fromRGB(40, 55, 40),
+      DropdownItem = Color3.fromRGB(40, 55, 40),
+      Textbox = Color3.fromRGB(40, 55, 40),
+      TextboxFrame = Color3.fromRGB(35, 50, 35),
+      Colorpicker = Color3.fromRGB(40, 55, 40),
+      Label = Color3.fromRGB(40, 55, 40),
+      Bind = Color3.fromRGB(40, 55, 40)
+    }
+  },
+  Settings = {
+    Theme = "Default",
+    ShowFriendsOnLaunch = true,
+    ShowMusicOnLaunch = true,
+    CloseBind = "RightControl"
+  },
+  Flags = {},
+  CurrentTab,
+  Settings = game:GetService("HttpService"):JSONDecode(readfile("SolarisHub/settings.txt")),
+  LoadCfg = function(a, b)
+    table.foreach(va:JSONDecode(b), function(a, b)
+      if va.Flags[a] then
+        spawn(function()
+          va.Flags[vb]:Set(vc)
+        end)
+      else
+        warn("cfg loader - could not find", a, b)
+      end
+    end)
+  end,
+  SaveCfg = function(a, b)
+    for fh, fj in pairs(va.Flags) do
+    end
+    writefile("SolarisHub/configs/" .. b .. ".txt", tostring(vb:JSONEncode({
+      [fh] = fj.Value
+    })))
+  end,
+  Notification = function(a, b, c)
+    va:New(b, c)
+  end,
+  New = function(a, b)
+    if b ~= "az8PYYKgEGsZM3nDeQzCW4y92qHurAmCBTujBe63gwRj" then
+      print("nigger detected")
+      while true do
+        if false == false then
+        end
+      end
+    end
+    va.Parent = vb
+    va.MainFrame.TopBar.TopFrameTitle.Text = "Solaris <font transparency=\"0.4\">" .. vc.Version .. "</font>"
+    vd(va.MainFrame.TopBar, va)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Parent = va.MainFrame.TopBar.ButtonHolder.MenuBtn.MenuFrame
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Position = UDim2.new(0, 0, 0, 5)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Text = "Friends"
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseEnter, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+    end)
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseLeave, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0,4}):Play()
+    end)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Parent = va.MainFrame.TopBar.ButtonHolder.MenuBtn.MenuFrame
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Position = UDim2.new(0, 0, 0, 25)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Text = "Music"
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseEnter, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+    end)
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseLeave, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0,4}):Play()
+    end)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Parent = va.MainFrame.TopBar.ButtonHolder.MenuBtn.MenuFrame
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Position = UDim2.new(0, 0, 0, 45)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Text = "Settings"
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseEnter, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+    end)
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseLeave, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0,4}):Play()
+    end)
+    function MusicConstructor()
+      game:GetObjects("rbxassetid://7296373622")[1].Parent = va
+      game:GetObjects("rbxassetid://7296373622")[1].ZIndex = 5
+      game:GetObjects("rbxassetid://7296373622")[1].Visible = vb.Settings.ShowMusicOnLaunch
+      game:GetObjects("rbxassetid://7296373622")[1].Frame.Title.Text = "Not Playing"
+      game:GetObjects("rbxassetid://7296373622")[1].Frame.Progress.ProgressFrame.Size = UDim2.new(0, 0, 1, 0)
+      game:GetObjects("rbxassetid://7296373622")[1].Frame.AddBtn.AutoButtonColor = false
+      vc(game:GetObjects("rbxassetid://7296373622")[1].Frame.TopBar, game:GetObjects("rbxassetid://7296373622")[1])
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.TopBar.CloseBtn.MouseButton1Click, function()
+        va.Visible = false
+      end)
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.TopBar.CloseBtn.MouseEnter, function()
+        va:Create(vb.Frame.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+      end)
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.TopBar.CloseBtn.MouseLeave, function()
+        va:Create(vb.Frame.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+      end)
+      vd(vg.MouseButton1Click, function()
+        va.Visible = not va.Visible
+        vb.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible = false
+      end)
+      Instance.new("Sound").Parent, Instance.new("Sound").Name = game:GetObjects("rbxassetid://7296373622")[1], "Sound"
+      Instance.new("Sound").Volume = 3
+      Instance.new("Sound"):Stop()
+      if not isfile("SolarisHub/music.txt") then
+        writefile("SolarisHub/music.txt", tostring(vj:JSONEncode({})))
+      end
+      function Save()
+        for fe, fg in pairs(va) do
+        end
+        writefile("SolarisHub/music.txt", tostring(vb:JSONEncode({
+          [fe] = fg
+        })))
+      end
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.Play.MouseButton1Click, function()
+        va = not va
+        if va then
+          vb:Pause()
+        else
+          vb:Resume()
+        end
+        vc.Frame.Play.Image = vc.Frame.Play or "http://www.roblox.com/asset/?id=6026663719"
+      end)
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.AddBtn.MouseButton1Click, function()
+        if not table.find(vb, va.Frame.AddSong.Text) then
+          table.insert(vb, va.Frame.AddSong.Text)
+          Save()
+          vc(vb)
+        end
+      end)
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.AddBtn.MouseEnter, function()
+        va = true
+      end)
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.AddBtn.MouseLeave, function()
+        va = false
+      end);
+      (function(a)
+        for fe, fg in next, va.Frame.MusicList.Scroll:GetChildren() do
+          if fg.Name == "Btn" then
+            fg:Destroy()
+          end
+        end
+        for fe, fg in next, a, nil do
+          if not next and pcall(vb.GetProductInfo, vb, fg).AssetTypeId == 3 then
+            vc:Clone().Parent = va.Frame.MusicList.Scroll
+            vc:Clone().Title.Text = pcall(vb.GetProductInfo, vb, fg).Name
+            vd(vc:Clone().MouseButton1Click, function()
+              va(vb, vc.Name)
+            end)
+            vd(vc:Clone().Delete.MouseButton1Click, function()
+              for fd, fe in next, va, nil do
+                if fe == vb then
+                  table.remove(va, fd)
+                end
+              end
+              Save()
+              vc:Destroy()
+            end)
+          end
+        end
+      end)((vj:JSONDecode(readfile("SolarisHub/music.txt"))))
+      vd(game:GetService("RunService").RenderStepped, function()
+        if string.len(math.floor(va.TimePosition) % 60) < 2 then
+        end
+        if string.len((math.floor(math.floor(va.TimePosition) / 60))) < 2 then
+        end
+        if 2 >= string.len(math.floor(va.TimeLength) % 60) then
+        end
+        if 2 > string.len((math.floor(math.floor(va.TimeLength) / 60))) then
+        end
+        if vb:IsDescendantOf(vc) and vb:FindFirstChild("Frame") then
+          vb.Frame.Timer1.Text = ("0" .. math.floor(math.floor(va.TimePosition) / 60)) .. ":" .. "0" .. math.floor(va.TimePosition) % 60
+          vb.Frame.Timer2.Text = ("0" .. math.floor(math.floor(va.TimeLength) / 60)) .. ":" .. "0" .. math.floor(va.TimeLength) % 60
+          vb.Frame.Progress.ProgressFrame.Size = UDim2.new(va.TimePosition / va.TimeLength, 0, 1, 0)
+        end
+      end)
+      spawn(function()
+        while wait() and not va do
+          vb.Frame.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+          vb.Frame.TopBar.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+          vb.Frame.TopBar.CloseBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+          vb.Frame.MusicList.BackgroundColor3 = va.Themes[va.Settings.Theme].TopBar
+          if vb.Frame.AddBtn or not va.Themes[va.Settings.Theme].ButtonHold then
+          end
+          vb.Frame.AddBtn.BackgroundColor3 = va.Themes[va.Settings.Theme].Button
+          vb.Frame.Progress.BackgroundColor3 = va.Themes[va.Settings.Theme].Slider
+          vb.Frame.Progress.ProgressFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].SliderInc
+          vb.Frame.AddSong.BackgroundColor3 = va.Themes[va.Settings.Theme].Textbox
+        end
+      end)
+    end
+    function SettingsConstructor()
+      game:GetObjects("rbxassetid://7167491516")[1].Parent = va
+      vb(game:GetObjects("rbxassetid://7167491516")[1].Main.TopBar.CloseBtn.MouseEnter, function()
+        va:Create(vb.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+      end)
+      vb(game:GetObjects("rbxassetid://7167491516")[1].Main.TopBar.CloseBtn.MouseLeave, function()
+        va:Create(vb.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+      end)
+      vb(vd.MouseButton1Click, function()
+        va.Visible = not va.Visible
+        vb.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible = false
+      end)
+      vb(game:GetObjects("rbxassetid://7167491516")[1].Main.TopBar.CloseBtn.MouseButton1Click, function()
+        va.Visible = false
+      end)
+      function SaveSettings()
+        for fe, fg in pairs(va.Settings) do
+        end
+        writefile("SolarisHub/settings.txt", tostring(vb:JSONEncode({
+          [fe] = fg
+        })))
+      end
+      spawn(function()
+        while wait() and not va do
+          vb.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+          vb.TopBar.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+          vb.TopBar.CloseBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+          vb.TopBar.TopFrameTitle.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+          vb.TabHolder.BackgroundColor3 = va.Themes[va.Settings.Theme].TopBar
+        end
+      end)
+      {
+        Tab = function(a, b)
+          va:Clone().Parent = vc.TabHolder
+          va:Clone().Text = b
+          va:Clone().Size = UDim2.new(0, va:Clone().TextBounds.X, 1, 0)
+          vb:Clone().Parent = vc.ContainerFolder
+          vb:Clone().Visible = false
+          if not b then
+            va:Clone().TextTransparency = 0
+            vb:Clone().Visible = true
+            vd = false
+          end
+          ve(va:Clone().MouseButton1Click, function()
+            for fd, fe in next, va.TabHolder:GetChildren() do
+              if fe.Name == "Tab" then
+                fe.TextTransparency = 0,4
+              end
+            end
+            for fd, fe in next, va.ContainerFolder:GetChildren() do
+              if fe.Name == "Container" then
+                fe.Visible = false
+              end
+            end
+            vb.TextTransparency = 0
+            vc.Visible = true
+          end)
+          return {
+            ToggleSetting = function(a, b, c, d, e)
+              if b then
+              end
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              (function(a)
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  ImageTransparency = a and 1
+                }):Play()
+                if va.Create or va.Create then
+                end
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Size = UDim2.new(1, -6, 1, -6)
+                }):Play()
+              end)(d)
+              ve(vb:Clone().MouseButton1Click, function()
+                va(not vb)
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  if vb.ToggleFrame.ToggleToggled or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+                  if vb.ToggleFrame or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            BindSetting = function(a, b, c, d, e)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              function SetValue(a)
+                va = false
+                vb = a or vb
+                if a then
+                end
+                vb = vb
+                vc.BText.Text = vb
+                vd.Settings[ve] = vb
+                SaveSettings()
+              end
+              SetValue(va.Settings[e] or d)
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  if va then
+                    return
+                  end
+                  va = true
+                  vb.BText.Text = "..."
+                end
+              end)
+              ve(vg.InputBegan, function(a)
+                if va:GetFocusedTextBox() then
+                  return
+                end
+                if vb then
+                  pcall(function()
+                    if vb then
+                      vd = vc.KeyCode
+                    end
+                  end)
+                  pcall(function()
+                    if va(vb, vc.UserInputType) and vb then
+                      vd = vc.UserInputType
+                    end
+                  end)
+                  if a then
+                  end
+                  SetValue(vg)
+                end
+              end)
+              spawn(function()
+                while not nil and not va do
+                  vb.Desc.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            Dropdown = function(a, b, c, d, e, g)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              vb:Clone().Main.Current.Text = va.Settings[g] or e
+              function Toggle()
+                va.Main.Holder.Visible = vb
+                if va.Main.Holder or not UDim2.new(1, 0, 0, va.Main.Holder.UIListLayout.AbsoluteContentSize.Y) then
+                end
+                va.Main.Holder.Size = UDim2.new(1, 0, 0, 0)
+                if not UDim2.new(1, 0, 0, 0) then
+                  if 0 + 1 > 190 then
+                    vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 6)
+                  end
+                else
+                  vc.CanvasSize = UDim2.new(0, 0, 0, vc.UIListLayout.AbsoluteContentSize.Y)
+                end
+                vd:Create(va.Main.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Rotation = vd or 0
+                }):Play()
+              end
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  va = not va
+                  Toggle()
+                end
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  vb.Main.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                  vb.Main.Holder.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                end
+              end);
+              (function(a)
+                spawn(function()
+                  for fd, fe in pairs(va) do
+                    vb:Clone().Parent = vc.Main.Holder
+                    vb:Clone().Text = fe
+                    vd(vb:Clone().MouseButton1Click, function()
+                      va = vb
+                      vc.Settings[vd] = va
+                      ve.Main.Current.Text = va
+                      SaveSettings()
+                    end)
+                    spawn(function()
+                      while not nil and va:IsRunning() do
+                        vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                      end
+                    end)
+                  end
+                end)
+              end)(d)
+            end
+          }
+        end
+      }:Tab("General"):ToggleSetting("Show Friends On Launch", "Shows the friends menu when you load Solaris", true, "ShowFriendsOnLaunch")
+      {
+        Tab = function(a, b)
+          va:Clone().Parent = vc.TabHolder
+          va:Clone().Text = b
+          va:Clone().Size = UDim2.new(0, va:Clone().TextBounds.X, 1, 0)
+          vb:Clone().Parent = vc.ContainerFolder
+          vb:Clone().Visible = false
+          if not b then
+            va:Clone().TextTransparency = 0
+            vb:Clone().Visible = true
+            vd = false
+          end
+          ve(va:Clone().MouseButton1Click, function()
+            for fd, fe in next, va.TabHolder:GetChildren() do
+              if fe.Name == "Tab" then
+                fe.TextTransparency = 0,4
+              end
+            end
+            for fd, fe in next, va.ContainerFolder:GetChildren() do
+              if fe.Name == "Container" then
+                fe.Visible = false
+              end
+            end
+            vb.TextTransparency = 0
+            vc.Visible = true
+          end)
+          return {
+            ToggleSetting = function(a, b, c, d, e)
+              if b then
+              end
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              (function(a)
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  ImageTransparency = a and 1
+                }):Play()
+                if va.Create or va.Create then
+                end
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Size = UDim2.new(1, -6, 1, -6)
+                }):Play()
+              end)(d)
+              ve(vb:Clone().MouseButton1Click, function()
+                va(not vb)
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  if vb.ToggleFrame.ToggleToggled or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+                  if vb.ToggleFrame or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            BindSetting = function(a, b, c, d, e)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              function SetValue(a)
+                va = false
+                vb = a or vb
+                if a then
+                end
+                vb = vb
+                vc.BText.Text = vb
+                vd.Settings[ve] = vb
+                SaveSettings()
+              end
+              SetValue(va.Settings[e] or d)
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  if va then
+                    return
+                  end
+                  va = true
+                  vb.BText.Text = "..."
+                end
+              end)
+              ve(vg.InputBegan, function(a)
+                if va:GetFocusedTextBox() then
+                  return
+                end
+                if vb then
+                  pcall(function()
+                    if vb then
+                      vd = vc.KeyCode
+                    end
+                  end)
+                  pcall(function()
+                    if va(vb, vc.UserInputType) and vb then
+                      vd = vc.UserInputType
+                    end
+                  end)
+                  if a then
+                  end
+                  SetValue(vg)
+                end
+              end)
+              spawn(function()
+                while not nil and not va do
+                  vb.Desc.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            Dropdown = function(a, b, c, d, e, g)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              vb:Clone().Main.Current.Text = va.Settings[g] or e
+              function Toggle()
+                va.Main.Holder.Visible = vb
+                if va.Main.Holder or not UDim2.new(1, 0, 0, va.Main.Holder.UIListLayout.AbsoluteContentSize.Y) then
+                end
+                va.Main.Holder.Size = UDim2.new(1, 0, 0, 0)
+                if not UDim2.new(1, 0, 0, 0) then
+                  if 0 + 1 > 190 then
+                    vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 6)
+                  end
+                else
+                  vc.CanvasSize = UDim2.new(0, 0, 0, vc.UIListLayout.AbsoluteContentSize.Y)
+                end
+                vd:Create(va.Main.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Rotation = vd or 0
+                }):Play()
+              end
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  va = not va
+                  Toggle()
+                end
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  vb.Main.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                  vb.Main.Holder.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                end
+              end);
+              (function(a)
+                spawn(function()
+                  for fd, fe in pairs(va) do
+                    vb:Clone().Parent = vc.Main.Holder
+                    vb:Clone().Text = fe
+                    vd(vb:Clone().MouseButton1Click, function()
+                      va = vb
+                      vc.Settings[vd] = va
+                      ve.Main.Current.Text = va
+                      SaveSettings()
+                    end)
+                    spawn(function()
+                      while not nil and va:IsRunning() do
+                        vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                      end
+                    end)
+                  end
+                end)
+              end)(d)
+            end
+          }
+        end
+      }:Tab("General"):ToggleSetting("Show Music On Launch", "Shows the music menu when you load Solaris", true, "ShowMusicOnLaunch")
+      {
+        Tab = function(a, b)
+          va:Clone().Parent = vc.TabHolder
+          va:Clone().Text = b
+          va:Clone().Size = UDim2.new(0, va:Clone().TextBounds.X, 1, 0)
+          vb:Clone().Parent = vc.ContainerFolder
+          vb:Clone().Visible = false
+          if not b then
+            va:Clone().TextTransparency = 0
+            vb:Clone().Visible = true
+            vd = false
+          end
+          ve(va:Clone().MouseButton1Click, function()
+            for fd, fe in next, va.TabHolder:GetChildren() do
+              if fe.Name == "Tab" then
+                fe.TextTransparency = 0,4
+              end
+            end
+            for fd, fe in next, va.ContainerFolder:GetChildren() do
+              if fe.Name == "Container" then
+                fe.Visible = false
+              end
+            end
+            vb.TextTransparency = 0
+            vc.Visible = true
+          end)
+          return {
+            ToggleSetting = function(a, b, c, d, e)
+              if b then
+              end
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              (function(a)
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  ImageTransparency = a and 1
+                }):Play()
+                if va.Create or va.Create then
+                end
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Size = UDim2.new(1, -6, 1, -6)
+                }):Play()
+              end)(d)
+              ve(vb:Clone().MouseButton1Click, function()
+                va(not vb)
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  if vb.ToggleFrame.ToggleToggled or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+                  if vb.ToggleFrame or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            BindSetting = function(a, b, c, d, e)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              function SetValue(a)
+                va = false
+                vb = a or vb
+                if a then
+                end
+                vb = vb
+                vc.BText.Text = vb
+                vd.Settings[ve] = vb
+                SaveSettings()
+              end
+              SetValue(va.Settings[e] or d)
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  if va then
+                    return
+                  end
+                  va = true
+                  vb.BText.Text = "..."
+                end
+              end)
+              ve(vg.InputBegan, function(a)
+                if va:GetFocusedTextBox() then
+                  return
+                end
+                if vb then
+                  pcall(function()
+                    if vb then
+                      vd = vc.KeyCode
+                    end
+                  end)
+                  pcall(function()
+                    if va(vb, vc.UserInputType) and vb then
+                      vd = vc.UserInputType
+                    end
+                  end)
+                  if a then
+                  end
+                  SetValue(vg)
+                end
+              end)
+              spawn(function()
+                while not nil and not va do
+                  vb.Desc.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            Dropdown = function(a, b, c, d, e, g)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              vb:Clone().Main.Current.Text = va.Settings[g] or e
+              function Toggle()
+                va.Main.Holder.Visible = vb
+                if va.Main.Holder or not UDim2.new(1, 0, 0, va.Main.Holder.UIListLayout.AbsoluteContentSize.Y) then
+                end
+                va.Main.Holder.Size = UDim2.new(1, 0, 0, 0)
+                if not UDim2.new(1, 0, 0, 0) then
+                  if 0 + 1 > 190 then
+                    vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 6)
+                  end
+                else
+                  vc.CanvasSize = UDim2.new(0, 0, 0, vc.UIListLayout.AbsoluteContentSize.Y)
+                end
+                vd:Create(va.Main.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Rotation = vd or 0
+                }):Play()
+              end
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  va = not va
+                  Toggle()
+                end
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  vb.Main.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                  vb.Main.Holder.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                end
+              end);
+              (function(a)
+                spawn(function()
+                  for fd, fe in pairs(va) do
+                    vb:Clone().Parent = vc.Main.Holder
+                    vb:Clone().Text = fe
+                    vd(vb:Clone().MouseButton1Click, function()
+                      va = vb
+                      vc.Settings[vd] = va
+                      ve.Main.Current.Text = va
+                      SaveSettings()
+                    end)
+                    spawn(function()
+                      while not nil and va:IsRunning() do
+                        vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                      end
+                    end)
+                  end
+                end)
+              end)(d)
+            end
+          }
+        end
+      }:Tab("General"):BindSetting("Close Bind", "Hides/Shows the main window when pressed.", Enum.KeyCode.RightControl, "CloseBind")
+      {
+        Tab = function(a, b)
+          va:Clone().Parent = vc.TabHolder
+          va:Clone().Text = b
+          va:Clone().Size = UDim2.new(0, va:Clone().TextBounds.X, 1, 0)
+          vb:Clone().Parent = vc.ContainerFolder
+          vb:Clone().Visible = false
+          if not b then
+            va:Clone().TextTransparency = 0
+            vb:Clone().Visible = true
+            vd = false
+          end
+          ve(va:Clone().MouseButton1Click, function()
+            for fd, fe in next, va.TabHolder:GetChildren() do
+              if fe.Name == "Tab" then
+                fe.TextTransparency = 0,4
+              end
+            end
+            for fd, fe in next, va.ContainerFolder:GetChildren() do
+              if fe.Name == "Container" then
+                fe.Visible = false
+              end
+            end
+            vb.TextTransparency = 0
+            vc.Visible = true
+          end)
+          return {
+            ToggleSetting = function(a, b, c, d, e)
+              if b then
+              end
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              (function(a)
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  ImageTransparency = a and 1
+                }):Play()
+                if va.Create or va.Create then
+                end
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Size = UDim2.new(1, -6, 1, -6)
+                }):Play()
+              end)(d)
+              ve(vb:Clone().MouseButton1Click, function()
+                va(not vb)
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  if vb.ToggleFrame.ToggleToggled or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+                  if vb.ToggleFrame or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            BindSetting = function(a, b, c, d, e)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              function SetValue(a)
+                va = false
+                vb = a or vb
+                if a then
+                end
+                vb = vb
+                vc.BText.Text = vb
+                vd.Settings[ve] = vb
+                SaveSettings()
+              end
+              SetValue(va.Settings[e] or d)
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  if va then
+                    return
+                  end
+                  va = true
+                  vb.BText.Text = "..."
+                end
+              end)
+              ve(vg.InputBegan, function(a)
+                if va:GetFocusedTextBox() then
+                  return
+                end
+                if vb then
+                  pcall(function()
+                    if vb then
+                      vd = vc.KeyCode
+                    end
+                  end)
+                  pcall(function()
+                    if va(vb, vc.UserInputType) and vb then
+                      vd = vc.UserInputType
+                    end
+                  end)
+                  if a then
+                  end
+                  SetValue(vg)
+                end
+              end)
+              spawn(function()
+                while not nil and not va do
+                  vb.Desc.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            Dropdown = function(a, b, c, d, e, g)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              vb:Clone().Main.Current.Text = va.Settings[g] or e
+              function Toggle()
+                va.Main.Holder.Visible = vb
+                if va.Main.Holder or not UDim2.new(1, 0, 0, va.Main.Holder.UIListLayout.AbsoluteContentSize.Y) then
+                end
+                va.Main.Holder.Size = UDim2.new(1, 0, 0, 0)
+                if not UDim2.new(1, 0, 0, 0) then
+                  if 0 + 1 > 190 then
+                    vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 6)
+                  end
+                else
+                  vc.CanvasSize = UDim2.new(0, 0, 0, vc.UIListLayout.AbsoluteContentSize.Y)
+                end
+                vd:Create(va.Main.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Rotation = vd or 0
+                }):Play()
+              end
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  va = not va
+                  Toggle()
+                end
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  vb.Main.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                  vb.Main.Holder.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                end
+              end);
+              (function(a)
+                spawn(function()
+                  for fd, fe in pairs(va) do
+                    vb:Clone().Parent = vc.Main.Holder
+                    vb:Clone().Text = fe
+                    vd(vb:Clone().MouseButton1Click, function()
+                      va = vb
+                      vc.Settings[vd] = va
+                      ve.Main.Current.Text = va
+                      SaveSettings()
+                    end)
+                    spawn(function()
+                      while not nil and va:IsRunning() do
+                        vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                      end
+                    end)
+                  end
+                end)
+              end)(d)
+            end
+          }
+        end
+      }:Tab("Appearance"):Dropdown("Theme", "The look of the user interface", {
+        "Default",
+        "Light",
+        "Discord",
+        "Red",
+        "Green",
+        "Blue"
+      }, "Default", "Theme")
+    end
+    (function()
+      game:GetObjects("rbxassetid://7037305928")[1].Parent = va
+      game:GetObjects("rbxassetid://7037305928")[1].ZIndex = 4
+      game:GetObjects("rbxassetid://7037305928")[1].Visible = vb.Settings.ShowFriendsOnLaunch
+      vc(vd.MouseButton1Click, function()
+        va.Visible = not va.Visible
+        vb.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible = false
+      end)
+      vc(game:GetObjects("rbxassetid://7037305928")[1].Frame.TopBar.CloseBtn.Ico.MouseEnter, function()
+        va:Create(vb.Frame.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+      end)
+      vc(game:GetObjects("rbxassetid://7037305928")[1].Frame.TopBar.CloseBtn.Ico.MouseLeave, function()
+        va:Create(vb.Frame.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+      end)
+      vc(game:GetObjects("rbxassetid://7037305928")[1].Frame.TopBar.CloseBtn.MouseButton1Click, function()
+        va.Visible = false
+      end)
+      function MakePanel(a)
+      end
+      function InviteFriend(a)
+      end
+      function JoinFriend(a)
+      end
+      vh(game:GetObjects("rbxassetid://7037305928")[1].Frame.TopBar, game:GetObjects("rbxassetid://7037305928")[1])
+      for fh, fj in next, {}, nil do
+      end
+      spawn(function()
+        while not nil and not va do
+          vb.Frame.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+          vb.Frame.TopBar.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+          vb.Frame.TopBar.CloseBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        end
+      end)
+    end)()
+    MusicConstructor()
+    SettingsConstructor()
+    ve(va.MainFrame.TopBar.TabListBtn.MouseButton1Click, function()
+      va()
+    end)
+    ve(va.MainFrame.TabMenu.Menu.Top.MenuCloseBtn.MouseButton1Click, function()
+      va()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.SearchBtn.MouseButton1Click, function()
+      va.TopBar.ButtonHolder.SearchBtn.TextBox.Visible = not va.TopBar.ButtonHolder.SearchBtn.TextBox.Visible
+      va.TopBar.TopFrameTitle.Visible = not va.TopBar.TopFrameTitle.Visible
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.CloseBtn.MouseEnter, function()
+      va:Create(vb.TopBar.ButtonHolder.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.CloseBtn.MouseLeave, function()
+      va:Create(vb.TopBar.ButtonHolder.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.SearchBtn.MouseEnter, function()
+      va:Create(vb.TopBar.ButtonHolder.SearchBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.SearchBtn.MouseLeave, function()
+      va:Create(vb.TopBar.ButtonHolder.SearchBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.MenuBtn.MouseEnter, function()
+      va:Create(vb.TopBar.ButtonHolder.MenuBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.MenuBtn.MouseLeave, function()
+      va:Create(vb.TopBar.ButtonHolder.MenuBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+    end)
+    ve(va.MainFrame.TopBar.TabListBtn.MouseEnter, function()
+      va:Create(vb.TopBar.TabListBtn, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+    end)
+    ve(va.MainFrame.TopBar.TabListBtn.MouseLeave, function()
+      va:Create(vb.TopBar.TabListBtn, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.MenuBtn.MouseButton1Click, function()
+      va.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible = not va.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.CloseBtn.MouseButton1Click, function()
+      va = not va
+      vb.Visible = va
+    end)
+    function SearchConstructor()
+      function StitchElements()
+        for fe, fg in next, va.CurrentTab:GetDescendants() do
+          if fg.Name:find("element") then
+            table.insert({}, fg)
+          end
+        end
+        return {}
+      end
+      vb(vc.TopBar.ButtonHolder.SearchBtn.TextBox:GetPropertyChangedSignal("Text"), function()
+        for fd, fe in pairs(StitchElements()) do
+          if va.TopBar.ButtonHolder.SearchBtn.TextBox.Text:len() > 1 then
+            if fe.Name:lower():sub(0, -8):find(va.TopBar.ButtonHolder.SearchBtn.TextBox.Text:lower()) then
+              fe.Visible = true
+            else
+              fe.Visible = false
+            end
+          else
+            fe.Visible = true
+          end
+        end
+      end)
+    end
+    SearchConstructor()
+    ve(vk.InputBegan, function(a)
+      if (a.KeyCode.Name == va.Settings.CloseBind or a.UserInputType.Name == va.Settings.CloseBind) and not vb then
+        vc = not vc
+        vd.Visible = vc
+      end
+    end)
+    vc:Notification("Notification", "Solaris has been loaded, press " .. vc.Settings.CloseBind .. " to open/close the UI.")
+    spawn(function()
+      while wait() and not va do
+        vb.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+        vb.TopBar.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+        vb.TopBar.ButtonHolder.CloseBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.ButtonHolder.MenuBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.ButtonHolder.SearchBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.TabListBtn.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.TopFrameTitle.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TabMenu.Menu.BackgroundColor3 = va.Themes[va.Settings.Theme].Menu
+        vb.TabMenu.Menu.Top.MenuCloseBtn.ImageLabel.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.ButtonHolder.SearchBtn.TextBox.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+        vb.TopBar.ButtonHolder.SearchBtn.TextBox.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.ButtonHolder.SearchBtn.TextBox.PlaceholderColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.ButtonHolder.MenuBtn.MenuFrame.Frame.BackgroundColor3 = va.Themes[va.Settings.Theme].TopBar
+      end
+    end)
+    return {
+      Tab = function(a, b)
+        va:Clone().AutoButtonColor = false
+        va:Clone().Parent = vb.TabMenu.Menu.Holder
+        va:Clone().Text = b
+        va:Clone().TextSize = 14
+        vc:Clone().Parent = vb.ContainerFolder
+        vc:Clone().Visible = false
+        if vd == false then
+          vd = true
+          vc:Clone().Visible = true
+          va:Clone().UIPadding.PaddingLeft = UDim.new(0, 10)
+          va:Clone().TextTransparency = 0
+          va:Clone().BackgroundTransparency = 0
+          ve.CurrentTab = vc:Clone()
+        end
+        spawn(function()
+          while wait() and va:IsRunning() do
+            vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+            vb.BackgroundColor3 = va.Themes[va.Settings.Theme].TabToggled
+            vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 26)
+          end
+        end)
+        vg(va:Clone().MouseButton1Click, function()
+          for fd, fe in next, va.TabMenu.Menu.Holder:GetChildren() do
+            if fe:IsA("TextButton") then
+              vb:Create(fe, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0,4, BackgroundTransparency = 1}):Play()
+              vb:Create(fe.UIPadding, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                PaddingLeft = UDim.new(0, 5)
+              }):Play()
+            end
+            vb:Create(vc, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0, BackgroundTransparency = 0}):Play()
+            vb:Create(vc.UIPadding, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+              PaddingLeft = UDim.new(0, 10)
+            }):Play()
+          end
+          for fd, fe in next, va.ContainerFolder:GetChildren() do
+            if fe.Name == "Container" then
+              fe.Visible = false
+            end
+            vd.Visible = true
+          end
+          tabtoggledname = vc.Name
+          ve()
+        end)
+        return {
+          Section = function(a, b)
+            va:Clone().Parent = vb
+            va:Clone().SectionTitle.Text = b
+            spawn(function()
+              while not nil and va:IsRunning() do
+                vb.SectionTitle.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                vb.Size = UDim2.new(0,9, 0, 0, vb.UIListLayout.AbsoluteContentSize.Y)
+              end
+            end)
+            return {
+              Button = function(a, b, c)
+                game:GetObjects("rbxassetid://6937142338")[1].Parent = va
+                game:GetObjects("rbxassetid://6937142338")[1].Name = b .. "element"
+                game:GetObjects("rbxassetid://6937142338")[1].ButtonText.Text = b
+                game:GetObjects("rbxassetid://6937142338")[1].ClipsDescendants = true
+                vb(game:GetObjects("rbxassetid://6937142338")[1].MouseButton1Click, function()
+                  Ripple(va)
+                  vb()
+                end)
+                vb(game:GetObjects("rbxassetid://6937142338")[1].MouseEnter, function()
+                  va = true
+                end)
+                vb(game:GetObjects("rbxassetid://6937142338")[1].MouseLeave, function()
+                  va = false
+                end)
+                spawn(function()
+                  while not nil and va:IsRunning() do
+                    vb.BackgroundColor3 = vc and va.Themes[va.Settings.Theme].Button
+                    vb.ButtonText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+              end,
+              Toggle = function(a, b, c, d, e)
+                game:GetObjects("rbxassetid://6963155498")[1].Parent = va
+                game:GetObjects("rbxassetid://6963155498")[1].ToggleText.Text = b
+                game:GetObjects("rbxassetid://6963155498")[1].Name = b .. "element"
+                vc(game:GetObjects("rbxassetid://6963155498")[1].MouseButton1Click, function()
+                  va.Value = not va.Value
+                  va:Set(va.Value)
+                end)
+                spawn(function()
+                  while wait() and va:IsRunning() do
+                    if not vc.Value or vb.ToggleFrame.ToggleToggled then
+                    end
+                    vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].Toggle
+                    if vb.ToggleFrame or vb.ToggleFrame then
+                    end
+                    vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Toggle
+                    vb.ToggleText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                spawn(function()
+                  va:Set(vb)
+                  vc.Flags[vd] = va
+                end)
+                return {
+                  Value = false,
+                  Set = function(a, b)
+                    va.Value = b
+                    if b or b then
+                    end
+                    vb:Create(vc.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                      ImageTransparency = b or 1,
+                      Size = UDim2.new(1, -6, 1, -6)
+                    }):Play()
+                    return vd(va.Value)
+                  end
+                }
+              end,
+              Slider = function(a, b, c, d, e, g, h, j)
+                game:GetObjects("rbxassetid://6967573727")[1].Parent = va
+                game:GetObjects("rbxassetid://6967573727")[1].SliderText.Text = b
+                game:GetObjects("rbxassetid://6967573727")[1].Name = b .. "element"
+                vc(game:GetObjects("rbxassetid://6967573727")[1].SliderFrame.InputBegan, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    va = true
+                  end
+                end)
+                vc(game:GetObjects("rbxassetid://6967573727")[1].SliderFrame.InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    va = false
+                  end
+                end)
+                vc(game:GetService("UserInputService").InputChanged, function(a)
+                  if va and a.UserInputType == Enum.UserInputType.MouseMovement then
+                    vb(a)
+                  end
+                end)
+                spawn(function()
+                  while wait() and va:IsRunning() do
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Slider
+                    vb.SliderFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].SliderBar
+                    vb.SliderFrame.SliderCurrentFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].SliderInc
+                    vb.SliderText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.SliderVal.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                spawn(function()
+                  va:Set(vb)
+                  vc.Flags[vd] = va
+                end)
+                return {
+                  Value = e,
+                  Set = function(a, b)
+                    if b then
+                    end
+                    vc.SliderVal.Text = tostring(0)
+                    vc.SliderFrame.SliderCurrentFrame.Size = UDim2.new((b or 0) / va, 0, 1, 0)
+                    vd.Value = b
+                    return ve(vd.Value)
+                  end
+                }
+              end,
+              Dropdown = function(a, b, c, d, e, g)
+                game:GetObjects("rbxassetid://7027964359")[1].Parent = va
+                game:GetObjects("rbxassetid://7027964359")[1].Btn.Title.Text = b
+                game:GetObjects("rbxassetid://7027964359")[1].Name = b .. "element"
+                vc(game:GetObjects("rbxassetid://7027964359")[1].Btn.MouseButton1Click, function()
+                  va()
+                end)
+                spawn(function()
+                  while not nil and va:IsRunning() do
+                    vb.Btn.BackgroundColor3 = va.Themes[va.Settings.Theme].Dropdown
+                    vb.Btn.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.Btn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                spawn(function()
+                  va:Refresh(vb, false)
+                  va:Set(vc)
+                  vd.Flags[ve] = va
+                end)
+                return {
+                  Value = nil,
+                  Toggled = false,
+                  Options = c,
+                  Refresh = function(a, b, c)
+                    if c then
+                      for fh, fj in pairs(va.Holder:GetChildren()) do
+                        if not b then
+                          fj:Destroy()
+                          if b or not UDim2.new(1, 0, 0, 6 + 13) then
+                          end
+                          va.Holder.Size = UDim2.new(1, 0, 0, 0)
+                          if not vb.Toggled or b then
+                          end
+                          va.Size = UDim2.new(1, 0, 0, 32)
+                        end
+                      end
+                    end
+                    vc(b)
+                  end,
+                  Set = function(a, b)
+                    va.Value = b
+                    vb.Btn.Title.Text = vc .. " - " .. b
+                    return vd(va.Value)
+                  end
+                }
+              end,
+              MultiDropdown = function(a, b, c, d, e, g)
+                game:GetObjects("rbxassetid://7027964359")[1].Parent = va
+                game:GetObjects("rbxassetid://7027964359")[1].Btn.Title.Text = b
+                game:GetObjects("rbxassetid://7027964359")[1].Name = b .. "element"
+                vc(game:GetObjects("rbxassetid://7027964359")[1].Btn.MouseButton1Click, function()
+                  va()
+                end)
+                spawn(function()
+                  while wait() and not va do
+                    vb.Btn.BackgroundColor3 = va.Themes[va.Settings.Theme].Dropdown
+                    vb.Btn.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.Btn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                spawn(function()
+                  va:Refresh(vb, false)
+                  va:Set(vc)
+                  vd.Flags[ve] = va
+                end)
+                return {
+                  Value = {},
+                  Toggled = false,
+                  Options = c,
+                  Refresh = function(a, b, c)
+                    if not b then
+                      for fh, fj in pairs(va.Holder:GetChildren()) do
+                        if fj:IsA("TextButton") then
+                          fj:Destroy()
+                          va.Holder.Size = vb.Toggled and UDim2.new(1, 0, 0, 0)
+                          if b or not UDim2.new(1, 0, 0, 38 + 13) then
+                          end
+                          va.Size = UDim2.new(1, 0, 0, 32)
+                        end
+                      end
+                    end
+                    vc(b)
+                  end,
+                  Set = function(a, b)
+                    va.Value = b
+                    vb.Btn.Title.Text = vc .. " - " .. table.concat(va.Value, ", ")
+                    return vd(va.Value)
+                  end
+                }
+              end,
+              Colorpicker = function(a, b, c, d, e)
+                game:GetObjects("rbxassetid://7329998014")[1].Hue.Visible, game:GetObjects("rbxassetid://7329998014")[1].Color.Visible = {Value = c, Toggled = false}.Toggled, {Value = c, Toggled = false}.Toggled
+                game:GetObjects("rbxassetid://7329998014")[1].Parent = va
+                game:GetObjects("rbxassetid://7329998014")[1].Btn.Colorpicker.Text = b
+                game:GetObjects("rbxassetid://7329998014")[1].Name = b .. "element"
+                game:GetObjects("rbxassetid://7329998014")[1].Btn.Box.BackgroundColor3 = c
+                game:GetObjects("rbxassetid://7329998014")[1].Hue.HueGradient.Color = ColorSequence.new({
+                  ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 4)),
+                  ColorSequenceKeypoint.new(0,2, Color3.fromRGB(234, 255, 0)),
+                  ColorSequenceKeypoint.new(0,4, Color3.fromRGB(21, 255, 0)),
+                  ColorSequenceKeypoint.new(0,6, Color3.fromRGB(0, 255, 255)),
+                  ColorSequenceKeypoint.new(0,8, Color3.fromRGB(0, 17, 255)),
+                  ColorSequenceKeypoint.new(0,9, Color3.fromRGB(255, 0, 251)),
+                  ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 4))
+                })
+                vb(game:GetObjects("rbxassetid://7329998014")[1].Btn.MouseButton1Click, function()
+                  va.Toggled = not va.Toggled
+                  if vb or not UDim2.new(1, 0, 0, 120) then
+                  end
+                  vb:Create(vc, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                    Size = UDim2.new(1, 0, 0, 32)
+                  }):Play()
+                  vc.Hue.Visible, vc.Color.Visible = va.Toggled, va.Toggled
+                end)
+                game:GetObjects("rbxassetid://7329998014")[1].Btn.Box.BackgroundColor3 = c
+                game:GetObjects("rbxassetid://7329998014")[1].Color.BackgroundColor3 = c
+                pcall(e, game:GetObjects("rbxassetid://7329998014")[1].Btn.Box.BackgroundColor3)
+                vb(game:GetObjects("rbxassetid://7329998014")[1].Color.InputBegan, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    if not a then
+                      ColorInput:Disconnect()
+                    end
+                    ColorInput = va.RenderStepped:Connect(function()
+                      vd, vc.Position = math.clamp(va.X - vb.AbsolutePosition.X, 0, vb.AbsoluteSize.X) / vb.AbsoluteSize.X, UDim2.new(math.clamp(va.X - vb.AbsolutePosition.X, 0, vb.AbsoluteSize.X) / vb.AbsoluteSize.X, 0, math.clamp(va.Y - vb.AbsolutePosition.Y, 0, vb.AbsoluteSize.Y) / vb.AbsoluteSize.Y, 0)
+                      ve = 1 - math.clamp(va.Y - vb.AbsolutePosition.Y, 0, vb.AbsoluteSize.Y) / vb.AbsoluteSize.Y
+                      vg(true)
+                    end)
+                  end
+                end)
+                vb(game:GetObjects("rbxassetid://7329998014")[1].Color.InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 and not a then
+                    ColorInput:Disconnect()
+                  end
+                end)
+                vb(game:GetObjects("rbxassetid://7329998014")[1].Hue.InputBegan, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    if HueInput then
+                      HueInput:Disconnect()
+                    end
+                    HueInput = va.RenderStepped:Connect(function()
+                      vc.Position = UDim2.new(0,48, 0, math.clamp(va.Y - vb.AbsolutePosition.Y, 0, vb.AbsoluteSize.Y) / vb.AbsoluteSize.Y, 0)
+                      vd = 1 - math.clamp(va.Y - vb.AbsolutePosition.Y, 0, vb.AbsoluteSize.Y) / vb.AbsoluteSize.Y
+                      ve(true)
+                    end)
+                  end
+                end)
+                vb(game:GetObjects("rbxassetid://7329998014")[1].Hue.InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 and not a then
+                    HueInput:Disconnect()
+                  end
+                end)
+                spawn(function()
+                  while wait() and not va do
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Colorpicker
+                    vb.Btn.Colorpicker.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                return {Value = c, Toggled = false}
+              end,
+              Label = function(a, b)
+                game:GetObjects("rbxassetid://7032552322")[1].Parent = va
+                game:GetObjects("rbxassetid://7032552322")[1].Title.Text = b
+                game:GetObjects("rbxassetid://7032552322")[1].Name = b .. "element"
+                spawn(function()
+                  while not nil and va:IsRunning() do
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Label
+                    vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                return {
+                  Set = function(a, b)
+                    va.Title.Text = b
+                    va.Name = vb .. "element"
+                  end
+                }
+              end,
+              Textbox = function(a, b, c, d)
+                game:GetObjects("rbxassetid://7147292392")[1].Parent = va
+                game:GetObjects("rbxassetid://7147292392")[1].Title.Text = b
+                game:GetObjects("rbxassetid://7147292392")[1].Name = b .. "element"
+                vb(game:GetObjects("rbxassetid://7147292392")[1].Box.Changed, function()
+                  va.Box.Size = UDim2.new(0, 3 + 16, 0, 22)
+                end)
+                game:GetObjects("rbxassetid://7147292392")[1].Box.PlaceholderText = "                  "
+                vb(game:GetObjects("rbxassetid://7147292392")[1].InputBegan, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    va.Box:CaptureFocus()
+                  end
+                end)
+                vb(game:GetObjects("rbxassetid://7147292392")[1].Box.FocusLost, function()
+                  if vb then
+                    va.Box.Text = ""
+                  end
+                  return vc(va.Box.Text)
+                end)
+                vb(vc.InputBegan, function(a)
+                  if a.KeyCode == Enum.KeyCode.Escape and va.Box:IsFocused() then
+                    va.Box:ReleaseFocus()
+                  end
+                end)
+                spawn(function()
+                  while not nil and va:IsRunning() do
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Textbox
+                    vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.Box.BackgroundColor3 = va.Themes[va.Settings.Theme].TextboxFrame
+                    vb.Box.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                return {}
+              end,
+              Bind = function(a, b, c, d, e, g)
+                game:GetObjects("rbxassetid://7126874744")[1].Parent = va
+                game:GetObjects("rbxassetid://7126874744")[1].Title.Text = b
+                game:GetObjects("rbxassetid://7126874744")[1].Name = b .. "element"
+                vb(game:GetObjects("rbxassetid://7126874744")[1].InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    if va.Binding then
+                      return
+                    end
+                    va.Binding = true
+                    vb.BText.Text = "..."
+                  end
+                end)
+                vb(vc.InputBegan, function(a)
+                  if not a then
+                    return
+                  end
+                  if (a.KeyCode.Name == vb.Value or a.UserInputType.Name == vb.Value) and not vb.Binding then
+                    if vc then
+                      Holding = true
+                      vd(Holding)
+                    else
+                      vd()
+                    end
+                  elseif vb.Binding then
+                    pcall(function()
+                      if vb then
+                        vd = vc.KeyCode
+                      end
+                    end)
+                    pcall(function()
+                      if not vb and vb then
+                        vd = vc.UserInputType
+                      end
+                    end)
+                    if a then
+                    end
+                    vb:Set(vb.Value)
+                  end
+                end)
+                vb(vc.InputEnded, function(a)
+                  if (a.KeyCode.Name == va.Value or a.UserInputType.Name == va.Value) and not a and Holding then
+                    Holding = false
+                    vc(Holding)
+                  end
+                end)
+                spawn(function()
+                  while not nil and not va do
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Bind
+                    vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                {
+                  Value,
+                  Binding = false,
+                  Holding = false,
+                  Set = function(a, b)
+                    a.Binding = false
+                    a.Value = b or a.Value
+                    a.Value = a.Value.Name or a.Value
+                    va.BText.Text = a.Value
+                  end
+                }:Set(c)
+                vh.Flags[e] = {
+                  Value,
+                  Binding = false,
+                  Holding = false,
+                  Set = function(a, b)
+                    a.Binding = false
+                    a.Value = b or a.Value
+                    a.Value = a.Value.Name or a.Value
+                    va.BText.Text = a.Value
+                  end
+                }
+                return {
+                  Value,
+                  Binding = false,
+                  Holding = false,
+                  Set = function(a, b)
+                    a.Binding = false
+                    a.Value = b or a.Value
+                    a.Value = a.Value.Name or a.Value
+                    va.BText.Text = a.Value
+                  end
+                }
+              end
+            }
+          end
+        }
+      end
+    }
+  end
+}:IsRunning() or Instance.new("ScreenGui").Parent ~= game:GetService("CoreGui") then
+  return
+end
+while true do
+  if {
+    Validate = function(a)
+      return type(true) == "boolean" == (type(va) == "boolean") and va == true
+    end,
+    Invalidate = function(a)
+      return type(true) == "boolean" == (type(va) == "boolean") and va == false
+    end
+  }:Invalidate() == {
+    Validate = function(a)
+      return type(true) == "boolean" == (type(va) == "boolean") and va == true
+    end,
+    Invalidate = function(a)
+      return type(true) == "boolean" == (type(va) == "boolean") and va == false
+    end
+  }:Validate() then
+  end
+end
+while true do
+  if not Instance.new("ScreenGui") then
+  end
+end
+if not {
+  GUI = Instance.new("ScreenGui"),
+  Connections = {},
+  NGUI = Instance.new("ScreenGui"),
+  trillhashedipaddress = "c2hlCnNheQpkbwp5b3UKbG92ZQptZQppCnRlbGwKaGVyCmkKYW0KbW9ua2U",
+  Version = "V2",
+  Themes = {
+    Default = {
+      MainFrame = Color3.fromRGB(25, 25, 25),
+      TopBar = Color3.fromRGB(30, 30, 30),
+      TextColor = Color3.fromRGB(255, 255, 255),
+      Menu = Color3.fromRGB(37, 37, 37),
+      TabToggled = Color3.fromRGB(43, 43, 43),
+      Button = Color3.fromRGB(30, 30, 30),
+      ButtonHold = Color3.fromRGB(31, 31, 31),
+      Toggle = Color3.fromRGB(30, 30, 30),
+      ToggleFrame = Color3.fromRGB(55, 55, 55),
+      ToggleToggled = Color3.fromRGB(22, 168, 76),
+      Slider = Color3.fromRGB(30, 30, 30),
+      SliderBar = Color3.fromRGB(25, 25, 25),
+      SliderInc = Color3.fromRGB(60, 60, 60),
+      Dropdown = Color3.fromRGB(30, 30, 30),
+      DropdownItem = Color3.fromRGB(30, 30, 30),
+      Textbox = Color3.fromRGB(30, 30, 30),
+      TextboxFrame = Color3.fromRGB(25, 25, 25),
+      Colorpicker = Color3.fromRGB(30, 30, 30),
+      Label = Color3.fromRGB(30, 30, 30),
+      Bind = Color3.fromRGB(30, 30, 30)
+    },
+    Light = {
+      MainFrame = Color3.fromRGB(255, 255, 255),
+      TopBar = Color3.fromRGB(227, 227, 227),
+      TextColor = Color3.fromRGB(0, 0, 0),
+      Menu = Color3.fromRGB(227, 227, 227),
+      TabToggled = Color3.fromRGB(43, 43, 43),
+      Button = Color3.fromRGB(227, 227, 227),
+      ButtonHold = Color3.fromRGB(31, 31, 31),
+      Toggle = Color3.fromRGB(227, 227, 227),
+      ToggleFrame = Color3.fromRGB(55, 55, 55),
+      ToggleToggled = Color3.fromRGB(22, 168, 76),
+      Slider = Color3.fromRGB(227, 227, 227),
+      SliderBar = Color3.fromRGB(220, 220, 220),
+      SliderInc = Color3.fromRGB(233, 233, 233),
+      Dropdown = Color3.fromRGB(227, 227, 227),
+      DropdownItem = Color3.fromRGB(227, 227, 227),
+      Textbox = Color3.fromRGB(227, 227, 227),
+      TextboxFrame = Color3.fromRGB(220, 220, 220),
+      Colorpicker = Color3.fromRGB(227, 227, 2270),
+      Label = Color3.fromRGB(227, 227, 227),
+      Bind = Color3.fromRGB(227, 227, 227)
+    },
+    Discord = {
+      MainFrame = Color3.fromRGB(54, 57, 63),
+      TopBar = Color3.fromRGB(47, 49, 54),
+      TextColor = Color3.fromRGB(255, 255, 255),
+      Menu = Color3.fromRGB(47, 49, 54),
+      TabToggled = Color3.fromRGB(54, 57, 63),
+      Button = Color3.fromRGB(88, 101, 242),
+      ButtonHold = Color3.fromRGB(71, 82, 196),
+      Toggle = Color3.fromRGB(47, 49, 54),
+      ToggleFrame = Color3.fromRGB(67, 69, 74),
+      ToggleToggled = Color3.fromRGB(22, 168, 76),
+      Slider = Color3.fromRGB(47, 49, 54),
+      SliderBar = Color3.fromRGB(42, 44, 49),
+      SliderInc = Color3.fromRGB(62, 64, 69),
+      Dropdown = Color3.fromRGB(47, 49, 54),
+      DropdownItem = Color3.fromRGB(47, 49, 54),
+      Textbox = Color3.fromRGB(47, 49, 54),
+      TextboxFrame = Color3.fromRGB(42, 44, 49),
+      Colorpicker = Color3.fromRGB(47, 49, 54),
+      Label = Color3.fromRGB(47, 49, 54),
+      Bind = Color3.fromRGB(47, 49, 54)
+    },
+    Blue = {
+      MainFrame = Color3.fromRGB(35, 35, 50),
+      TopBar = Color3.fromRGB(40, 40, 55),
+      TextColor = Color3.fromRGB(255, 255, 255),
+      Menu = Color3.fromRGB(47, 47, 62),
+      TabToggled = Color3.fromRGB(53, 53, 68),
+      Button = Color3.fromRGB(40, 40, 55),
+      ButtonHold = Color3.fromRGB(41, 41, 56),
+      Toggle = Color3.fromRGB(40, 40, 55),
+      ToggleFrame = Color3.fromRGB(65, 65, 80),
+      ToggleToggled = Color3.fromRGB(64, 64, 120),
+      Slider = Color3.fromRGB(40, 40, 55),
+      SliderBar = Color3.fromRGB(35, 35, 50),
+      SliderInc = Color3.fromRGB(70, 70, 85),
+      Dropdown = Color3.fromRGB(40, 40, 55),
+      DropdownItem = Color3.fromRGB(40, 40, 55),
+      Textbox = Color3.fromRGB(40, 40, 55),
+      TextboxFrame = Color3.fromRGB(35, 35, 50),
+      Colorpicker = Color3.fromRGB(40, 40, 55),
+      Label = Color3.fromRGB(40, 40, 55),
+      Bind = Color3.fromRGB(40, 40, 55)
+    },
+    Red = {
+      MainFrame = Color3.fromRGB(50, 35, 35),
+      TopBar = Color3.fromRGB(55, 40, 40),
+      TextColor = Color3.fromRGB(255, 255, 255),
+      Menu = Color3.fromRGB(62, 47, 47),
+      TabToggled = Color3.fromRGB(68, 53, 53),
+      Button = Color3.fromRGB(55, 40, 40),
+      ButtonHold = Color3.fromRGB(56, 41, 41),
+      Toggle = Color3.fromRGB(55, 40, 40),
+      ToggleFrame = Color3.fromRGB(80, 65, 65),
+      ToggleToggled = Color3.fromRGB(120, 64, 64),
+      Slider = Color3.fromRGB(55, 40, 40),
+      SliderBar = Color3.fromRGB(50, 35, 35),
+      SliderInc = Color3.fromRGB(85, 70, 70),
+      Dropdown = Color3.fromRGB(55, 40, 40),
+      DropdownItem = Color3.fromRGB(55, 40, 40),
+      Textbox = Color3.fromRGB(55, 40, 40),
+      TextboxFrame = Color3.fromRGB(50, 35, 35),
+      Colorpicker = Color3.fromRGB(55, 40, 40),
+      Label = Color3.fromRGB(55, 40, 40),
+      Bind = Color3.fromRGB(55, 40, 40)
+    },
+    Green = {
+      MainFrame = Color3.fromRGB(35, 50, 35),
+      TopBar = Color3.fromRGB(40, 55, 40),
+      TextColor = Color3.fromRGB(255, 255, 255),
+      Menu = Color3.fromRGB(47, 62, 47),
+      TabToggled = Color3.fromRGB(53, 68, 53),
+      Button = Color3.fromRGB(40, 55, 40),
+      ButtonHold = Color3.fromRGB(41, 56, 41),
+      Toggle = Color3.fromRGB(40, 55, 40),
+      ToggleFrame = Color3.fromRGB(65, 80, 65),
+      ToggleToggled = Color3.fromRGB(64, 120, 64),
+      Slider = Color3.fromRGB(40, 55, 40),
+      SliderBar = Color3.fromRGB(35, 50, 35),
+      SliderInc = Color3.fromRGB(70, 85, 70),
+      Dropdown = Color3.fromRGB(40, 55, 40),
+      DropdownItem = Color3.fromRGB(40, 55, 40),
+      Textbox = Color3.fromRGB(40, 55, 40),
+      TextboxFrame = Color3.fromRGB(35, 50, 35),
+      Colorpicker = Color3.fromRGB(40, 55, 40),
+      Label = Color3.fromRGB(40, 55, 40),
+      Bind = Color3.fromRGB(40, 55, 40)
+    }
+  },
+  Settings = {
+    Theme = "Default",
+    ShowFriendsOnLaunch = true,
+    ShowMusicOnLaunch = true,
+    CloseBind = "RightControl"
+  },
+  Flags = {},
+  CurrentTab,
+  Settings = game:GetService("HttpService"):JSONDecode(readfile("SolarisHub/settings.txt")),
+  LoadCfg = function(a, b)
+    table.foreach(va:JSONDecode(b), function(a, b)
+      if va.Flags[a] then
+        spawn(function()
+          va.Flags[vb]:Set(vc)
+        end)
+      else
+        warn("cfg loader - could not find", a, b)
+      end
+    end)
+  end,
+  SaveCfg = function(a, b)
+    for fh, fj in pairs(va.Flags) do
+    end
+    writefile("SolarisHub/configs/" .. b .. ".txt", tostring(vb:JSONEncode({
+      [fh] = fj.Value
+    })))
+  end,
+  Notification = function(a, b, c)
+    va:New(b, c)
+  end,
+  New = function(a, b)
+    if b ~= "az8PYYKgEGsZM3nDeQzCW4y92qHurAmCBTujBe63gwRj" then
+      print("nigger detected")
+      while true do
+        if false == false then
+        end
+      end
+    end
+    va.Parent = vb
+    va.MainFrame.TopBar.TopFrameTitle.Text = "Solaris <font transparency=\"0.4\">" .. vc.Version .. "</font>"
+    vd(va.MainFrame.TopBar, va)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Parent = va.MainFrame.TopBar.ButtonHolder.MenuBtn.MenuFrame
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Position = UDim2.new(0, 0, 0, 5)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Text = "Friends"
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseEnter, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+    end)
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseLeave, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0,4}):Play()
+    end)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Parent = va.MainFrame.TopBar.ButtonHolder.MenuBtn.MenuFrame
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Position = UDim2.new(0, 0, 0, 25)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Text = "Music"
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseEnter, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+    end)
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseLeave, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0,4}):Play()
+    end)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Parent = va.MainFrame.TopBar.ButtonHolder.MenuBtn.MenuFrame
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Position = UDim2.new(0, 0, 0, 45)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Text = "Settings"
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseEnter, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+    end)
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseLeave, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0,4}):Play()
+    end)
+    function MusicConstructor()
+      game:GetObjects("rbxassetid://7296373622")[1].Parent = va
+      game:GetObjects("rbxassetid://7296373622")[1].ZIndex = 5
+      game:GetObjects("rbxassetid://7296373622")[1].Visible = vb.Settings.ShowMusicOnLaunch
+      game:GetObjects("rbxassetid://7296373622")[1].Frame.Title.Text = "Not Playing"
+      game:GetObjects("rbxassetid://7296373622")[1].Frame.Progress.ProgressFrame.Size = UDim2.new(0, 0, 1, 0)
+      game:GetObjects("rbxassetid://7296373622")[1].Frame.AddBtn.AutoButtonColor = false
+      vc(game:GetObjects("rbxassetid://7296373622")[1].Frame.TopBar, game:GetObjects("rbxassetid://7296373622")[1])
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.TopBar.CloseBtn.MouseButton1Click, function()
+        va.Visible = false
+      end)
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.TopBar.CloseBtn.MouseEnter, function()
+        va:Create(vb.Frame.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+      end)
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.TopBar.CloseBtn.MouseLeave, function()
+        va:Create(vb.Frame.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+      end)
+      vd(vg.MouseButton1Click, function()
+        va.Visible = not va.Visible
+        vb.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible = false
+      end)
+      Instance.new("Sound").Parent, Instance.new("Sound").Name = game:GetObjects("rbxassetid://7296373622")[1], "Sound"
+      Instance.new("Sound").Volume = 3
+      Instance.new("Sound"):Stop()
+      if not isfile("SolarisHub/music.txt") then
+        writefile("SolarisHub/music.txt", tostring(vj:JSONEncode({})))
+      end
+      function Save()
+        for fe, fg in pairs(va) do
+        end
+        writefile("SolarisHub/music.txt", tostring(vb:JSONEncode({
+          [fe] = fg
+        })))
+      end
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.Play.MouseButton1Click, function()
+        va = not va
+        if va then
+          vb:Pause()
+        else
+          vb:Resume()
+        end
+        vc.Frame.Play.Image = vc.Frame.Play or "http://www.roblox.com/asset/?id=6026663719"
+      end)
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.AddBtn.MouseButton1Click, function()
+        if not table.find(vb, va.Frame.AddSong.Text) then
+          table.insert(vb, va.Frame.AddSong.Text)
+          Save()
+          vc(vb)
+        end
+      end)
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.AddBtn.MouseEnter, function()
+        va = true
+      end)
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.AddBtn.MouseLeave, function()
+        va = false
+      end);
+      (function(a)
+        for fe, fg in next, va.Frame.MusicList.Scroll:GetChildren() do
+          if fg.Name == "Btn" then
+            fg:Destroy()
+          end
+        end
+        for fe, fg in next, a, nil do
+          if not next and pcall(vb.GetProductInfo, vb, fg).AssetTypeId == 3 then
+            vc:Clone().Parent = va.Frame.MusicList.Scroll
+            vc:Clone().Title.Text = pcall(vb.GetProductInfo, vb, fg).Name
+            vd(vc:Clone().MouseButton1Click, function()
+              va(vb, vc.Name)
+            end)
+            vd(vc:Clone().Delete.MouseButton1Click, function()
+              for fd, fe in next, va, nil do
+                if fe == vb then
+                  table.remove(va, fd)
+                end
+              end
+              Save()
+              vc:Destroy()
+            end)
+          end
+        end
+      end)((vj:JSONDecode(readfile("SolarisHub/music.txt"))))
+      vd(game:GetService("RunService").RenderStepped, function()
+        if string.len(math.floor(va.TimePosition) % 60) < 2 then
+        end
+        if string.len((math.floor(math.floor(va.TimePosition) / 60))) < 2 then
+        end
+        if 2 >= string.len(math.floor(va.TimeLength) % 60) then
+        end
+        if 2 > string.len((math.floor(math.floor(va.TimeLength) / 60))) then
+        end
+        if vb:IsDescendantOf(vc) and vb:FindFirstChild("Frame") then
+          vb.Frame.Timer1.Text = ("0" .. math.floor(math.floor(va.TimePosition) / 60)) .. ":" .. "0" .. math.floor(va.TimePosition) % 60
+          vb.Frame.Timer2.Text = ("0" .. math.floor(math.floor(va.TimeLength) / 60)) .. ":" .. "0" .. math.floor(va.TimeLength) % 60
+          vb.Frame.Progress.ProgressFrame.Size = UDim2.new(va.TimePosition / va.TimeLength, 0, 1, 0)
+        end
+      end)
+      spawn(function()
+        while wait() and not va do
+          vb.Frame.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+          vb.Frame.TopBar.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+          vb.Frame.TopBar.CloseBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+          vb.Frame.MusicList.BackgroundColor3 = va.Themes[va.Settings.Theme].TopBar
+          if vb.Frame.AddBtn or not va.Themes[va.Settings.Theme].ButtonHold then
+          end
+          vb.Frame.AddBtn.BackgroundColor3 = va.Themes[va.Settings.Theme].Button
+          vb.Frame.Progress.BackgroundColor3 = va.Themes[va.Settings.Theme].Slider
+          vb.Frame.Progress.ProgressFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].SliderInc
+          vb.Frame.AddSong.BackgroundColor3 = va.Themes[va.Settings.Theme].Textbox
+        end
+      end)
+    end
+    function SettingsConstructor()
+      game:GetObjects("rbxassetid://7167491516")[1].Parent = va
+      vb(game:GetObjects("rbxassetid://7167491516")[1].Main.TopBar.CloseBtn.MouseEnter, function()
+        va:Create(vb.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+      end)
+      vb(game:GetObjects("rbxassetid://7167491516")[1].Main.TopBar.CloseBtn.MouseLeave, function()
+        va:Create(vb.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+      end)
+      vb(vd.MouseButton1Click, function()
+        va.Visible = not va.Visible
+        vb.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible = false
+      end)
+      vb(game:GetObjects("rbxassetid://7167491516")[1].Main.TopBar.CloseBtn.MouseButton1Click, function()
+        va.Visible = false
+      end)
+      function SaveSettings()
+        for fe, fg in pairs(va.Settings) do
+        end
+        writefile("SolarisHub/settings.txt", tostring(vb:JSONEncode({
+          [fe] = fg
+        })))
+      end
+      spawn(function()
+        while wait() and not va do
+          vb.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+          vb.TopBar.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+          vb.TopBar.CloseBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+          vb.TopBar.TopFrameTitle.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+          vb.TabHolder.BackgroundColor3 = va.Themes[va.Settings.Theme].TopBar
+        end
+      end)
+      {
+        Tab = function(a, b)
+          va:Clone().Parent = vc.TabHolder
+          va:Clone().Text = b
+          va:Clone().Size = UDim2.new(0, va:Clone().TextBounds.X, 1, 0)
+          vb:Clone().Parent = vc.ContainerFolder
+          vb:Clone().Visible = false
+          if not b then
+            va:Clone().TextTransparency = 0
+            vb:Clone().Visible = true
+            vd = false
+          end
+          ve(va:Clone().MouseButton1Click, function()
+            for fd, fe in next, va.TabHolder:GetChildren() do
+              if fe.Name == "Tab" then
+                fe.TextTransparency = 0,4
+              end
+            end
+            for fd, fe in next, va.ContainerFolder:GetChildren() do
+              if fe.Name == "Container" then
+                fe.Visible = false
+              end
+            end
+            vb.TextTransparency = 0
+            vc.Visible = true
+          end)
+          return {
+            ToggleSetting = function(a, b, c, d, e)
+              if b then
+              end
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              (function(a)
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  ImageTransparency = a and 1
+                }):Play()
+                if va.Create or va.Create then
+                end
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Size = UDim2.new(1, -6, 1, -6)
+                }):Play()
+              end)(d)
+              ve(vb:Clone().MouseButton1Click, function()
+                va(not vb)
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  if vb.ToggleFrame.ToggleToggled or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+                  if vb.ToggleFrame or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            BindSetting = function(a, b, c, d, e)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              function SetValue(a)
+                va = false
+                vb = a or vb
+                if a then
+                end
+                vb = vb
+                vc.BText.Text = vb
+                vd.Settings[ve] = vb
+                SaveSettings()
+              end
+              SetValue(va.Settings[e] or d)
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  if va then
+                    return
+                  end
+                  va = true
+                  vb.BText.Text = "..."
+                end
+              end)
+              ve(vg.InputBegan, function(a)
+                if va:GetFocusedTextBox() then
+                  return
+                end
+                if vb then
+                  pcall(function()
+                    if vb then
+                      vd = vc.KeyCode
+                    end
+                  end)
+                  pcall(function()
+                    if va(vb, vc.UserInputType) and vb then
+                      vd = vc.UserInputType
+                    end
+                  end)
+                  if a then
+                  end
+                  SetValue(vg)
+                end
+              end)
+              spawn(function()
+                while not nil and not va do
+                  vb.Desc.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            Dropdown = function(a, b, c, d, e, g)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              vb:Clone().Main.Current.Text = va.Settings[g] or e
+              function Toggle()
+                va.Main.Holder.Visible = vb
+                if va.Main.Holder or not UDim2.new(1, 0, 0, va.Main.Holder.UIListLayout.AbsoluteContentSize.Y) then
+                end
+                va.Main.Holder.Size = UDim2.new(1, 0, 0, 0)
+                if not UDim2.new(1, 0, 0, 0) then
+                  if 0 + 1 > 190 then
+                    vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 6)
+                  end
+                else
+                  vc.CanvasSize = UDim2.new(0, 0, 0, vc.UIListLayout.AbsoluteContentSize.Y)
+                end
+                vd:Create(va.Main.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Rotation = vd or 0
+                }):Play()
+              end
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  va = not va
+                  Toggle()
+                end
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  vb.Main.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                  vb.Main.Holder.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                end
+              end);
+              (function(a)
+                spawn(function()
+                  for fd, fe in pairs(va) do
+                    vb:Clone().Parent = vc.Main.Holder
+                    vb:Clone().Text = fe
+                    vd(vb:Clone().MouseButton1Click, function()
+                      va = vb
+                      vc.Settings[vd] = va
+                      ve.Main.Current.Text = va
+                      SaveSettings()
+                    end)
+                    spawn(function()
+                      while not nil and va:IsRunning() do
+                        vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                      end
+                    end)
+                  end
+                end)
+              end)(d)
+            end
+          }
+        end
+      }:Tab("General"):ToggleSetting("Show Friends On Launch", "Shows the friends menu when you load Solaris", true, "ShowFriendsOnLaunch")
+      {
+        Tab = function(a, b)
+          va:Clone().Parent = vc.TabHolder
+          va:Clone().Text = b
+          va:Clone().Size = UDim2.new(0, va:Clone().TextBounds.X, 1, 0)
+          vb:Clone().Parent = vc.ContainerFolder
+          vb:Clone().Visible = false
+          if not b then
+            va:Clone().TextTransparency = 0
+            vb:Clone().Visible = true
+            vd = false
+          end
+          ve(va:Clone().MouseButton1Click, function()
+            for fd, fe in next, va.TabHolder:GetChildren() do
+              if fe.Name == "Tab" then
+                fe.TextTransparency = 0,4
+              end
+            end
+            for fd, fe in next, va.ContainerFolder:GetChildren() do
+              if fe.Name == "Container" then
+                fe.Visible = false
+              end
+            end
+            vb.TextTransparency = 0
+            vc.Visible = true
+          end)
+          return {
+            ToggleSetting = function(a, b, c, d, e)
+              if b then
+              end
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              (function(a)
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  ImageTransparency = a and 1
+                }):Play()
+                if va.Create or va.Create then
+                end
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Size = UDim2.new(1, -6, 1, -6)
+                }):Play()
+              end)(d)
+              ve(vb:Clone().MouseButton1Click, function()
+                va(not vb)
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  if vb.ToggleFrame.ToggleToggled or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+                  if vb.ToggleFrame or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            BindSetting = function(a, b, c, d, e)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              function SetValue(a)
+                va = false
+                vb = a or vb
+                if a then
+                end
+                vb = vb
+                vc.BText.Text = vb
+                vd.Settings[ve] = vb
+                SaveSettings()
+              end
+              SetValue(va.Settings[e] or d)
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  if va then
+                    return
+                  end
+                  va = true
+                  vb.BText.Text = "..."
+                end
+              end)
+              ve(vg.InputBegan, function(a)
+                if va:GetFocusedTextBox() then
+                  return
+                end
+                if vb then
+                  pcall(function()
+                    if vb then
+                      vd = vc.KeyCode
+                    end
+                  end)
+                  pcall(function()
+                    if va(vb, vc.UserInputType) and vb then
+                      vd = vc.UserInputType
+                    end
+                  end)
+                  if a then
+                  end
+                  SetValue(vg)
+                end
+              end)
+              spawn(function()
+                while not nil and not va do
+                  vb.Desc.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            Dropdown = function(a, b, c, d, e, g)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              vb:Clone().Main.Current.Text = va.Settings[g] or e
+              function Toggle()
+                va.Main.Holder.Visible = vb
+                if va.Main.Holder or not UDim2.new(1, 0, 0, va.Main.Holder.UIListLayout.AbsoluteContentSize.Y) then
+                end
+                va.Main.Holder.Size = UDim2.new(1, 0, 0, 0)
+                if not UDim2.new(1, 0, 0, 0) then
+                  if 0 + 1 > 190 then
+                    vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 6)
+                  end
+                else
+                  vc.CanvasSize = UDim2.new(0, 0, 0, vc.UIListLayout.AbsoluteContentSize.Y)
+                end
+                vd:Create(va.Main.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Rotation = vd or 0
+                }):Play()
+              end
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  va = not va
+                  Toggle()
+                end
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  vb.Main.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                  vb.Main.Holder.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                end
+              end);
+              (function(a)
+                spawn(function()
+                  for fd, fe in pairs(va) do
+                    vb:Clone().Parent = vc.Main.Holder
+                    vb:Clone().Text = fe
+                    vd(vb:Clone().MouseButton1Click, function()
+                      va = vb
+                      vc.Settings[vd] = va
+                      ve.Main.Current.Text = va
+                      SaveSettings()
+                    end)
+                    spawn(function()
+                      while not nil and va:IsRunning() do
+                        vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                      end
+                    end)
+                  end
+                end)
+              end)(d)
+            end
+          }
+        end
+      }:Tab("General"):ToggleSetting("Show Music On Launch", "Shows the music menu when you load Solaris", true, "ShowMusicOnLaunch")
+      {
+        Tab = function(a, b)
+          va:Clone().Parent = vc.TabHolder
+          va:Clone().Text = b
+          va:Clone().Size = UDim2.new(0, va:Clone().TextBounds.X, 1, 0)
+          vb:Clone().Parent = vc.ContainerFolder
+          vb:Clone().Visible = false
+          if not b then
+            va:Clone().TextTransparency = 0
+            vb:Clone().Visible = true
+            vd = false
+          end
+          ve(va:Clone().MouseButton1Click, function()
+            for fd, fe in next, va.TabHolder:GetChildren() do
+              if fe.Name == "Tab" then
+                fe.TextTransparency = 0,4
+              end
+            end
+            for fd, fe in next, va.ContainerFolder:GetChildren() do
+              if fe.Name == "Container" then
+                fe.Visible = false
+              end
+            end
+            vb.TextTransparency = 0
+            vc.Visible = true
+          end)
+          return {
+            ToggleSetting = function(a, b, c, d, e)
+              if b then
+              end
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              (function(a)
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  ImageTransparency = a and 1
+                }):Play()
+                if va.Create or va.Create then
+                end
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Size = UDim2.new(1, -6, 1, -6)
+                }):Play()
+              end)(d)
+              ve(vb:Clone().MouseButton1Click, function()
+                va(not vb)
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  if vb.ToggleFrame.ToggleToggled or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+                  if vb.ToggleFrame or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            BindSetting = function(a, b, c, d, e)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              function SetValue(a)
+                va = false
+                vb = a or vb
+                if a then
+                end
+                vb = vb
+                vc.BText.Text = vb
+                vd.Settings[ve] = vb
+                SaveSettings()
+              end
+              SetValue(va.Settings[e] or d)
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  if va then
+                    return
+                  end
+                  va = true
+                  vb.BText.Text = "..."
+                end
+              end)
+              ve(vg.InputBegan, function(a)
+                if va:GetFocusedTextBox() then
+                  return
+                end
+                if vb then
+                  pcall(function()
+                    if vb then
+                      vd = vc.KeyCode
+                    end
+                  end)
+                  pcall(function()
+                    if va(vb, vc.UserInputType) and vb then
+                      vd = vc.UserInputType
+                    end
+                  end)
+                  if a then
+                  end
+                  SetValue(vg)
+                end
+              end)
+              spawn(function()
+                while not nil and not va do
+                  vb.Desc.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            Dropdown = function(a, b, c, d, e, g)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              vb:Clone().Main.Current.Text = va.Settings[g] or e
+              function Toggle()
+                va.Main.Holder.Visible = vb
+                if va.Main.Holder or not UDim2.new(1, 0, 0, va.Main.Holder.UIListLayout.AbsoluteContentSize.Y) then
+                end
+                va.Main.Holder.Size = UDim2.new(1, 0, 0, 0)
+                if not UDim2.new(1, 0, 0, 0) then
+                  if 0 + 1 > 190 then
+                    vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 6)
+                  end
+                else
+                  vc.CanvasSize = UDim2.new(0, 0, 0, vc.UIListLayout.AbsoluteContentSize.Y)
+                end
+                vd:Create(va.Main.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Rotation = vd or 0
+                }):Play()
+              end
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  va = not va
+                  Toggle()
+                end
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  vb.Main.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                  vb.Main.Holder.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                end
+              end);
+              (function(a)
+                spawn(function()
+                  for fd, fe in pairs(va) do
+                    vb:Clone().Parent = vc.Main.Holder
+                    vb:Clone().Text = fe
+                    vd(vb:Clone().MouseButton1Click, function()
+                      va = vb
+                      vc.Settings[vd] = va
+                      ve.Main.Current.Text = va
+                      SaveSettings()
+                    end)
+                    spawn(function()
+                      while not nil and va:IsRunning() do
+                        vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                      end
+                    end)
+                  end
+                end)
+              end)(d)
+            end
+          }
+        end
+      }:Tab("General"):BindSetting("Close Bind", "Hides/Shows the main window when pressed.", Enum.KeyCode.RightControl, "CloseBind")
+      {
+        Tab = function(a, b)
+          va:Clone().Parent = vc.TabHolder
+          va:Clone().Text = b
+          va:Clone().Size = UDim2.new(0, va:Clone().TextBounds.X, 1, 0)
+          vb:Clone().Parent = vc.ContainerFolder
+          vb:Clone().Visible = false
+          if not b then
+            va:Clone().TextTransparency = 0
+            vb:Clone().Visible = true
+            vd = false
+          end
+          ve(va:Clone().MouseButton1Click, function()
+            for fd, fe in next, va.TabHolder:GetChildren() do
+              if fe.Name == "Tab" then
+                fe.TextTransparency = 0,4
+              end
+            end
+            for fd, fe in next, va.ContainerFolder:GetChildren() do
+              if fe.Name == "Container" then
+                fe.Visible = false
+              end
+            end
+            vb.TextTransparency = 0
+            vc.Visible = true
+          end)
+          return {
+            ToggleSetting = function(a, b, c, d, e)
+              if b then
+              end
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              (function(a)
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  ImageTransparency = a and 1
+                }):Play()
+                if va.Create or va.Create then
+                end
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Size = UDim2.new(1, -6, 1, -6)
+                }):Play()
+              end)(d)
+              ve(vb:Clone().MouseButton1Click, function()
+                va(not vb)
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  if vb.ToggleFrame.ToggleToggled or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+                  if vb.ToggleFrame or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            BindSetting = function(a, b, c, d, e)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              function SetValue(a)
+                va = false
+                vb = a or vb
+                if a then
+                end
+                vb = vb
+                vc.BText.Text = vb
+                vd.Settings[ve] = vb
+                SaveSettings()
+              end
+              SetValue(va.Settings[e] or d)
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  if va then
+                    return
+                  end
+                  va = true
+                  vb.BText.Text = "..."
+                end
+              end)
+              ve(vg.InputBegan, function(a)
+                if va:GetFocusedTextBox() then
+                  return
+                end
+                if vb then
+                  pcall(function()
+                    if vb then
+                      vd = vc.KeyCode
+                    end
+                  end)
+                  pcall(function()
+                    if va(vb, vc.UserInputType) and vb then
+                      vd = vc.UserInputType
+                    end
+                  end)
+                  if a then
+                  end
+                  SetValue(vg)
+                end
+              end)
+              spawn(function()
+                while not nil and not va do
+                  vb.Desc.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            Dropdown = function(a, b, c, d, e, g)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              vb:Clone().Main.Current.Text = va.Settings[g] or e
+              function Toggle()
+                va.Main.Holder.Visible = vb
+                if va.Main.Holder or not UDim2.new(1, 0, 0, va.Main.Holder.UIListLayout.AbsoluteContentSize.Y) then
+                end
+                va.Main.Holder.Size = UDim2.new(1, 0, 0, 0)
+                if not UDim2.new(1, 0, 0, 0) then
+                  if 0 + 1 > 190 then
+                    vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 6)
+                  end
+                else
+                  vc.CanvasSize = UDim2.new(0, 0, 0, vc.UIListLayout.AbsoluteContentSize.Y)
+                end
+                vd:Create(va.Main.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Rotation = vd or 0
+                }):Play()
+              end
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  va = not va
+                  Toggle()
+                end
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  vb.Main.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                  vb.Main.Holder.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                end
+              end);
+              (function(a)
+                spawn(function()
+                  for fd, fe in pairs(va) do
+                    vb:Clone().Parent = vc.Main.Holder
+                    vb:Clone().Text = fe
+                    vd(vb:Clone().MouseButton1Click, function()
+                      va = vb
+                      vc.Settings[vd] = va
+                      ve.Main.Current.Text = va
+                      SaveSettings()
+                    end)
+                    spawn(function()
+                      while not nil and va:IsRunning() do
+                        vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                      end
+                    end)
+                  end
+                end)
+              end)(d)
+            end
+          }
+        end
+      }:Tab("Appearance"):Dropdown("Theme", "The look of the user interface", {
+        "Default",
+        "Light",
+        "Discord",
+        "Red",
+        "Green",
+        "Blue"
+      }, "Default", "Theme")
+    end
+    (function()
+      game:GetObjects("rbxassetid://7037305928")[1].Parent = va
+      game:GetObjects("rbxassetid://7037305928")[1].ZIndex = 4
+      game:GetObjects("rbxassetid://7037305928")[1].Visible = vb.Settings.ShowFriendsOnLaunch
+      vc(vd.MouseButton1Click, function()
+        va.Visible = not va.Visible
+        vb.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible = false
+      end)
+      vc(game:GetObjects("rbxassetid://7037305928")[1].Frame.TopBar.CloseBtn.Ico.MouseEnter, function()
+        va:Create(vb.Frame.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+      end)
+      vc(game:GetObjects("rbxassetid://7037305928")[1].Frame.TopBar.CloseBtn.Ico.MouseLeave, function()
+        va:Create(vb.Frame.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+      end)
+      vc(game:GetObjects("rbxassetid://7037305928")[1].Frame.TopBar.CloseBtn.MouseButton1Click, function()
+        va.Visible = false
+      end)
+      function MakePanel(a)
+      end
+      function InviteFriend(a)
+      end
+      function JoinFriend(a)
+      end
+      vh(game:GetObjects("rbxassetid://7037305928")[1].Frame.TopBar, game:GetObjects("rbxassetid://7037305928")[1])
+      for fh, fj in next, {}, nil do
+      end
+      spawn(function()
+        while not nil and not va do
+          vb.Frame.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+          vb.Frame.TopBar.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+          vb.Frame.TopBar.CloseBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        end
+      end)
+    end)()
+    MusicConstructor()
+    SettingsConstructor()
+    ve(va.MainFrame.TopBar.TabListBtn.MouseButton1Click, function()
+      va()
+    end)
+    ve(va.MainFrame.TabMenu.Menu.Top.MenuCloseBtn.MouseButton1Click, function()
+      va()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.SearchBtn.MouseButton1Click, function()
+      va.TopBar.ButtonHolder.SearchBtn.TextBox.Visible = not va.TopBar.ButtonHolder.SearchBtn.TextBox.Visible
+      va.TopBar.TopFrameTitle.Visible = not va.TopBar.TopFrameTitle.Visible
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.CloseBtn.MouseEnter, function()
+      va:Create(vb.TopBar.ButtonHolder.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.CloseBtn.MouseLeave, function()
+      va:Create(vb.TopBar.ButtonHolder.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.SearchBtn.MouseEnter, function()
+      va:Create(vb.TopBar.ButtonHolder.SearchBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.SearchBtn.MouseLeave, function()
+      va:Create(vb.TopBar.ButtonHolder.SearchBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.MenuBtn.MouseEnter, function()
+      va:Create(vb.TopBar.ButtonHolder.MenuBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.MenuBtn.MouseLeave, function()
+      va:Create(vb.TopBar.ButtonHolder.MenuBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+    end)
+    ve(va.MainFrame.TopBar.TabListBtn.MouseEnter, function()
+      va:Create(vb.TopBar.TabListBtn, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+    end)
+    ve(va.MainFrame.TopBar.TabListBtn.MouseLeave, function()
+      va:Create(vb.TopBar.TabListBtn, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.MenuBtn.MouseButton1Click, function()
+      va.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible = not va.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.CloseBtn.MouseButton1Click, function()
+      va = not va
+      vb.Visible = va
+    end)
+    function SearchConstructor()
+      function StitchElements()
+        for fe, fg in next, va.CurrentTab:GetDescendants() do
+          if fg.Name:find("element") then
+            table.insert({}, fg)
+          end
+        end
+        return {}
+      end
+      vb(vc.TopBar.ButtonHolder.SearchBtn.TextBox:GetPropertyChangedSignal("Text"), function()
+        for fd, fe in pairs(StitchElements()) do
+          if va.TopBar.ButtonHolder.SearchBtn.TextBox.Text:len() > 1 then
+            if fe.Name:lower():sub(0, -8):find(va.TopBar.ButtonHolder.SearchBtn.TextBox.Text:lower()) then
+              fe.Visible = true
+            else
+              fe.Visible = false
+            end
+          else
+            fe.Visible = true
+          end
+        end
+      end)
+    end
+    SearchConstructor()
+    ve(vk.InputBegan, function(a)
+      if (a.KeyCode.Name == va.Settings.CloseBind or a.UserInputType.Name == va.Settings.CloseBind) and not vb then
+        vc = not vc
+        vd.Visible = vc
+      end
+    end)
+    vc:Notification("Notification", "Solaris has been loaded, press " .. vc.Settings.CloseBind .. " to open/close the UI.")
+    spawn(function()
+      while wait() and not va do
+        vb.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+        vb.TopBar.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+        vb.TopBar.ButtonHolder.CloseBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.ButtonHolder.MenuBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.ButtonHolder.SearchBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.TabListBtn.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.TopFrameTitle.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TabMenu.Menu.BackgroundColor3 = va.Themes[va.Settings.Theme].Menu
+        vb.TabMenu.Menu.Top.MenuCloseBtn.ImageLabel.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.ButtonHolder.SearchBtn.TextBox.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+        vb.TopBar.ButtonHolder.SearchBtn.TextBox.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.ButtonHolder.SearchBtn.TextBox.PlaceholderColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.ButtonHolder.MenuBtn.MenuFrame.Frame.BackgroundColor3 = va.Themes[va.Settings.Theme].TopBar
+      end
+    end)
+    return {
+      Tab = function(a, b)
+        va:Clone().AutoButtonColor = false
+        va:Clone().Parent = vb.TabMenu.Menu.Holder
+        va:Clone().Text = b
+        va:Clone().TextSize = 14
+        vc:Clone().Parent = vb.ContainerFolder
+        vc:Clone().Visible = false
+        if vd == false then
+          vd = true
+          vc:Clone().Visible = true
+          va:Clone().UIPadding.PaddingLeft = UDim.new(0, 10)
+          va:Clone().TextTransparency = 0
+          va:Clone().BackgroundTransparency = 0
+          ve.CurrentTab = vc:Clone()
+        end
+        spawn(function()
+          while wait() and va:IsRunning() do
+            vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+            vb.BackgroundColor3 = va.Themes[va.Settings.Theme].TabToggled
+            vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 26)
+          end
+        end)
+        vg(va:Clone().MouseButton1Click, function()
+          for fd, fe in next, va.TabMenu.Menu.Holder:GetChildren() do
+            if fe:IsA("TextButton") then
+              vb:Create(fe, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0,4, BackgroundTransparency = 1}):Play()
+              vb:Create(fe.UIPadding, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                PaddingLeft = UDim.new(0, 5)
+              }):Play()
+            end
+            vb:Create(vc, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0, BackgroundTransparency = 0}):Play()
+            vb:Create(vc.UIPadding, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+              PaddingLeft = UDim.new(0, 10)
+            }):Play()
+          end
+          for fd, fe in next, va.ContainerFolder:GetChildren() do
+            if fe.Name == "Container" then
+              fe.Visible = false
+            end
+            vd.Visible = true
+          end
+          tabtoggledname = vc.Name
+          ve()
+        end)
+        return {
+          Section = function(a, b)
+            va:Clone().Parent = vb
+            va:Clone().SectionTitle.Text = b
+            spawn(function()
+              while not nil and va:IsRunning() do
+                vb.SectionTitle.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                vb.Size = UDim2.new(0,9, 0, 0, vb.UIListLayout.AbsoluteContentSize.Y)
+              end
+            end)
+            return {
+              Button = function(a, b, c)
+                game:GetObjects("rbxassetid://6937142338")[1].Parent = va
+                game:GetObjects("rbxassetid://6937142338")[1].Name = b .. "element"
+                game:GetObjects("rbxassetid://6937142338")[1].ButtonText.Text = b
+                game:GetObjects("rbxassetid://6937142338")[1].ClipsDescendants = true
+                vb(game:GetObjects("rbxassetid://6937142338")[1].MouseButton1Click, function()
+                  Ripple(va)
+                  vb()
+                end)
+                vb(game:GetObjects("rbxassetid://6937142338")[1].MouseEnter, function()
+                  va = true
+                end)
+                vb(game:GetObjects("rbxassetid://6937142338")[1].MouseLeave, function()
+                  va = false
+                end)
+                spawn(function()
+                  while not nil and va:IsRunning() do
+                    vb.BackgroundColor3 = vc and va.Themes[va.Settings.Theme].Button
+                    vb.ButtonText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+              end,
+              Toggle = function(a, b, c, d, e)
+                game:GetObjects("rbxassetid://6963155498")[1].Parent = va
+                game:GetObjects("rbxassetid://6963155498")[1].ToggleText.Text = b
+                game:GetObjects("rbxassetid://6963155498")[1].Name = b .. "element"
+                vc(game:GetObjects("rbxassetid://6963155498")[1].MouseButton1Click, function()
+                  va.Value = not va.Value
+                  va:Set(va.Value)
+                end)
+                spawn(function()
+                  while wait() and va:IsRunning() do
+                    if not vc.Value or vb.ToggleFrame.ToggleToggled then
+                    end
+                    vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].Toggle
+                    if vb.ToggleFrame or vb.ToggleFrame then
+                    end
+                    vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Toggle
+                    vb.ToggleText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                spawn(function()
+                  va:Set(vb)
+                  vc.Flags[vd] = va
+                end)
+                return {
+                  Value = false,
+                  Set = function(a, b)
+                    va.Value = b
+                    if b or b then
+                    end
+                    vb:Create(vc.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                      ImageTransparency = b or 1,
+                      Size = UDim2.new(1, -6, 1, -6)
+                    }):Play()
+                    return vd(va.Value)
+                  end
+                }
+              end,
+              Slider = function(a, b, c, d, e, g, h, j)
+                game:GetObjects("rbxassetid://6967573727")[1].Parent = va
+                game:GetObjects("rbxassetid://6967573727")[1].SliderText.Text = b
+                game:GetObjects("rbxassetid://6967573727")[1].Name = b .. "element"
+                vc(game:GetObjects("rbxassetid://6967573727")[1].SliderFrame.InputBegan, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    va = true
+                  end
+                end)
+                vc(game:GetObjects("rbxassetid://6967573727")[1].SliderFrame.InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    va = false
+                  end
+                end)
+                vc(game:GetService("UserInputService").InputChanged, function(a)
+                  if va and a.UserInputType == Enum.UserInputType.MouseMovement then
+                    vb(a)
+                  end
+                end)
+                spawn(function()
+                  while wait() and va:IsRunning() do
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Slider
+                    vb.SliderFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].SliderBar
+                    vb.SliderFrame.SliderCurrentFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].SliderInc
+                    vb.SliderText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.SliderVal.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                spawn(function()
+                  va:Set(vb)
+                  vc.Flags[vd] = va
+                end)
+                return {
+                  Value = e,
+                  Set = function(a, b)
+                    if b then
+                    end
+                    vc.SliderVal.Text = tostring(0)
+                    vc.SliderFrame.SliderCurrentFrame.Size = UDim2.new((b or 0) / va, 0, 1, 0)
+                    vd.Value = b
+                    return ve(vd.Value)
+                  end
+                }
+              end,
+              Dropdown = function(a, b, c, d, e, g)
+                game:GetObjects("rbxassetid://7027964359")[1].Parent = va
+                game:GetObjects("rbxassetid://7027964359")[1].Btn.Title.Text = b
+                game:GetObjects("rbxassetid://7027964359")[1].Name = b .. "element"
+                vc(game:GetObjects("rbxassetid://7027964359")[1].Btn.MouseButton1Click, function()
+                  va()
+                end)
+                spawn(function()
+                  while not nil and va:IsRunning() do
+                    vb.Btn.BackgroundColor3 = va.Themes[va.Settings.Theme].Dropdown
+                    vb.Btn.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.Btn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                spawn(function()
+                  va:Refresh(vb, false)
+                  va:Set(vc)
+                  vd.Flags[ve] = va
+                end)
+                return {
+                  Value = nil,
+                  Toggled = false,
+                  Options = c,
+                  Refresh = function(a, b, c)
+                    if c then
+                      for fh, fj in pairs(va.Holder:GetChildren()) do
+                        if not b then
+                          fj:Destroy()
+                          if b or not UDim2.new(1, 0, 0, 6 + 13) then
+                          end
+                          va.Holder.Size = UDim2.new(1, 0, 0, 0)
+                          if not vb.Toggled or b then
+                          end
+                          va.Size = UDim2.new(1, 0, 0, 32)
+                        end
+                      end
+                    end
+                    vc(b)
+                  end,
+                  Set = function(a, b)
+                    va.Value = b
+                    vb.Btn.Title.Text = vc .. " - " .. b
+                    return vd(va.Value)
+                  end
+                }
+              end,
+              MultiDropdown = function(a, b, c, d, e, g)
+                game:GetObjects("rbxassetid://7027964359")[1].Parent = va
+                game:GetObjects("rbxassetid://7027964359")[1].Btn.Title.Text = b
+                game:GetObjects("rbxassetid://7027964359")[1].Name = b .. "element"
+                vc(game:GetObjects("rbxassetid://7027964359")[1].Btn.MouseButton1Click, function()
+                  va()
+                end)
+                spawn(function()
+                  while wait() and not va do
+                    vb.Btn.BackgroundColor3 = va.Themes[va.Settings.Theme].Dropdown
+                    vb.Btn.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.Btn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                spawn(function()
+                  va:Refresh(vb, false)
+                  va:Set(vc)
+                  vd.Flags[ve] = va
+                end)
+                return {
+                  Value = {},
+                  Toggled = false,
+                  Options = c,
+                  Refresh = function(a, b, c)
+                    if not b then
+                      for fh, fj in pairs(va.Holder:GetChildren()) do
+                        if fj:IsA("TextButton") then
+                          fj:Destroy()
+                          va.Holder.Size = vb.Toggled and UDim2.new(1, 0, 0, 0)
+                          if b or not UDim2.new(1, 0, 0, 38 + 13) then
+                          end
+                          va.Size = UDim2.new(1, 0, 0, 32)
+                        end
+                      end
+                    end
+                    vc(b)
+                  end,
+                  Set = function(a, b)
+                    va.Value = b
+                    vb.Btn.Title.Text = vc .. " - " .. table.concat(va.Value, ", ")
+                    return vd(va.Value)
+                  end
+                }
+              end,
+              Colorpicker = function(a, b, c, d, e)
+                game:GetObjects("rbxassetid://7329998014")[1].Hue.Visible, game:GetObjects("rbxassetid://7329998014")[1].Color.Visible = {Value = c, Toggled = false}.Toggled, {Value = c, Toggled = false}.Toggled
+                game:GetObjects("rbxassetid://7329998014")[1].Parent = va
+                game:GetObjects("rbxassetid://7329998014")[1].Btn.Colorpicker.Text = b
+                game:GetObjects("rbxassetid://7329998014")[1].Name = b .. "element"
+                game:GetObjects("rbxassetid://7329998014")[1].Btn.Box.BackgroundColor3 = c
+                game:GetObjects("rbxassetid://7329998014")[1].Hue.HueGradient.Color = ColorSequence.new({
+                  ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 4)),
+                  ColorSequenceKeypoint.new(0,2, Color3.fromRGB(234, 255, 0)),
+                  ColorSequenceKeypoint.new(0,4, Color3.fromRGB(21, 255, 0)),
+                  ColorSequenceKeypoint.new(0,6, Color3.fromRGB(0, 255, 255)),
+                  ColorSequenceKeypoint.new(0,8, Color3.fromRGB(0, 17, 255)),
+                  ColorSequenceKeypoint.new(0,9, Color3.fromRGB(255, 0, 251)),
+                  ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 4))
+                })
+                vb(game:GetObjects("rbxassetid://7329998014")[1].Btn.MouseButton1Click, function()
+                  va.Toggled = not va.Toggled
+                  if vb or not UDim2.new(1, 0, 0, 120) then
+                  end
+                  vb:Create(vc, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                    Size = UDim2.new(1, 0, 0, 32)
+                  }):Play()
+                  vc.Hue.Visible, vc.Color.Visible = va.Toggled, va.Toggled
+                end)
+                game:GetObjects("rbxassetid://7329998014")[1].Btn.Box.BackgroundColor3 = c
+                game:GetObjects("rbxassetid://7329998014")[1].Color.BackgroundColor3 = c
+                pcall(e, game:GetObjects("rbxassetid://7329998014")[1].Btn.Box.BackgroundColor3)
+                vb(game:GetObjects("rbxassetid://7329998014")[1].Color.InputBegan, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    if not a then
+                      ColorInput:Disconnect()
+                    end
+                    ColorInput = va.RenderStepped:Connect(function()
+                      vd, vc.Position = math.clamp(va.X - vb.AbsolutePosition.X, 0, vb.AbsoluteSize.X) / vb.AbsoluteSize.X, UDim2.new(math.clamp(va.X - vb.AbsolutePosition.X, 0, vb.AbsoluteSize.X) / vb.AbsoluteSize.X, 0, math.clamp(va.Y - vb.AbsolutePosition.Y, 0, vb.AbsoluteSize.Y) / vb.AbsoluteSize.Y, 0)
+                      ve = 1 - math.clamp(va.Y - vb.AbsolutePosition.Y, 0, vb.AbsoluteSize.Y) / vb.AbsoluteSize.Y
+                      vg(true)
+                    end)
+                  end
+                end)
+                vb(game:GetObjects("rbxassetid://7329998014")[1].Color.InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 and not a then
+                    ColorInput:Disconnect()
+                  end
+                end)
+                vb(game:GetObjects("rbxassetid://7329998014")[1].Hue.InputBegan, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    if HueInput then
+                      HueInput:Disconnect()
+                    end
+                    HueInput = va.RenderStepped:Connect(function()
+                      vc.Position = UDim2.new(0,48, 0, math.clamp(va.Y - vb.AbsolutePosition.Y, 0, vb.AbsoluteSize.Y) / vb.AbsoluteSize.Y, 0)
+                      vd = 1 - math.clamp(va.Y - vb.AbsolutePosition.Y, 0, vb.AbsoluteSize.Y) / vb.AbsoluteSize.Y
+                      ve(true)
+                    end)
+                  end
+                end)
+                vb(game:GetObjects("rbxassetid://7329998014")[1].Hue.InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 and not a then
+                    HueInput:Disconnect()
+                  end
+                end)
+                spawn(function()
+                  while wait() and not va do
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Colorpicker
+                    vb.Btn.Colorpicker.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                return {Value = c, Toggled = false}
+              end,
+              Label = function(a, b)
+                game:GetObjects("rbxassetid://7032552322")[1].Parent = va
+                game:GetObjects("rbxassetid://7032552322")[1].Title.Text = b
+                game:GetObjects("rbxassetid://7032552322")[1].Name = b .. "element"
+                spawn(function()
+                  while not nil and va:IsRunning() do
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Label
+                    vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                return {
+                  Set = function(a, b)
+                    va.Title.Text = b
+                    va.Name = vb .. "element"
+                  end
+                }
+              end,
+              Textbox = function(a, b, c, d)
+                game:GetObjects("rbxassetid://7147292392")[1].Parent = va
+                game:GetObjects("rbxassetid://7147292392")[1].Title.Text = b
+                game:GetObjects("rbxassetid://7147292392")[1].Name = b .. "element"
+                vb(game:GetObjects("rbxassetid://7147292392")[1].Box.Changed, function()
+                  va.Box.Size = UDim2.new(0, 3 + 16, 0, 22)
+                end)
+                game:GetObjects("rbxassetid://7147292392")[1].Box.PlaceholderText = "                  "
+                vb(game:GetObjects("rbxassetid://7147292392")[1].InputBegan, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    va.Box:CaptureFocus()
+                  end
+                end)
+                vb(game:GetObjects("rbxassetid://7147292392")[1].Box.FocusLost, function()
+                  if vb then
+                    va.Box.Text = ""
+                  end
+                  return vc(va.Box.Text)
+                end)
+                vb(vc.InputBegan, function(a)
+                  if a.KeyCode == Enum.KeyCode.Escape and va.Box:IsFocused() then
+                    va.Box:ReleaseFocus()
+                  end
+                end)
+                spawn(function()
+                  while not nil and va:IsRunning() do
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Textbox
+                    vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.Box.BackgroundColor3 = va.Themes[va.Settings.Theme].TextboxFrame
+                    vb.Box.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                return {}
+              end,
+              Bind = function(a, b, c, d, e, g)
+                game:GetObjects("rbxassetid://7126874744")[1].Parent = va
+                game:GetObjects("rbxassetid://7126874744")[1].Title.Text = b
+                game:GetObjects("rbxassetid://7126874744")[1].Name = b .. "element"
+                vb(game:GetObjects("rbxassetid://7126874744")[1].InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    if va.Binding then
+                      return
+                    end
+                    va.Binding = true
+                    vb.BText.Text = "..."
+                  end
+                end)
+                vb(vc.InputBegan, function(a)
+                  if not a then
+                    return
+                  end
+                  if (a.KeyCode.Name == vb.Value or a.UserInputType.Name == vb.Value) and not vb.Binding then
+                    if vc then
+                      Holding = true
+                      vd(Holding)
+                    else
+                      vd()
+                    end
+                  elseif vb.Binding then
+                    pcall(function()
+                      if vb then
+                        vd = vc.KeyCode
+                      end
+                    end)
+                    pcall(function()
+                      if not vb and vb then
+                        vd = vc.UserInputType
+                      end
+                    end)
+                    if a then
+                    end
+                    vb:Set(vb.Value)
+                  end
+                end)
+                vb(vc.InputEnded, function(a)
+                  if (a.KeyCode.Name == va.Value or a.UserInputType.Name == va.Value) and not a and Holding then
+                    Holding = false
+                    vc(Holding)
+                  end
+                end)
+                spawn(function()
+                  while not nil and not va do
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Bind
+                    vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                {
+                  Value,
+                  Binding = false,
+                  Holding = false,
+                  Set = function(a, b)
+                    a.Binding = false
+                    a.Value = b or a.Value
+                    a.Value = a.Value.Name or a.Value
+                    va.BText.Text = a.Value
+                  end
+                }:Set(c)
+                vh.Flags[e] = {
+                  Value,
+                  Binding = false,
+                  Holding = false,
+                  Set = function(a, b)
+                    a.Binding = false
+                    a.Value = b or a.Value
+                    a.Value = a.Value.Name or a.Value
+                    va.BText.Text = a.Value
+                  end
+                }
+                return {
+                  Value,
+                  Binding = false,
+                  Holding = false,
+                  Set = function(a, b)
+                    a.Binding = false
+                    a.Value = b or a.Value
+                    a.Value = a.Value.Name or a.Value
+                    va.BText.Text = a.Value
+                  end
+                }
+              end
+            }
+          end
+        }
+      end
+    }
+  end
+}:IsRunning() or Instance.new("ScreenGui").Parent ~= game:GetService("CoreGui") then
+  return
+end
+print("Valid")
+getfenv(1).SolarisLib = {
+  GUI = Instance.new("ScreenGui"),
+  Connections = {},
+  NGUI = Instance.new("ScreenGui"),
+  trillhashedipaddress = "c2hlCnNheQpkbwp5b3UKbG92ZQptZQppCnRlbGwKaGVyCmkKYW0KbW9ua2U",
+  Version = "V2",
+  Themes = {
+    Default = {
+      MainFrame = Color3.fromRGB(25, 25, 25),
+      TopBar = Color3.fromRGB(30, 30, 30),
+      TextColor = Color3.fromRGB(255, 255, 255),
+      Menu = Color3.fromRGB(37, 37, 37),
+      TabToggled = Color3.fromRGB(43, 43, 43),
+      Button = Color3.fromRGB(30, 30, 30),
+      ButtonHold = Color3.fromRGB(31, 31, 31),
+      Toggle = Color3.fromRGB(30, 30, 30),
+      ToggleFrame = Color3.fromRGB(55, 55, 55),
+      ToggleToggled = Color3.fromRGB(22, 168, 76),
+      Slider = Color3.fromRGB(30, 30, 30),
+      SliderBar = Color3.fromRGB(25, 25, 25),
+      SliderInc = Color3.fromRGB(60, 60, 60),
+      Dropdown = Color3.fromRGB(30, 30, 30),
+      DropdownItem = Color3.fromRGB(30, 30, 30),
+      Textbox = Color3.fromRGB(30, 30, 30),
+      TextboxFrame = Color3.fromRGB(25, 25, 25),
+      Colorpicker = Color3.fromRGB(30, 30, 30),
+      Label = Color3.fromRGB(30, 30, 30),
+      Bind = Color3.fromRGB(30, 30, 30)
+    },
+    Light = {
+      MainFrame = Color3.fromRGB(255, 255, 255),
+      TopBar = Color3.fromRGB(227, 227, 227),
+      TextColor = Color3.fromRGB(0, 0, 0),
+      Menu = Color3.fromRGB(227, 227, 227),
+      TabToggled = Color3.fromRGB(43, 43, 43),
+      Button = Color3.fromRGB(227, 227, 227),
+      ButtonHold = Color3.fromRGB(31, 31, 31),
+      Toggle = Color3.fromRGB(227, 227, 227),
+      ToggleFrame = Color3.fromRGB(55, 55, 55),
+      ToggleToggled = Color3.fromRGB(22, 168, 76),
+      Slider = Color3.fromRGB(227, 227, 227),
+      SliderBar = Color3.fromRGB(220, 220, 220),
+      SliderInc = Color3.fromRGB(233, 233, 233),
+      Dropdown = Color3.fromRGB(227, 227, 227),
+      DropdownItem = Color3.fromRGB(227, 227, 227),
+      Textbox = Color3.fromRGB(227, 227, 227),
+      TextboxFrame = Color3.fromRGB(220, 220, 220),
+      Colorpicker = Color3.fromRGB(227, 227, 2270),
+      Label = Color3.fromRGB(227, 227, 227),
+      Bind = Color3.fromRGB(227, 227, 227)
+    },
+    Discord = {
+      MainFrame = Color3.fromRGB(54, 57, 63),
+      TopBar = Color3.fromRGB(47, 49, 54),
+      TextColor = Color3.fromRGB(255, 255, 255),
+      Menu = Color3.fromRGB(47, 49, 54),
+      TabToggled = Color3.fromRGB(54, 57, 63),
+      Button = Color3.fromRGB(88, 101, 242),
+      ButtonHold = Color3.fromRGB(71, 82, 196),
+      Toggle = Color3.fromRGB(47, 49, 54),
+      ToggleFrame = Color3.fromRGB(67, 69, 74),
+      ToggleToggled = Color3.fromRGB(22, 168, 76),
+      Slider = Color3.fromRGB(47, 49, 54),
+      SliderBar = Color3.fromRGB(42, 44, 49),
+      SliderInc = Color3.fromRGB(62, 64, 69),
+      Dropdown = Color3.fromRGB(47, 49, 54),
+      DropdownItem = Color3.fromRGB(47, 49, 54),
+      Textbox = Color3.fromRGB(47, 49, 54),
+      TextboxFrame = Color3.fromRGB(42, 44, 49),
+      Colorpicker = Color3.fromRGB(47, 49, 54),
+      Label = Color3.fromRGB(47, 49, 54),
+      Bind = Color3.fromRGB(47, 49, 54)
+    },
+    Blue = {
+      MainFrame = Color3.fromRGB(35, 35, 50),
+      TopBar = Color3.fromRGB(40, 40, 55),
+      TextColor = Color3.fromRGB(255, 255, 255),
+      Menu = Color3.fromRGB(47, 47, 62),
+      TabToggled = Color3.fromRGB(53, 53, 68),
+      Button = Color3.fromRGB(40, 40, 55),
+      ButtonHold = Color3.fromRGB(41, 41, 56),
+      Toggle = Color3.fromRGB(40, 40, 55),
+      ToggleFrame = Color3.fromRGB(65, 65, 80),
+      ToggleToggled = Color3.fromRGB(64, 64, 120),
+      Slider = Color3.fromRGB(40, 40, 55),
+      SliderBar = Color3.fromRGB(35, 35, 50),
+      SliderInc = Color3.fromRGB(70, 70, 85),
+      Dropdown = Color3.fromRGB(40, 40, 55),
+      DropdownItem = Color3.fromRGB(40, 40, 55),
+      Textbox = Color3.fromRGB(40, 40, 55),
+      TextboxFrame = Color3.fromRGB(35, 35, 50),
+      Colorpicker = Color3.fromRGB(40, 40, 55),
+      Label = Color3.fromRGB(40, 40, 55),
+      Bind = Color3.fromRGB(40, 40, 55)
+    },
+    Red = {
+      MainFrame = Color3.fromRGB(50, 35, 35),
+      TopBar = Color3.fromRGB(55, 40, 40),
+      TextColor = Color3.fromRGB(255, 255, 255),
+      Menu = Color3.fromRGB(62, 47, 47),
+      TabToggled = Color3.fromRGB(68, 53, 53),
+      Button = Color3.fromRGB(55, 40, 40),
+      ButtonHold = Color3.fromRGB(56, 41, 41),
+      Toggle = Color3.fromRGB(55, 40, 40),
+      ToggleFrame = Color3.fromRGB(80, 65, 65),
+      ToggleToggled = Color3.fromRGB(120, 64, 64),
+      Slider = Color3.fromRGB(55, 40, 40),
+      SliderBar = Color3.fromRGB(50, 35, 35),
+      SliderInc = Color3.fromRGB(85, 70, 70),
+      Dropdown = Color3.fromRGB(55, 40, 40),
+      DropdownItem = Color3.fromRGB(55, 40, 40),
+      Textbox = Color3.fromRGB(55, 40, 40),
+      TextboxFrame = Color3.fromRGB(50, 35, 35),
+      Colorpicker = Color3.fromRGB(55, 40, 40),
+      Label = Color3.fromRGB(55, 40, 40),
+      Bind = Color3.fromRGB(55, 40, 40)
+    },
+    Green = {
+      MainFrame = Color3.fromRGB(35, 50, 35),
+      TopBar = Color3.fromRGB(40, 55, 40),
+      TextColor = Color3.fromRGB(255, 255, 255),
+      Menu = Color3.fromRGB(47, 62, 47),
+      TabToggled = Color3.fromRGB(53, 68, 53),
+      Button = Color3.fromRGB(40, 55, 40),
+      ButtonHold = Color3.fromRGB(41, 56, 41),
+      Toggle = Color3.fromRGB(40, 55, 40),
+      ToggleFrame = Color3.fromRGB(65, 80, 65),
+      ToggleToggled = Color3.fromRGB(64, 120, 64),
+      Slider = Color3.fromRGB(40, 55, 40),
+      SliderBar = Color3.fromRGB(35, 50, 35),
+      SliderInc = Color3.fromRGB(70, 85, 70),
+      Dropdown = Color3.fromRGB(40, 55, 40),
+      DropdownItem = Color3.fromRGB(40, 55, 40),
+      Textbox = Color3.fromRGB(40, 55, 40),
+      TextboxFrame = Color3.fromRGB(35, 50, 35),
+      Colorpicker = Color3.fromRGB(40, 55, 40),
+      Label = Color3.fromRGB(40, 55, 40),
+      Bind = Color3.fromRGB(40, 55, 40)
+    }
+  },
+  Settings = {
+    Theme = "Default",
+    ShowFriendsOnLaunch = true,
+    ShowMusicOnLaunch = true,
+    CloseBind = "RightControl"
+  },
+  Flags = {},
+  CurrentTab,
+  Settings = game:GetService("HttpService"):JSONDecode(readfile("SolarisHub/settings.txt")),
+  LoadCfg = function(a, b)
+    table.foreach(va:JSONDecode(b), function(a, b)
+      if va.Flags[a] then
+        spawn(function()
+          va.Flags[vb]:Set(vc)
+        end)
+      else
+        warn("cfg loader - could not find", a, b)
+      end
+    end)
+  end,
+  SaveCfg = function(a, b)
+    for fh, fj in pairs(va.Flags) do
+    end
+    writefile("SolarisHub/configs/" .. b .. ".txt", tostring(vb:JSONEncode({
+      [fh] = fj.Value
+    })))
+  end,
+  Notification = function(a, b, c)
+    va:New(b, c)
+  end,
+  New = function(a, b)
+    if b ~= "az8PYYKgEGsZM3nDeQzCW4y92qHurAmCBTujBe63gwRj" then
+      print("nigger detected")
+      while true do
+        if false == false then
+        end
+      end
+    end
+    va.Parent = vb
+    va.MainFrame.TopBar.TopFrameTitle.Text = "Solaris <font transparency=\"0.4\">" .. vc.Version .. "</font>"
+    vd(va.MainFrame.TopBar, va)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Parent = va.MainFrame.TopBar.ButtonHolder.MenuBtn.MenuFrame
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Position = UDim2.new(0, 0, 0, 5)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Text = "Friends"
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseEnter, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+    end)
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseLeave, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0,4}):Play()
+    end)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Parent = va.MainFrame.TopBar.ButtonHolder.MenuBtn.MenuFrame
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Position = UDim2.new(0, 0, 0, 25)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Text = "Music"
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseEnter, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+    end)
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseLeave, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0,4}):Play()
+    end)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Parent = va.MainFrame.TopBar.ButtonHolder.MenuBtn.MenuFrame
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Position = UDim2.new(0, 0, 0, 45)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Text = "Settings"
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseEnter, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+    end)
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseLeave, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0,4}):Play()
+    end)
+    function MusicConstructor()
+      game:GetObjects("rbxassetid://7296373622")[1].Parent = va
+      game:GetObjects("rbxassetid://7296373622")[1].ZIndex = 5
+      game:GetObjects("rbxassetid://7296373622")[1].Visible = vb.Settings.ShowMusicOnLaunch
+      game:GetObjects("rbxassetid://7296373622")[1].Frame.Title.Text = "Not Playing"
+      game:GetObjects("rbxassetid://7296373622")[1].Frame.Progress.ProgressFrame.Size = UDim2.new(0, 0, 1, 0)
+      game:GetObjects("rbxassetid://7296373622")[1].Frame.AddBtn.AutoButtonColor = false
+      vc(game:GetObjects("rbxassetid://7296373622")[1].Frame.TopBar, game:GetObjects("rbxassetid://7296373622")[1])
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.TopBar.CloseBtn.MouseButton1Click, function()
+        va.Visible = false
+      end)
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.TopBar.CloseBtn.MouseEnter, function()
+        va:Create(vb.Frame.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+      end)
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.TopBar.CloseBtn.MouseLeave, function()
+        va:Create(vb.Frame.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+      end)
+      vd(vg.MouseButton1Click, function()
+        va.Visible = not va.Visible
+        vb.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible = false
+      end)
+      Instance.new("Sound").Parent, Instance.new("Sound").Name = game:GetObjects("rbxassetid://7296373622")[1], "Sound"
+      Instance.new("Sound").Volume = 3
+      Instance.new("Sound"):Stop()
+      if not isfile("SolarisHub/music.txt") then
+        writefile("SolarisHub/music.txt", tostring(vj:JSONEncode({})))
+      end
+      function Save()
+        for fe, fg in pairs(va) do
+        end
+        writefile("SolarisHub/music.txt", tostring(vb:JSONEncode({
+          [fe] = fg
+        })))
+      end
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.Play.MouseButton1Click, function()
+        va = not va
+        if va then
+          vb:Pause()
+        else
+          vb:Resume()
+        end
+        vc.Frame.Play.Image = vc.Frame.Play or "http://www.roblox.com/asset/?id=6026663719"
+      end)
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.AddBtn.MouseButton1Click, function()
+        if not table.find(vb, va.Frame.AddSong.Text) then
+          table.insert(vb, va.Frame.AddSong.Text)
+          Save()
+          vc(vb)
+        end
+      end)
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.AddBtn.MouseEnter, function()
+        va = true
+      end)
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.AddBtn.MouseLeave, function()
+        va = false
+      end);
+      (function(a)
+        for fe, fg in next, va.Frame.MusicList.Scroll:GetChildren() do
+          if fg.Name == "Btn" then
+            fg:Destroy()
+          end
+        end
+        for fe, fg in next, a, nil do
+          if not next and pcall(vb.GetProductInfo, vb, fg).AssetTypeId == 3 then
+            vc:Clone().Parent = va.Frame.MusicList.Scroll
+            vc:Clone().Title.Text = pcall(vb.GetProductInfo, vb, fg).Name
+            vd(vc:Clone().MouseButton1Click, function()
+              va(vb, vc.Name)
+            end)
+            vd(vc:Clone().Delete.MouseButton1Click, function()
+              for fd, fe in next, va, nil do
+                if fe == vb then
+                  table.remove(va, fd)
+                end
+              end
+              Save()
+              vc:Destroy()
+            end)
+          end
+        end
+      end)((vj:JSONDecode(readfile("SolarisHub/music.txt"))))
+      vd(game:GetService("RunService").RenderStepped, function()
+        if string.len(math.floor(va.TimePosition) % 60) < 2 then
+        end
+        if string.len((math.floor(math.floor(va.TimePosition) / 60))) < 2 then
+        end
+        if 2 >= string.len(math.floor(va.TimeLength) % 60) then
+        end
+        if 2 > string.len((math.floor(math.floor(va.TimeLength) / 60))) then
+        end
+        if vb:IsDescendantOf(vc) and vb:FindFirstChild("Frame") then
+          vb.Frame.Timer1.Text = ("0" .. math.floor(math.floor(va.TimePosition) / 60)) .. ":" .. "0" .. math.floor(va.TimePosition) % 60
+          vb.Frame.Timer2.Text = ("0" .. math.floor(math.floor(va.TimeLength) / 60)) .. ":" .. "0" .. math.floor(va.TimeLength) % 60
+          vb.Frame.Progress.ProgressFrame.Size = UDim2.new(va.TimePosition / va.TimeLength, 0, 1, 0)
+        end
+      end)
+      spawn(function()
+        while wait() and not va do
+          vb.Frame.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+          vb.Frame.TopBar.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+          vb.Frame.TopBar.CloseBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+          vb.Frame.MusicList.BackgroundColor3 = va.Themes[va.Settings.Theme].TopBar
+          if vb.Frame.AddBtn or not va.Themes[va.Settings.Theme].ButtonHold then
+          end
+          vb.Frame.AddBtn.BackgroundColor3 = va.Themes[va.Settings.Theme].Button
+          vb.Frame.Progress.BackgroundColor3 = va.Themes[va.Settings.Theme].Slider
+          vb.Frame.Progress.ProgressFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].SliderInc
+          vb.Frame.AddSong.BackgroundColor3 = va.Themes[va.Settings.Theme].Textbox
+        end
+      end)
+    end
+    function SettingsConstructor()
+      game:GetObjects("rbxassetid://7167491516")[1].Parent = va
+      vb(game:GetObjects("rbxassetid://7167491516")[1].Main.TopBar.CloseBtn.MouseEnter, function()
+        va:Create(vb.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+      end)
+      vb(game:GetObjects("rbxassetid://7167491516")[1].Main.TopBar.CloseBtn.MouseLeave, function()
+        va:Create(vb.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+      end)
+      vb(vd.MouseButton1Click, function()
+        va.Visible = not va.Visible
+        vb.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible = false
+      end)
+      vb(game:GetObjects("rbxassetid://7167491516")[1].Main.TopBar.CloseBtn.MouseButton1Click, function()
+        va.Visible = false
+      end)
+      function SaveSettings()
+        for fe, fg in pairs(va.Settings) do
+        end
+        writefile("SolarisHub/settings.txt", tostring(vb:JSONEncode({
+          [fe] = fg
+        })))
+      end
+      spawn(function()
+        while wait() and not va do
+          vb.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+          vb.TopBar.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+          vb.TopBar.CloseBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+          vb.TopBar.TopFrameTitle.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+          vb.TabHolder.BackgroundColor3 = va.Themes[va.Settings.Theme].TopBar
+        end
+      end)
+      {
+        Tab = function(a, b)
+          va:Clone().Parent = vc.TabHolder
+          va:Clone().Text = b
+          va:Clone().Size = UDim2.new(0, va:Clone().TextBounds.X, 1, 0)
+          vb:Clone().Parent = vc.ContainerFolder
+          vb:Clone().Visible = false
+          if not b then
+            va:Clone().TextTransparency = 0
+            vb:Clone().Visible = true
+            vd = false
+          end
+          ve(va:Clone().MouseButton1Click, function()
+            for fd, fe in next, va.TabHolder:GetChildren() do
+              if fe.Name == "Tab" then
+                fe.TextTransparency = 0,4
+              end
+            end
+            for fd, fe in next, va.ContainerFolder:GetChildren() do
+              if fe.Name == "Container" then
+                fe.Visible = false
+              end
+            end
+            vb.TextTransparency = 0
+            vc.Visible = true
+          end)
+          return {
+            ToggleSetting = function(a, b, c, d, e)
+              if b then
+              end
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              (function(a)
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  ImageTransparency = a and 1
+                }):Play()
+                if va.Create or va.Create then
+                end
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Size = UDim2.new(1, -6, 1, -6)
+                }):Play()
+              end)(d)
+              ve(vb:Clone().MouseButton1Click, function()
+                va(not vb)
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  if vb.ToggleFrame.ToggleToggled or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+                  if vb.ToggleFrame or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            BindSetting = function(a, b, c, d, e)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              function SetValue(a)
+                va = false
+                vb = a or vb
+                if a then
+                end
+                vb = vb
+                vc.BText.Text = vb
+                vd.Settings[ve] = vb
+                SaveSettings()
+              end
+              SetValue(va.Settings[e] or d)
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  if va then
+                    return
+                  end
+                  va = true
+                  vb.BText.Text = "..."
+                end
+              end)
+              ve(vg.InputBegan, function(a)
+                if va:GetFocusedTextBox() then
+                  return
+                end
+                if vb then
+                  pcall(function()
+                    if vb then
+                      vd = vc.KeyCode
+                    end
+                  end)
+                  pcall(function()
+                    if va(vb, vc.UserInputType) and vb then
+                      vd = vc.UserInputType
+                    end
+                  end)
+                  if a then
+                  end
+                  SetValue(vg)
+                end
+              end)
+              spawn(function()
+                while not nil and not va do
+                  vb.Desc.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            Dropdown = function(a, b, c, d, e, g)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              vb:Clone().Main.Current.Text = va.Settings[g] or e
+              function Toggle()
+                va.Main.Holder.Visible = vb
+                if va.Main.Holder or not UDim2.new(1, 0, 0, va.Main.Holder.UIListLayout.AbsoluteContentSize.Y) then
+                end
+                va.Main.Holder.Size = UDim2.new(1, 0, 0, 0)
+                if not UDim2.new(1, 0, 0, 0) then
+                  if 0 + 1 > 190 then
+                    vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 6)
+                  end
+                else
+                  vc.CanvasSize = UDim2.new(0, 0, 0, vc.UIListLayout.AbsoluteContentSize.Y)
+                end
+                vd:Create(va.Main.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Rotation = vd or 0
+                }):Play()
+              end
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  va = not va
+                  Toggle()
+                end
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  vb.Main.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                  vb.Main.Holder.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                end
+              end);
+              (function(a)
+                spawn(function()
+                  for fd, fe in pairs(va) do
+                    vb:Clone().Parent = vc.Main.Holder
+                    vb:Clone().Text = fe
+                    vd(vb:Clone().MouseButton1Click, function()
+                      va = vb
+                      vc.Settings[vd] = va
+                      ve.Main.Current.Text = va
+                      SaveSettings()
+                    end)
+                    spawn(function()
+                      while not nil and va:IsRunning() do
+                        vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                      end
+                    end)
+                  end
+                end)
+              end)(d)
+            end
+          }
+        end
+      }:Tab("General"):ToggleSetting("Show Friends On Launch", "Shows the friends menu when you load Solaris", true, "ShowFriendsOnLaunch")
+      {
+        Tab = function(a, b)
+          va:Clone().Parent = vc.TabHolder
+          va:Clone().Text = b
+          va:Clone().Size = UDim2.new(0, va:Clone().TextBounds.X, 1, 0)
+          vb:Clone().Parent = vc.ContainerFolder
+          vb:Clone().Visible = false
+          if not b then
+            va:Clone().TextTransparency = 0
+            vb:Clone().Visible = true
+            vd = false
+          end
+          ve(va:Clone().MouseButton1Click, function()
+            for fd, fe in next, va.TabHolder:GetChildren() do
+              if fe.Name == "Tab" then
+                fe.TextTransparency = 0,4
+              end
+            end
+            for fd, fe in next, va.ContainerFolder:GetChildren() do
+              if fe.Name == "Container" then
+                fe.Visible = false
+              end
+            end
+            vb.TextTransparency = 0
+            vc.Visible = true
+          end)
+          return {
+            ToggleSetting = function(a, b, c, d, e)
+              if b then
+              end
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              (function(a)
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  ImageTransparency = a and 1
+                }):Play()
+                if va.Create or va.Create then
+                end
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Size = UDim2.new(1, -6, 1, -6)
+                }):Play()
+              end)(d)
+              ve(vb:Clone().MouseButton1Click, function()
+                va(not vb)
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  if vb.ToggleFrame.ToggleToggled or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+                  if vb.ToggleFrame or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            BindSetting = function(a, b, c, d, e)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              function SetValue(a)
+                va = false
+                vb = a or vb
+                if a then
+                end
+                vb = vb
+                vc.BText.Text = vb
+                vd.Settings[ve] = vb
+                SaveSettings()
+              end
+              SetValue(va.Settings[e] or d)
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  if va then
+                    return
+                  end
+                  va = true
+                  vb.BText.Text = "..."
+                end
+              end)
+              ve(vg.InputBegan, function(a)
+                if va:GetFocusedTextBox() then
+                  return
+                end
+                if vb then
+                  pcall(function()
+                    if vb then
+                      vd = vc.KeyCode
+                    end
+                  end)
+                  pcall(function()
+                    if va(vb, vc.UserInputType) and vb then
+                      vd = vc.UserInputType
+                    end
+                  end)
+                  if a then
+                  end
+                  SetValue(vg)
+                end
+              end)
+              spawn(function()
+                while not nil and not va do
+                  vb.Desc.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            Dropdown = function(a, b, c, d, e, g)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              vb:Clone().Main.Current.Text = va.Settings[g] or e
+              function Toggle()
+                va.Main.Holder.Visible = vb
+                if va.Main.Holder or not UDim2.new(1, 0, 0, va.Main.Holder.UIListLayout.AbsoluteContentSize.Y) then
+                end
+                va.Main.Holder.Size = UDim2.new(1, 0, 0, 0)
+                if not UDim2.new(1, 0, 0, 0) then
+                  if 0 + 1 > 190 then
+                    vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 6)
+                  end
+                else
+                  vc.CanvasSize = UDim2.new(0, 0, 0, vc.UIListLayout.AbsoluteContentSize.Y)
+                end
+                vd:Create(va.Main.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Rotation = vd or 0
+                }):Play()
+              end
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  va = not va
+                  Toggle()
+                end
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  vb.Main.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                  vb.Main.Holder.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                end
+              end);
+              (function(a)
+                spawn(function()
+                  for fd, fe in pairs(va) do
+                    vb:Clone().Parent = vc.Main.Holder
+                    vb:Clone().Text = fe
+                    vd(vb:Clone().MouseButton1Click, function()
+                      va = vb
+                      vc.Settings[vd] = va
+                      ve.Main.Current.Text = va
+                      SaveSettings()
+                    end)
+                    spawn(function()
+                      while not nil and va:IsRunning() do
+                        vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                      end
+                    end)
+                  end
+                end)
+              end)(d)
+            end
+          }
+        end
+      }:Tab("General"):ToggleSetting("Show Music On Launch", "Shows the music menu when you load Solaris", true, "ShowMusicOnLaunch")
+      {
+        Tab = function(a, b)
+          va:Clone().Parent = vc.TabHolder
+          va:Clone().Text = b
+          va:Clone().Size = UDim2.new(0, va:Clone().TextBounds.X, 1, 0)
+          vb:Clone().Parent = vc.ContainerFolder
+          vb:Clone().Visible = false
+          if not b then
+            va:Clone().TextTransparency = 0
+            vb:Clone().Visible = true
+            vd = false
+          end
+          ve(va:Clone().MouseButton1Click, function()
+            for fd, fe in next, va.TabHolder:GetChildren() do
+              if fe.Name == "Tab" then
+                fe.TextTransparency = 0,4
+              end
+            end
+            for fd, fe in next, va.ContainerFolder:GetChildren() do
+              if fe.Name == "Container" then
+                fe.Visible = false
+              end
+            end
+            vb.TextTransparency = 0
+            vc.Visible = true
+          end)
+          return {
+            ToggleSetting = function(a, b, c, d, e)
+              if b then
+              end
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              (function(a)
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  ImageTransparency = a and 1
+                }):Play()
+                if va.Create or va.Create then
+                end
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Size = UDim2.new(1, -6, 1, -6)
+                }):Play()
+              end)(d)
+              ve(vb:Clone().MouseButton1Click, function()
+                va(not vb)
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  if vb.ToggleFrame.ToggleToggled or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+                  if vb.ToggleFrame or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            BindSetting = function(a, b, c, d, e)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              function SetValue(a)
+                va = false
+                vb = a or vb
+                if a then
+                end
+                vb = vb
+                vc.BText.Text = vb
+                vd.Settings[ve] = vb
+                SaveSettings()
+              end
+              SetValue(va.Settings[e] or d)
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  if va then
+                    return
+                  end
+                  va = true
+                  vb.BText.Text = "..."
+                end
+              end)
+              ve(vg.InputBegan, function(a)
+                if va:GetFocusedTextBox() then
+                  return
+                end
+                if vb then
+                  pcall(function()
+                    if vb then
+                      vd = vc.KeyCode
+                    end
+                  end)
+                  pcall(function()
+                    if va(vb, vc.UserInputType) and vb then
+                      vd = vc.UserInputType
+                    end
+                  end)
+                  if a then
+                  end
+                  SetValue(vg)
+                end
+              end)
+              spawn(function()
+                while not nil and not va do
+                  vb.Desc.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            Dropdown = function(a, b, c, d, e, g)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              vb:Clone().Main.Current.Text = va.Settings[g] or e
+              function Toggle()
+                va.Main.Holder.Visible = vb
+                if va.Main.Holder or not UDim2.new(1, 0, 0, va.Main.Holder.UIListLayout.AbsoluteContentSize.Y) then
+                end
+                va.Main.Holder.Size = UDim2.new(1, 0, 0, 0)
+                if not UDim2.new(1, 0, 0, 0) then
+                  if 0 + 1 > 190 then
+                    vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 6)
+                  end
+                else
+                  vc.CanvasSize = UDim2.new(0, 0, 0, vc.UIListLayout.AbsoluteContentSize.Y)
+                end
+                vd:Create(va.Main.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Rotation = vd or 0
+                }):Play()
+              end
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  va = not va
+                  Toggle()
+                end
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  vb.Main.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                  vb.Main.Holder.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                end
+              end);
+              (function(a)
+                spawn(function()
+                  for fd, fe in pairs(va) do
+                    vb:Clone().Parent = vc.Main.Holder
+                    vb:Clone().Text = fe
+                    vd(vb:Clone().MouseButton1Click, function()
+                      va = vb
+                      vc.Settings[vd] = va
+                      ve.Main.Current.Text = va
+                      SaveSettings()
+                    end)
+                    spawn(function()
+                      while not nil and va:IsRunning() do
+                        vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                      end
+                    end)
+                  end
+                end)
+              end)(d)
+            end
+          }
+        end
+      }:Tab("General"):BindSetting("Close Bind", "Hides/Shows the main window when pressed.", Enum.KeyCode.RightControl, "CloseBind")
+      {
+        Tab = function(a, b)
+          va:Clone().Parent = vc.TabHolder
+          va:Clone().Text = b
+          va:Clone().Size = UDim2.new(0, va:Clone().TextBounds.X, 1, 0)
+          vb:Clone().Parent = vc.ContainerFolder
+          vb:Clone().Visible = false
+          if not b then
+            va:Clone().TextTransparency = 0
+            vb:Clone().Visible = true
+            vd = false
+          end
+          ve(va:Clone().MouseButton1Click, function()
+            for fd, fe in next, va.TabHolder:GetChildren() do
+              if fe.Name == "Tab" then
+                fe.TextTransparency = 0,4
+              end
+            end
+            for fd, fe in next, va.ContainerFolder:GetChildren() do
+              if fe.Name == "Container" then
+                fe.Visible = false
+              end
+            end
+            vb.TextTransparency = 0
+            vc.Visible = true
+          end)
+          return {
+            ToggleSetting = function(a, b, c, d, e)
+              if b then
+              end
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              (function(a)
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  ImageTransparency = a and 1
+                }):Play()
+                if va.Create or va.Create then
+                end
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Size = UDim2.new(1, -6, 1, -6)
+                }):Play()
+              end)(d)
+              ve(vb:Clone().MouseButton1Click, function()
+                va(not vb)
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  if vb.ToggleFrame.ToggleToggled or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+                  if vb.ToggleFrame or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            BindSetting = function(a, b, c, d, e)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              function SetValue(a)
+                va = false
+                vb = a or vb
+                if a then
+                end
+                vb = vb
+                vc.BText.Text = vb
+                vd.Settings[ve] = vb
+                SaveSettings()
+              end
+              SetValue(va.Settings[e] or d)
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  if va then
+                    return
+                  end
+                  va = true
+                  vb.BText.Text = "..."
+                end
+              end)
+              ve(vg.InputBegan, function(a)
+                if va:GetFocusedTextBox() then
+                  return
+                end
+                if vb then
+                  pcall(function()
+                    if vb then
+                      vd = vc.KeyCode
+                    end
+                  end)
+                  pcall(function()
+                    if va(vb, vc.UserInputType) and vb then
+                      vd = vc.UserInputType
+                    end
+                  end)
+                  if a then
+                  end
+                  SetValue(vg)
+                end
+              end)
+              spawn(function()
+                while not nil and not va do
+                  vb.Desc.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            Dropdown = function(a, b, c, d, e, g)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              vb:Clone().Main.Current.Text = va.Settings[g] or e
+              function Toggle()
+                va.Main.Holder.Visible = vb
+                if va.Main.Holder or not UDim2.new(1, 0, 0, va.Main.Holder.UIListLayout.AbsoluteContentSize.Y) then
+                end
+                va.Main.Holder.Size = UDim2.new(1, 0, 0, 0)
+                if not UDim2.new(1, 0, 0, 0) then
+                  if 0 + 1 > 190 then
+                    vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 6)
+                  end
+                else
+                  vc.CanvasSize = UDim2.new(0, 0, 0, vc.UIListLayout.AbsoluteContentSize.Y)
+                end
+                vd:Create(va.Main.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Rotation = vd or 0
+                }):Play()
+              end
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  va = not va
+                  Toggle()
+                end
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  vb.Main.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                  vb.Main.Holder.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                end
+              end);
+              (function(a)
+                spawn(function()
+                  for fd, fe in pairs(va) do
+                    vb:Clone().Parent = vc.Main.Holder
+                    vb:Clone().Text = fe
+                    vd(vb:Clone().MouseButton1Click, function()
+                      va = vb
+                      vc.Settings[vd] = va
+                      ve.Main.Current.Text = va
+                      SaveSettings()
+                    end)
+                    spawn(function()
+                      while not nil and va:IsRunning() do
+                        vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                      end
+                    end)
+                  end
+                end)
+              end)(d)
+            end
+          }
+        end
+      }:Tab("Appearance"):Dropdown("Theme", "The look of the user interface", {
+        "Default",
+        "Light",
+        "Discord",
+        "Red",
+        "Green",
+        "Blue"
+      }, "Default", "Theme")
+    end
+    (function()
+      game:GetObjects("rbxassetid://7037305928")[1].Parent = va
+      game:GetObjects("rbxassetid://7037305928")[1].ZIndex = 4
+      game:GetObjects("rbxassetid://7037305928")[1].Visible = vb.Settings.ShowFriendsOnLaunch
+      vc(vd.MouseButton1Click, function()
+        va.Visible = not va.Visible
+        vb.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible = false
+      end)
+      vc(game:GetObjects("rbxassetid://7037305928")[1].Frame.TopBar.CloseBtn.Ico.MouseEnter, function()
+        va:Create(vb.Frame.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+      end)
+      vc(game:GetObjects("rbxassetid://7037305928")[1].Frame.TopBar.CloseBtn.Ico.MouseLeave, function()
+        va:Create(vb.Frame.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+      end)
+      vc(game:GetObjects("rbxassetid://7037305928")[1].Frame.TopBar.CloseBtn.MouseButton1Click, function()
+        va.Visible = false
+      end)
+      function MakePanel(a)
+      end
+      function InviteFriend(a)
+      end
+      function JoinFriend(a)
+      end
+      vh(game:GetObjects("rbxassetid://7037305928")[1].Frame.TopBar, game:GetObjects("rbxassetid://7037305928")[1])
+      for fh, fj in next, {}, nil do
+      end
+      spawn(function()
+        while not nil and not va do
+          vb.Frame.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+          vb.Frame.TopBar.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+          vb.Frame.TopBar.CloseBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        end
+      end)
+    end)()
+    MusicConstructor()
+    SettingsConstructor()
+    ve(va.MainFrame.TopBar.TabListBtn.MouseButton1Click, function()
+      va()
+    end)
+    ve(va.MainFrame.TabMenu.Menu.Top.MenuCloseBtn.MouseButton1Click, function()
+      va()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.SearchBtn.MouseButton1Click, function()
+      va.TopBar.ButtonHolder.SearchBtn.TextBox.Visible = not va.TopBar.ButtonHolder.SearchBtn.TextBox.Visible
+      va.TopBar.TopFrameTitle.Visible = not va.TopBar.TopFrameTitle.Visible
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.CloseBtn.MouseEnter, function()
+      va:Create(vb.TopBar.ButtonHolder.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.CloseBtn.MouseLeave, function()
+      va:Create(vb.TopBar.ButtonHolder.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.SearchBtn.MouseEnter, function()
+      va:Create(vb.TopBar.ButtonHolder.SearchBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.SearchBtn.MouseLeave, function()
+      va:Create(vb.TopBar.ButtonHolder.SearchBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.MenuBtn.MouseEnter, function()
+      va:Create(vb.TopBar.ButtonHolder.MenuBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.MenuBtn.MouseLeave, function()
+      va:Create(vb.TopBar.ButtonHolder.MenuBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+    end)
+    ve(va.MainFrame.TopBar.TabListBtn.MouseEnter, function()
+      va:Create(vb.TopBar.TabListBtn, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+    end)
+    ve(va.MainFrame.TopBar.TabListBtn.MouseLeave, function()
+      va:Create(vb.TopBar.TabListBtn, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.MenuBtn.MouseButton1Click, function()
+      va.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible = not va.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.CloseBtn.MouseButton1Click, function()
+      va = not va
+      vb.Visible = va
+    end)
+    function SearchConstructor()
+      function StitchElements()
+        for fe, fg in next, va.CurrentTab:GetDescendants() do
+          if fg.Name:find("element") then
+            table.insert({}, fg)
+          end
+        end
+        return {}
+      end
+      vb(vc.TopBar.ButtonHolder.SearchBtn.TextBox:GetPropertyChangedSignal("Text"), function()
+        for fd, fe in pairs(StitchElements()) do
+          if va.TopBar.ButtonHolder.SearchBtn.TextBox.Text:len() > 1 then
+            if fe.Name:lower():sub(0, -8):find(va.TopBar.ButtonHolder.SearchBtn.TextBox.Text:lower()) then
+              fe.Visible = true
+            else
+              fe.Visible = false
+            end
+          else
+            fe.Visible = true
+          end
+        end
+      end)
+    end
+    SearchConstructor()
+    ve(vk.InputBegan, function(a)
+      if (a.KeyCode.Name == va.Settings.CloseBind or a.UserInputType.Name == va.Settings.CloseBind) and not vb then
+        vc = not vc
+        vd.Visible = vc
+      end
+    end)
+    vc:Notification("Notification", "Solaris has been loaded, press " .. vc.Settings.CloseBind .. " to open/close the UI.")
+    spawn(function()
+      while wait() and not va do
+        vb.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+        vb.TopBar.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+        vb.TopBar.ButtonHolder.CloseBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.ButtonHolder.MenuBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.ButtonHolder.SearchBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.TabListBtn.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.TopFrameTitle.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TabMenu.Menu.BackgroundColor3 = va.Themes[va.Settings.Theme].Menu
+        vb.TabMenu.Menu.Top.MenuCloseBtn.ImageLabel.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.ButtonHolder.SearchBtn.TextBox.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+        vb.TopBar.ButtonHolder.SearchBtn.TextBox.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.ButtonHolder.SearchBtn.TextBox.PlaceholderColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.ButtonHolder.MenuBtn.MenuFrame.Frame.BackgroundColor3 = va.Themes[va.Settings.Theme].TopBar
+      end
+    end)
+    return {
+      Tab = function(a, b)
+        va:Clone().AutoButtonColor = false
+        va:Clone().Parent = vb.TabMenu.Menu.Holder
+        va:Clone().Text = b
+        va:Clone().TextSize = 14
+        vc:Clone().Parent = vb.ContainerFolder
+        vc:Clone().Visible = false
+        if vd == false then
+          vd = true
+          vc:Clone().Visible = true
+          va:Clone().UIPadding.PaddingLeft = UDim.new(0, 10)
+          va:Clone().TextTransparency = 0
+          va:Clone().BackgroundTransparency = 0
+          ve.CurrentTab = vc:Clone()
+        end
+        spawn(function()
+          while wait() and va:IsRunning() do
+            vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+            vb.BackgroundColor3 = va.Themes[va.Settings.Theme].TabToggled
+            vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 26)
+          end
+        end)
+        vg(va:Clone().MouseButton1Click, function()
+          for fd, fe in next, va.TabMenu.Menu.Holder:GetChildren() do
+            if fe:IsA("TextButton") then
+              vb:Create(fe, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0,4, BackgroundTransparency = 1}):Play()
+              vb:Create(fe.UIPadding, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                PaddingLeft = UDim.new(0, 5)
+              }):Play()
+            end
+            vb:Create(vc, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0, BackgroundTransparency = 0}):Play()
+            vb:Create(vc.UIPadding, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+              PaddingLeft = UDim.new(0, 10)
+            }):Play()
+          end
+          for fd, fe in next, va.ContainerFolder:GetChildren() do
+            if fe.Name == "Container" then
+              fe.Visible = false
+            end
+            vd.Visible = true
+          end
+          tabtoggledname = vc.Name
+          ve()
+        end)
+        return {
+          Section = function(a, b)
+            va:Clone().Parent = vb
+            va:Clone().SectionTitle.Text = b
+            spawn(function()
+              while not nil and va:IsRunning() do
+                vb.SectionTitle.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                vb.Size = UDim2.new(0,9, 0, 0, vb.UIListLayout.AbsoluteContentSize.Y)
+              end
+            end)
+            return {
+              Button = function(a, b, c)
+                game:GetObjects("rbxassetid://6937142338")[1].Parent = va
+                game:GetObjects("rbxassetid://6937142338")[1].Name = b .. "element"
+                game:GetObjects("rbxassetid://6937142338")[1].ButtonText.Text = b
+                game:GetObjects("rbxassetid://6937142338")[1].ClipsDescendants = true
+                vb(game:GetObjects("rbxassetid://6937142338")[1].MouseButton1Click, function()
+                  Ripple(va)
+                  vb()
+                end)
+                vb(game:GetObjects("rbxassetid://6937142338")[1].MouseEnter, function()
+                  va = true
+                end)
+                vb(game:GetObjects("rbxassetid://6937142338")[1].MouseLeave, function()
+                  va = false
+                end)
+                spawn(function()
+                  while not nil and va:IsRunning() do
+                    vb.BackgroundColor3 = vc and va.Themes[va.Settings.Theme].Button
+                    vb.ButtonText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+              end,
+              Toggle = function(a, b, c, d, e)
+                game:GetObjects("rbxassetid://6963155498")[1].Parent = va
+                game:GetObjects("rbxassetid://6963155498")[1].ToggleText.Text = b
+                game:GetObjects("rbxassetid://6963155498")[1].Name = b .. "element"
+                vc(game:GetObjects("rbxassetid://6963155498")[1].MouseButton1Click, function()
+                  va.Value = not va.Value
+                  va:Set(va.Value)
+                end)
+                spawn(function()
+                  while wait() and va:IsRunning() do
+                    if not vc.Value or vb.ToggleFrame.ToggleToggled then
+                    end
+                    vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].Toggle
+                    if vb.ToggleFrame or vb.ToggleFrame then
+                    end
+                    vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Toggle
+                    vb.ToggleText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                spawn(function()
+                  va:Set(vb)
+                  vc.Flags[vd] = va
+                end)
+                return {
+                  Value = false,
+                  Set = function(a, b)
+                    va.Value = b
+                    if b or b then
+                    end
+                    vb:Create(vc.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                      ImageTransparency = b or 1,
+                      Size = UDim2.new(1, -6, 1, -6)
+                    }):Play()
+                    return vd(va.Value)
+                  end
+                }
+              end,
+              Slider = function(a, b, c, d, e, g, h, j)
+                game:GetObjects("rbxassetid://6967573727")[1].Parent = va
+                game:GetObjects("rbxassetid://6967573727")[1].SliderText.Text = b
+                game:GetObjects("rbxassetid://6967573727")[1].Name = b .. "element"
+                vc(game:GetObjects("rbxassetid://6967573727")[1].SliderFrame.InputBegan, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    va = true
+                  end
+                end)
+                vc(game:GetObjects("rbxassetid://6967573727")[1].SliderFrame.InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    va = false
+                  end
+                end)
+                vc(game:GetService("UserInputService").InputChanged, function(a)
+                  if va and a.UserInputType == Enum.UserInputType.MouseMovement then
+                    vb(a)
+                  end
+                end)
+                spawn(function()
+                  while wait() and va:IsRunning() do
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Slider
+                    vb.SliderFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].SliderBar
+                    vb.SliderFrame.SliderCurrentFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].SliderInc
+                    vb.SliderText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.SliderVal.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                spawn(function()
+                  va:Set(vb)
+                  vc.Flags[vd] = va
+                end)
+                return {
+                  Value = e,
+                  Set = function(a, b)
+                    if b then
+                    end
+                    vc.SliderVal.Text = tostring(0)
+                    vc.SliderFrame.SliderCurrentFrame.Size = UDim2.new((b or 0) / va, 0, 1, 0)
+                    vd.Value = b
+                    return ve(vd.Value)
+                  end
+                }
+              end,
+              Dropdown = function(a, b, c, d, e, g)
+                game:GetObjects("rbxassetid://7027964359")[1].Parent = va
+                game:GetObjects("rbxassetid://7027964359")[1].Btn.Title.Text = b
+                game:GetObjects("rbxassetid://7027964359")[1].Name = b .. "element"
+                vc(game:GetObjects("rbxassetid://7027964359")[1].Btn.MouseButton1Click, function()
+                  va()
+                end)
+                spawn(function()
+                  while not nil and va:IsRunning() do
+                    vb.Btn.BackgroundColor3 = va.Themes[va.Settings.Theme].Dropdown
+                    vb.Btn.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.Btn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                spawn(function()
+                  va:Refresh(vb, false)
+                  va:Set(vc)
+                  vd.Flags[ve] = va
+                end)
+                return {
+                  Value = nil,
+                  Toggled = false,
+                  Options = c,
+                  Refresh = function(a, b, c)
+                    if c then
+                      for fh, fj in pairs(va.Holder:GetChildren()) do
+                        if not b then
+                          fj:Destroy()
+                          if b or not UDim2.new(1, 0, 0, 6 + 13) then
+                          end
+                          va.Holder.Size = UDim2.new(1, 0, 0, 0)
+                          if not vb.Toggled or b then
+                          end
+                          va.Size = UDim2.new(1, 0, 0, 32)
+                        end
+                      end
+                    end
+                    vc(b)
+                  end,
+                  Set = function(a, b)
+                    va.Value = b
+                    vb.Btn.Title.Text = vc .. " - " .. b
+                    return vd(va.Value)
+                  end
+                }
+              end,
+              MultiDropdown = function(a, b, c, d, e, g)
+                game:GetObjects("rbxassetid://7027964359")[1].Parent = va
+                game:GetObjects("rbxassetid://7027964359")[1].Btn.Title.Text = b
+                game:GetObjects("rbxassetid://7027964359")[1].Name = b .. "element"
+                vc(game:GetObjects("rbxassetid://7027964359")[1].Btn.MouseButton1Click, function()
+                  va()
+                end)
+                spawn(function()
+                  while wait() and not va do
+                    vb.Btn.BackgroundColor3 = va.Themes[va.Settings.Theme].Dropdown
+                    vb.Btn.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.Btn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                spawn(function()
+                  va:Refresh(vb, false)
+                  va:Set(vc)
+                  vd.Flags[ve] = va
+                end)
+                return {
+                  Value = {},
+                  Toggled = false,
+                  Options = c,
+                  Refresh = function(a, b, c)
+                    if not b then
+                      for fh, fj in pairs(va.Holder:GetChildren()) do
+                        if fj:IsA("TextButton") then
+                          fj:Destroy()
+                          va.Holder.Size = vb.Toggled and UDim2.new(1, 0, 0, 0)
+                          if b or not UDim2.new(1, 0, 0, 38 + 13) then
+                          end
+                          va.Size = UDim2.new(1, 0, 0, 32)
+                        end
+                      end
+                    end
+                    vc(b)
+                  end,
+                  Set = function(a, b)
+                    va.Value = b
+                    vb.Btn.Title.Text = vc .. " - " .. table.concat(va.Value, ", ")
+                    return vd(va.Value)
+                  end
+                }
+              end,
+              Colorpicker = function(a, b, c, d, e)
+                game:GetObjects("rbxassetid://7329998014")[1].Hue.Visible, game:GetObjects("rbxassetid://7329998014")[1].Color.Visible = {Value = c, Toggled = false}.Toggled, {Value = c, Toggled = false}.Toggled
+                game:GetObjects("rbxassetid://7329998014")[1].Parent = va
+                game:GetObjects("rbxassetid://7329998014")[1].Btn.Colorpicker.Text = b
+                game:GetObjects("rbxassetid://7329998014")[1].Name = b .. "element"
+                game:GetObjects("rbxassetid://7329998014")[1].Btn.Box.BackgroundColor3 = c
+                game:GetObjects("rbxassetid://7329998014")[1].Hue.HueGradient.Color = ColorSequence.new({
+                  ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 4)),
+                  ColorSequenceKeypoint.new(0,2, Color3.fromRGB(234, 255, 0)),
+                  ColorSequenceKeypoint.new(0,4, Color3.fromRGB(21, 255, 0)),
+                  ColorSequenceKeypoint.new(0,6, Color3.fromRGB(0, 255, 255)),
+                  ColorSequenceKeypoint.new(0,8, Color3.fromRGB(0, 17, 255)),
+                  ColorSequenceKeypoint.new(0,9, Color3.fromRGB(255, 0, 251)),
+                  ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 4))
+                })
+                vb(game:GetObjects("rbxassetid://7329998014")[1].Btn.MouseButton1Click, function()
+                  va.Toggled = not va.Toggled
+                  if vb or not UDim2.new(1, 0, 0, 120) then
+                  end
+                  vb:Create(vc, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                    Size = UDim2.new(1, 0, 0, 32)
+                  }):Play()
+                  vc.Hue.Visible, vc.Color.Visible = va.Toggled, va.Toggled
+                end)
+                game:GetObjects("rbxassetid://7329998014")[1].Btn.Box.BackgroundColor3 = c
+                game:GetObjects("rbxassetid://7329998014")[1].Color.BackgroundColor3 = c
+                pcall(e, game:GetObjects("rbxassetid://7329998014")[1].Btn.Box.BackgroundColor3)
+                vb(game:GetObjects("rbxassetid://7329998014")[1].Color.InputBegan, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    if not a then
+                      ColorInput:Disconnect()
+                    end
+                    ColorInput = va.RenderStepped:Connect(function()
+                      vd, vc.Position = math.clamp(va.X - vb.AbsolutePosition.X, 0, vb.AbsoluteSize.X) / vb.AbsoluteSize.X, UDim2.new(math.clamp(va.X - vb.AbsolutePosition.X, 0, vb.AbsoluteSize.X) / vb.AbsoluteSize.X, 0, math.clamp(va.Y - vb.AbsolutePosition.Y, 0, vb.AbsoluteSize.Y) / vb.AbsoluteSize.Y, 0)
+                      ve = 1 - math.clamp(va.Y - vb.AbsolutePosition.Y, 0, vb.AbsoluteSize.Y) / vb.AbsoluteSize.Y
+                      vg(true)
+                    end)
+                  end
+                end)
+                vb(game:GetObjects("rbxassetid://7329998014")[1].Color.InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 and not a then
+                    ColorInput:Disconnect()
+                  end
+                end)
+                vb(game:GetObjects("rbxassetid://7329998014")[1].Hue.InputBegan, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    if HueInput then
+                      HueInput:Disconnect()
+                    end
+                    HueInput = va.RenderStepped:Connect(function()
+                      vc.Position = UDim2.new(0,48, 0, math.clamp(va.Y - vb.AbsolutePosition.Y, 0, vb.AbsoluteSize.Y) / vb.AbsoluteSize.Y, 0)
+                      vd = 1 - math.clamp(va.Y - vb.AbsolutePosition.Y, 0, vb.AbsoluteSize.Y) / vb.AbsoluteSize.Y
+                      ve(true)
+                    end)
+                  end
+                end)
+                vb(game:GetObjects("rbxassetid://7329998014")[1].Hue.InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 and not a then
+                    HueInput:Disconnect()
+                  end
+                end)
+                spawn(function()
+                  while wait() and not va do
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Colorpicker
+                    vb.Btn.Colorpicker.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                return {Value = c, Toggled = false}
+              end,
+              Label = function(a, b)
+                game:GetObjects("rbxassetid://7032552322")[1].Parent = va
+                game:GetObjects("rbxassetid://7032552322")[1].Title.Text = b
+                game:GetObjects("rbxassetid://7032552322")[1].Name = b .. "element"
+                spawn(function()
+                  while not nil and va:IsRunning() do
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Label
+                    vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                return {
+                  Set = function(a, b)
+                    va.Title.Text = b
+                    va.Name = vb .. "element"
+                  end
+                }
+              end,
+              Textbox = function(a, b, c, d)
+                game:GetObjects("rbxassetid://7147292392")[1].Parent = va
+                game:GetObjects("rbxassetid://7147292392")[1].Title.Text = b
+                game:GetObjects("rbxassetid://7147292392")[1].Name = b .. "element"
+                vb(game:GetObjects("rbxassetid://7147292392")[1].Box.Changed, function()
+                  va.Box.Size = UDim2.new(0, 3 + 16, 0, 22)
+                end)
+                game:GetObjects("rbxassetid://7147292392")[1].Box.PlaceholderText = "                  "
+                vb(game:GetObjects("rbxassetid://7147292392")[1].InputBegan, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    va.Box:CaptureFocus()
+                  end
+                end)
+                vb(game:GetObjects("rbxassetid://7147292392")[1].Box.FocusLost, function()
+                  if vb then
+                    va.Box.Text = ""
+                  end
+                  return vc(va.Box.Text)
+                end)
+                vb(vc.InputBegan, function(a)
+                  if a.KeyCode == Enum.KeyCode.Escape and va.Box:IsFocused() then
+                    va.Box:ReleaseFocus()
+                  end
+                end)
+                spawn(function()
+                  while not nil and va:IsRunning() do
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Textbox
+                    vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.Box.BackgroundColor3 = va.Themes[va.Settings.Theme].TextboxFrame
+                    vb.Box.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                return {}
+              end,
+              Bind = function(a, b, c, d, e, g)
+                game:GetObjects("rbxassetid://7126874744")[1].Parent = va
+                game:GetObjects("rbxassetid://7126874744")[1].Title.Text = b
+                game:GetObjects("rbxassetid://7126874744")[1].Name = b .. "element"
+                vb(game:GetObjects("rbxassetid://7126874744")[1].InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    if va.Binding then
+                      return
+                    end
+                    va.Binding = true
+                    vb.BText.Text = "..."
+                  end
+                end)
+                vb(vc.InputBegan, function(a)
+                  if not a then
+                    return
+                  end
+                  if (a.KeyCode.Name == vb.Value or a.UserInputType.Name == vb.Value) and not vb.Binding then
+                    if vc then
+                      Holding = true
+                      vd(Holding)
+                    else
+                      vd()
+                    end
+                  elseif vb.Binding then
+                    pcall(function()
+                      if vb then
+                        vd = vc.KeyCode
+                      end
+                    end)
+                    pcall(function()
+                      if not vb and vb then
+                        vd = vc.UserInputType
+                      end
+                    end)
+                    if a then
+                    end
+                    vb:Set(vb.Value)
+                  end
+                end)
+                vb(vc.InputEnded, function(a)
+                  if (a.KeyCode.Name == va.Value or a.UserInputType.Name == va.Value) and not a and Holding then
+                    Holding = false
+                    vc(Holding)
+                  end
+                end)
+                spawn(function()
+                  while not nil and not va do
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Bind
+                    vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                {
+                  Value,
+                  Binding = false,
+                  Holding = false,
+                  Set = function(a, b)
+                    a.Binding = false
+                    a.Value = b or a.Value
+                    a.Value = a.Value.Name or a.Value
+                    va.BText.Text = a.Value
+                  end
+                }:Set(c)
+                vh.Flags[e] = {
+                  Value,
+                  Binding = false,
+                  Holding = false,
+                  Set = function(a, b)
+                    a.Binding = false
+                    a.Value = b or a.Value
+                    a.Value = a.Value.Name or a.Value
+                    va.BText.Text = a.Value
+                  end
+                }
+                return {
+                  Value,
+                  Binding = false,
+                  Holding = false,
+                  Set = function(a, b)
+                    a.Binding = false
+                    a.Value = b or a.Value
+                    a.Value = a.Value.Name or a.Value
+                    va.BText.Text = a.Value
+                  end
+                }
+              end
+            }
+          end
+        }
+      end
+    }
+  end
+}
+return {
+  GUI = Instance.new("ScreenGui"),
+  Connections = {},
+  NGUI = Instance.new("ScreenGui"),
+  trillhashedipaddress = "c2hlCnNheQpkbwp5b3UKbG92ZQptZQppCnRlbGwKaGVyCmkKYW0KbW9ua2U",
+  Version = "V2",
+  Themes = {
+    Default = {
+      MainFrame = Color3.fromRGB(25, 25, 25),
+      TopBar = Color3.fromRGB(30, 30, 30),
+      TextColor = Color3.fromRGB(255, 255, 255),
+      Menu = Color3.fromRGB(37, 37, 37),
+      TabToggled = Color3.fromRGB(43, 43, 43),
+      Button = Color3.fromRGB(30, 30, 30),
+      ButtonHold = Color3.fromRGB(31, 31, 31),
+      Toggle = Color3.fromRGB(30, 30, 30),
+      ToggleFrame = Color3.fromRGB(55, 55, 55),
+      ToggleToggled = Color3.fromRGB(22, 168, 76),
+      Slider = Color3.fromRGB(30, 30, 30),
+      SliderBar = Color3.fromRGB(25, 25, 25),
+      SliderInc = Color3.fromRGB(60, 60, 60),
+      Dropdown = Color3.fromRGB(30, 30, 30),
+      DropdownItem = Color3.fromRGB(30, 30, 30),
+      Textbox = Color3.fromRGB(30, 30, 30),
+      TextboxFrame = Color3.fromRGB(25, 25, 25),
+      Colorpicker = Color3.fromRGB(30, 30, 30),
+      Label = Color3.fromRGB(30, 30, 30),
+      Bind = Color3.fromRGB(30, 30, 30)
+    },
+    Light = {
+      MainFrame = Color3.fromRGB(255, 255, 255),
+      TopBar = Color3.fromRGB(227, 227, 227),
+      TextColor = Color3.fromRGB(0, 0, 0),
+      Menu = Color3.fromRGB(227, 227, 227),
+      TabToggled = Color3.fromRGB(43, 43, 43),
+      Button = Color3.fromRGB(227, 227, 227),
+      ButtonHold = Color3.fromRGB(31, 31, 31),
+      Toggle = Color3.fromRGB(227, 227, 227),
+      ToggleFrame = Color3.fromRGB(55, 55, 55),
+      ToggleToggled = Color3.fromRGB(22, 168, 76),
+      Slider = Color3.fromRGB(227, 227, 227),
+      SliderBar = Color3.fromRGB(220, 220, 220),
+      SliderInc = Color3.fromRGB(233, 233, 233),
+      Dropdown = Color3.fromRGB(227, 227, 227),
+      DropdownItem = Color3.fromRGB(227, 227, 227),
+      Textbox = Color3.fromRGB(227, 227, 227),
+      TextboxFrame = Color3.fromRGB(220, 220, 220),
+      Colorpicker = Color3.fromRGB(227, 227, 2270),
+      Label = Color3.fromRGB(227, 227, 227),
+      Bind = Color3.fromRGB(227, 227, 227)
+    },
+    Discord = {
+      MainFrame = Color3.fromRGB(54, 57, 63),
+      TopBar = Color3.fromRGB(47, 49, 54),
+      TextColor = Color3.fromRGB(255, 255, 255),
+      Menu = Color3.fromRGB(47, 49, 54),
+      TabToggled = Color3.fromRGB(54, 57, 63),
+      Button = Color3.fromRGB(88, 101, 242),
+      ButtonHold = Color3.fromRGB(71, 82, 196),
+      Toggle = Color3.fromRGB(47, 49, 54),
+      ToggleFrame = Color3.fromRGB(67, 69, 74),
+      ToggleToggled = Color3.fromRGB(22, 168, 76),
+      Slider = Color3.fromRGB(47, 49, 54),
+      SliderBar = Color3.fromRGB(42, 44, 49),
+      SliderInc = Color3.fromRGB(62, 64, 69),
+      Dropdown = Color3.fromRGB(47, 49, 54),
+      DropdownItem = Color3.fromRGB(47, 49, 54),
+      Textbox = Color3.fromRGB(47, 49, 54),
+      TextboxFrame = Color3.fromRGB(42, 44, 49),
+      Colorpicker = Color3.fromRGB(47, 49, 54),
+      Label = Color3.fromRGB(47, 49, 54),
+      Bind = Color3.fromRGB(47, 49, 54)
+    },
+    Blue = {
+      MainFrame = Color3.fromRGB(35, 35, 50),
+      TopBar = Color3.fromRGB(40, 40, 55),
+      TextColor = Color3.fromRGB(255, 255, 255),
+      Menu = Color3.fromRGB(47, 47, 62),
+      TabToggled = Color3.fromRGB(53, 53, 68),
+      Button = Color3.fromRGB(40, 40, 55),
+      ButtonHold = Color3.fromRGB(41, 41, 56),
+      Toggle = Color3.fromRGB(40, 40, 55),
+      ToggleFrame = Color3.fromRGB(65, 65, 80),
+      ToggleToggled = Color3.fromRGB(64, 64, 120),
+      Slider = Color3.fromRGB(40, 40, 55),
+      SliderBar = Color3.fromRGB(35, 35, 50),
+      SliderInc = Color3.fromRGB(70, 70, 85),
+      Dropdown = Color3.fromRGB(40, 40, 55),
+      DropdownItem = Color3.fromRGB(40, 40, 55),
+      Textbox = Color3.fromRGB(40, 40, 55),
+      TextboxFrame = Color3.fromRGB(35, 35, 50),
+      Colorpicker = Color3.fromRGB(40, 40, 55),
+      Label = Color3.fromRGB(40, 40, 55),
+      Bind = Color3.fromRGB(40, 40, 55)
+    },
+    Red = {
+      MainFrame = Color3.fromRGB(50, 35, 35),
+      TopBar = Color3.fromRGB(55, 40, 40),
+      TextColor = Color3.fromRGB(255, 255, 255),
+      Menu = Color3.fromRGB(62, 47, 47),
+      TabToggled = Color3.fromRGB(68, 53, 53),
+      Button = Color3.fromRGB(55, 40, 40),
+      ButtonHold = Color3.fromRGB(56, 41, 41),
+      Toggle = Color3.fromRGB(55, 40, 40),
+      ToggleFrame = Color3.fromRGB(80, 65, 65),
+      ToggleToggled = Color3.fromRGB(120, 64, 64),
+      Slider = Color3.fromRGB(55, 40, 40),
+      SliderBar = Color3.fromRGB(50, 35, 35),
+      SliderInc = Color3.fromRGB(85, 70, 70),
+      Dropdown = Color3.fromRGB(55, 40, 40),
+      DropdownItem = Color3.fromRGB(55, 40, 40),
+      Textbox = Color3.fromRGB(55, 40, 40),
+      TextboxFrame = Color3.fromRGB(50, 35, 35),
+      Colorpicker = Color3.fromRGB(55, 40, 40),
+      Label = Color3.fromRGB(55, 40, 40),
+      Bind = Color3.fromRGB(55, 40, 40)
+    },
+    Green = {
+      MainFrame = Color3.fromRGB(35, 50, 35),
+      TopBar = Color3.fromRGB(40, 55, 40),
+      TextColor = Color3.fromRGB(255, 255, 255),
+      Menu = Color3.fromRGB(47, 62, 47),
+      TabToggled = Color3.fromRGB(53, 68, 53),
+      Button = Color3.fromRGB(40, 55, 40),
+      ButtonHold = Color3.fromRGB(41, 56, 41),
+      Toggle = Color3.fromRGB(40, 55, 40),
+      ToggleFrame = Color3.fromRGB(65, 80, 65),
+      ToggleToggled = Color3.fromRGB(64, 120, 64),
+      Slider = Color3.fromRGB(40, 55, 40),
+      SliderBar = Color3.fromRGB(35, 50, 35),
+      SliderInc = Color3.fromRGB(70, 85, 70),
+      Dropdown = Color3.fromRGB(40, 55, 40),
+      DropdownItem = Color3.fromRGB(40, 55, 40),
+      Textbox = Color3.fromRGB(40, 55, 40),
+      TextboxFrame = Color3.fromRGB(35, 50, 35),
+      Colorpicker = Color3.fromRGB(40, 55, 40),
+      Label = Color3.fromRGB(40, 55, 40),
+      Bind = Color3.fromRGB(40, 55, 40)
+    }
+  },
+  Settings = {
+    Theme = "Default",
+    ShowFriendsOnLaunch = true,
+    ShowMusicOnLaunch = true,
+    CloseBind = "RightControl"
+  },
+  Flags = {},
+  CurrentTab,
+  Settings = game:GetService("HttpService"):JSONDecode(readfile("SolarisHub/settings.txt")),
+  LoadCfg = function(a, b)
+    table.foreach(va:JSONDecode(b), function(a, b)
+      if va.Flags[a] then
+        spawn(function()
+          va.Flags[vb]:Set(vc)
+        end)
+      else
+        warn("cfg loader - could not find", a, b)
+      end
+    end)
+  end,
+  SaveCfg = function(a, b)
+    for fh, fj in pairs(va.Flags) do
+    end
+    writefile("SolarisHub/configs/" .. b .. ".txt", tostring(vb:JSONEncode({
+      [fh] = fj.Value
+    })))
+  end,
+  Notification = function(a, b, c)
+    va:New(b, c)
+  end,
+  New = function(a, b)
+    if b ~= "az8PYYKgEGsZM3nDeQzCW4y92qHurAmCBTujBe63gwRj" then
+      print("nigger detected")
+      while true do
+        if false == false then
+        end
+      end
+    end
+    va.Parent = vb
+    va.MainFrame.TopBar.TopFrameTitle.Text = "Solaris <font transparency=\"0.4\">" .. vc.Version .. "</font>"
+    vd(va.MainFrame.TopBar, va)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Parent = va.MainFrame.TopBar.ButtonHolder.MenuBtn.MenuFrame
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Position = UDim2.new(0, 0, 0, 5)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Text = "Friends"
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseEnter, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+    end)
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseLeave, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0,4}):Play()
+    end)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Parent = va.MainFrame.TopBar.ButtonHolder.MenuBtn.MenuFrame
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Position = UDim2.new(0, 0, 0, 25)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Text = "Music"
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseEnter, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+    end)
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseLeave, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0,4}):Play()
+    end)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Parent = va.MainFrame.TopBar.ButtonHolder.MenuBtn.MenuFrame
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Position = UDim2.new(0, 0, 0, 45)
+    game:GetObjects("rbxassetid://7037141226")[1]:Clone().Text = "Settings"
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseEnter, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+    end)
+    ve(game:GetObjects("rbxassetid://7037141226")[1]:Clone().MouseLeave, function()
+      va:Create(vb, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0,4}):Play()
+    end)
+    function MusicConstructor()
+      game:GetObjects("rbxassetid://7296373622")[1].Parent = va
+      game:GetObjects("rbxassetid://7296373622")[1].ZIndex = 5
+      game:GetObjects("rbxassetid://7296373622")[1].Visible = vb.Settings.ShowMusicOnLaunch
+      game:GetObjects("rbxassetid://7296373622")[1].Frame.Title.Text = "Not Playing"
+      game:GetObjects("rbxassetid://7296373622")[1].Frame.Progress.ProgressFrame.Size = UDim2.new(0, 0, 1, 0)
+      game:GetObjects("rbxassetid://7296373622")[1].Frame.AddBtn.AutoButtonColor = false
+      vc(game:GetObjects("rbxassetid://7296373622")[1].Frame.TopBar, game:GetObjects("rbxassetid://7296373622")[1])
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.TopBar.CloseBtn.MouseButton1Click, function()
+        va.Visible = false
+      end)
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.TopBar.CloseBtn.MouseEnter, function()
+        va:Create(vb.Frame.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+      end)
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.TopBar.CloseBtn.MouseLeave, function()
+        va:Create(vb.Frame.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+      end)
+      vd(vg.MouseButton1Click, function()
+        va.Visible = not va.Visible
+        vb.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible = false
+      end)
+      Instance.new("Sound").Parent, Instance.new("Sound").Name = game:GetObjects("rbxassetid://7296373622")[1], "Sound"
+      Instance.new("Sound").Volume = 3
+      Instance.new("Sound"):Stop()
+      if not isfile("SolarisHub/music.txt") then
+        writefile("SolarisHub/music.txt", tostring(vj:JSONEncode({})))
+      end
+      function Save()
+        for fe, fg in pairs(va) do
+        end
+        writefile("SolarisHub/music.txt", tostring(vb:JSONEncode({
+          [fe] = fg
+        })))
+      end
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.Play.MouseButton1Click, function()
+        va = not va
+        if va then
+          vb:Pause()
+        else
+          vb:Resume()
+        end
+        vc.Frame.Play.Image = vc.Frame.Play or "http://www.roblox.com/asset/?id=6026663719"
+      end)
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.AddBtn.MouseButton1Click, function()
+        if not table.find(vb, va.Frame.AddSong.Text) then
+          table.insert(vb, va.Frame.AddSong.Text)
+          Save()
+          vc(vb)
+        end
+      end)
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.AddBtn.MouseEnter, function()
+        va = true
+      end)
+      vd(game:GetObjects("rbxassetid://7296373622")[1].Frame.AddBtn.MouseLeave, function()
+        va = false
+      end);
+      (function(a)
+        for fe, fg in next, va.Frame.MusicList.Scroll:GetChildren() do
+          if fg.Name == "Btn" then
+            fg:Destroy()
+          end
+        end
+        for fe, fg in next, a, nil do
+          if not next and pcall(vb.GetProductInfo, vb, fg).AssetTypeId == 3 then
+            vc:Clone().Parent = va.Frame.MusicList.Scroll
+            vc:Clone().Title.Text = pcall(vb.GetProductInfo, vb, fg).Name
+            vd(vc:Clone().MouseButton1Click, function()
+              va(vb, vc.Name)
+            end)
+            vd(vc:Clone().Delete.MouseButton1Click, function()
+              for fd, fe in next, va, nil do
+                if fe == vb then
+                  table.remove(va, fd)
+                end
+              end
+              Save()
+              vc:Destroy()
+            end)
+          end
+        end
+      end)((vj:JSONDecode(readfile("SolarisHub/music.txt"))))
+      vd(game:GetService("RunService").RenderStepped, function()
+        if string.len(math.floor(va.TimePosition) % 60) < 2 then
+        end
+        if string.len((math.floor(math.floor(va.TimePosition) / 60))) < 2 then
+        end
+        if 2 >= string.len(math.floor(va.TimeLength) % 60) then
+        end
+        if 2 > string.len((math.floor(math.floor(va.TimeLength) / 60))) then
+        end
+        if vb:IsDescendantOf(vc) and vb:FindFirstChild("Frame") then
+          vb.Frame.Timer1.Text = ("0" .. math.floor(math.floor(va.TimePosition) / 60)) .. ":" .. "0" .. math.floor(va.TimePosition) % 60
+          vb.Frame.Timer2.Text = ("0" .. math.floor(math.floor(va.TimeLength) / 60)) .. ":" .. "0" .. math.floor(va.TimeLength) % 60
+          vb.Frame.Progress.ProgressFrame.Size = UDim2.new(va.TimePosition / va.TimeLength, 0, 1, 0)
+        end
+      end)
+      spawn(function()
+        while wait() and not va do
+          vb.Frame.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+          vb.Frame.TopBar.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+          vb.Frame.TopBar.CloseBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+          vb.Frame.MusicList.BackgroundColor3 = va.Themes[va.Settings.Theme].TopBar
+          if vb.Frame.AddBtn or not va.Themes[va.Settings.Theme].ButtonHold then
+          end
+          vb.Frame.AddBtn.BackgroundColor3 = va.Themes[va.Settings.Theme].Button
+          vb.Frame.Progress.BackgroundColor3 = va.Themes[va.Settings.Theme].Slider
+          vb.Frame.Progress.ProgressFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].SliderInc
+          vb.Frame.AddSong.BackgroundColor3 = va.Themes[va.Settings.Theme].Textbox
+        end
+      end)
+    end
+    function SettingsConstructor()
+      game:GetObjects("rbxassetid://7167491516")[1].Parent = va
+      vb(game:GetObjects("rbxassetid://7167491516")[1].Main.TopBar.CloseBtn.MouseEnter, function()
+        va:Create(vb.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+      end)
+      vb(game:GetObjects("rbxassetid://7167491516")[1].Main.TopBar.CloseBtn.MouseLeave, function()
+        va:Create(vb.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+      end)
+      vb(vd.MouseButton1Click, function()
+        va.Visible = not va.Visible
+        vb.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible = false
+      end)
+      vb(game:GetObjects("rbxassetid://7167491516")[1].Main.TopBar.CloseBtn.MouseButton1Click, function()
+        va.Visible = false
+      end)
+      function SaveSettings()
+        for fe, fg in pairs(va.Settings) do
+        end
+        writefile("SolarisHub/settings.txt", tostring(vb:JSONEncode({
+          [fe] = fg
+        })))
+      end
+      spawn(function()
+        while wait() and not va do
+          vb.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+          vb.TopBar.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+          vb.TopBar.CloseBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+          vb.TopBar.TopFrameTitle.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+          vb.TabHolder.BackgroundColor3 = va.Themes[va.Settings.Theme].TopBar
+        end
+      end)
+      {
+        Tab = function(a, b)
+          va:Clone().Parent = vc.TabHolder
+          va:Clone().Text = b
+          va:Clone().Size = UDim2.new(0, va:Clone().TextBounds.X, 1, 0)
+          vb:Clone().Parent = vc.ContainerFolder
+          vb:Clone().Visible = false
+          if not b then
+            va:Clone().TextTransparency = 0
+            vb:Clone().Visible = true
+            vd = false
+          end
+          ve(va:Clone().MouseButton1Click, function()
+            for fd, fe in next, va.TabHolder:GetChildren() do
+              if fe.Name == "Tab" then
+                fe.TextTransparency = 0,4
+              end
+            end
+            for fd, fe in next, va.ContainerFolder:GetChildren() do
+              if fe.Name == "Container" then
+                fe.Visible = false
+              end
+            end
+            vb.TextTransparency = 0
+            vc.Visible = true
+          end)
+          return {
+            ToggleSetting = function(a, b, c, d, e)
+              if b then
+              end
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              (function(a)
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  ImageTransparency = a and 1
+                }):Play()
+                if va.Create or va.Create then
+                end
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Size = UDim2.new(1, -6, 1, -6)
+                }):Play()
+              end)(d)
+              ve(vb:Clone().MouseButton1Click, function()
+                va(not vb)
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  if vb.ToggleFrame.ToggleToggled or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+                  if vb.ToggleFrame or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            BindSetting = function(a, b, c, d, e)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              function SetValue(a)
+                va = false
+                vb = a or vb
+                if a then
+                end
+                vb = vb
+                vc.BText.Text = vb
+                vd.Settings[ve] = vb
+                SaveSettings()
+              end
+              SetValue(va.Settings[e] or d)
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  if va then
+                    return
+                  end
+                  va = true
+                  vb.BText.Text = "..."
+                end
+              end)
+              ve(vg.InputBegan, function(a)
+                if va:GetFocusedTextBox() then
+                  return
+                end
+                if vb then
+                  pcall(function()
+                    if vb then
+                      vd = vc.KeyCode
+                    end
+                  end)
+                  pcall(function()
+                    if va(vb, vc.UserInputType) and vb then
+                      vd = vc.UserInputType
+                    end
+                  end)
+                  if a then
+                  end
+                  SetValue(vg)
+                end
+              end)
+              spawn(function()
+                while not nil and not va do
+                  vb.Desc.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            Dropdown = function(a, b, c, d, e, g)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              vb:Clone().Main.Current.Text = va.Settings[g] or e
+              function Toggle()
+                va.Main.Holder.Visible = vb
+                if va.Main.Holder or not UDim2.new(1, 0, 0, va.Main.Holder.UIListLayout.AbsoluteContentSize.Y) then
+                end
+                va.Main.Holder.Size = UDim2.new(1, 0, 0, 0)
+                if not UDim2.new(1, 0, 0, 0) then
+                  if 0 + 1 > 190 then
+                    vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 6)
+                  end
+                else
+                  vc.CanvasSize = UDim2.new(0, 0, 0, vc.UIListLayout.AbsoluteContentSize.Y)
+                end
+                vd:Create(va.Main.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Rotation = vd or 0
+                }):Play()
+              end
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  va = not va
+                  Toggle()
+                end
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  vb.Main.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                  vb.Main.Holder.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                end
+              end);
+              (function(a)
+                spawn(function()
+                  for fd, fe in pairs(va) do
+                    vb:Clone().Parent = vc.Main.Holder
+                    vb:Clone().Text = fe
+                    vd(vb:Clone().MouseButton1Click, function()
+                      va = vb
+                      vc.Settings[vd] = va
+                      ve.Main.Current.Text = va
+                      SaveSettings()
+                    end)
+                    spawn(function()
+                      while not nil and va:IsRunning() do
+                        vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                      end
+                    end)
+                  end
+                end)
+              end)(d)
+            end
+          }
+        end
+      }:Tab("General"):ToggleSetting("Show Friends On Launch", "Shows the friends menu when you load Solaris", true, "ShowFriendsOnLaunch")
+      {
+        Tab = function(a, b)
+          va:Clone().Parent = vc.TabHolder
+          va:Clone().Text = b
+          va:Clone().Size = UDim2.new(0, va:Clone().TextBounds.X, 1, 0)
+          vb:Clone().Parent = vc.ContainerFolder
+          vb:Clone().Visible = false
+          if not b then
+            va:Clone().TextTransparency = 0
+            vb:Clone().Visible = true
+            vd = false
+          end
+          ve(va:Clone().MouseButton1Click, function()
+            for fd, fe in next, va.TabHolder:GetChildren() do
+              if fe.Name == "Tab" then
+                fe.TextTransparency = 0,4
+              end
+            end
+            for fd, fe in next, va.ContainerFolder:GetChildren() do
+              if fe.Name == "Container" then
+                fe.Visible = false
+              end
+            end
+            vb.TextTransparency = 0
+            vc.Visible = true
+          end)
+          return {
+            ToggleSetting = function(a, b, c, d, e)
+              if b then
+              end
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              (function(a)
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  ImageTransparency = a and 1
+                }):Play()
+                if va.Create or va.Create then
+                end
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Size = UDim2.new(1, -6, 1, -6)
+                }):Play()
+              end)(d)
+              ve(vb:Clone().MouseButton1Click, function()
+                va(not vb)
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  if vb.ToggleFrame.ToggleToggled or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+                  if vb.ToggleFrame or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            BindSetting = function(a, b, c, d, e)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              function SetValue(a)
+                va = false
+                vb = a or vb
+                if a then
+                end
+                vb = vb
+                vc.BText.Text = vb
+                vd.Settings[ve] = vb
+                SaveSettings()
+              end
+              SetValue(va.Settings[e] or d)
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  if va then
+                    return
+                  end
+                  va = true
+                  vb.BText.Text = "..."
+                end
+              end)
+              ve(vg.InputBegan, function(a)
+                if va:GetFocusedTextBox() then
+                  return
+                end
+                if vb then
+                  pcall(function()
+                    if vb then
+                      vd = vc.KeyCode
+                    end
+                  end)
+                  pcall(function()
+                    if va(vb, vc.UserInputType) and vb then
+                      vd = vc.UserInputType
+                    end
+                  end)
+                  if a then
+                  end
+                  SetValue(vg)
+                end
+              end)
+              spawn(function()
+                while not nil and not va do
+                  vb.Desc.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            Dropdown = function(a, b, c, d, e, g)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              vb:Clone().Main.Current.Text = va.Settings[g] or e
+              function Toggle()
+                va.Main.Holder.Visible = vb
+                if va.Main.Holder or not UDim2.new(1, 0, 0, va.Main.Holder.UIListLayout.AbsoluteContentSize.Y) then
+                end
+                va.Main.Holder.Size = UDim2.new(1, 0, 0, 0)
+                if not UDim2.new(1, 0, 0, 0) then
+                  if 0 + 1 > 190 then
+                    vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 6)
+                  end
+                else
+                  vc.CanvasSize = UDim2.new(0, 0, 0, vc.UIListLayout.AbsoluteContentSize.Y)
+                end
+                vd:Create(va.Main.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Rotation = vd or 0
+                }):Play()
+              end
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  va = not va
+                  Toggle()
+                end
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  vb.Main.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                  vb.Main.Holder.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                end
+              end);
+              (function(a)
+                spawn(function()
+                  for fd, fe in pairs(va) do
+                    vb:Clone().Parent = vc.Main.Holder
+                    vb:Clone().Text = fe
+                    vd(vb:Clone().MouseButton1Click, function()
+                      va = vb
+                      vc.Settings[vd] = va
+                      ve.Main.Current.Text = va
+                      SaveSettings()
+                    end)
+                    spawn(function()
+                      while not nil and va:IsRunning() do
+                        vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                      end
+                    end)
+                  end
+                end)
+              end)(d)
+            end
+          }
+        end
+      }:Tab("General"):ToggleSetting("Show Music On Launch", "Shows the music menu when you load Solaris", true, "ShowMusicOnLaunch")
+      {
+        Tab = function(a, b)
+          va:Clone().Parent = vc.TabHolder
+          va:Clone().Text = b
+          va:Clone().Size = UDim2.new(0, va:Clone().TextBounds.X, 1, 0)
+          vb:Clone().Parent = vc.ContainerFolder
+          vb:Clone().Visible = false
+          if not b then
+            va:Clone().TextTransparency = 0
+            vb:Clone().Visible = true
+            vd = false
+          end
+          ve(va:Clone().MouseButton1Click, function()
+            for fd, fe in next, va.TabHolder:GetChildren() do
+              if fe.Name == "Tab" then
+                fe.TextTransparency = 0,4
+              end
+            end
+            for fd, fe in next, va.ContainerFolder:GetChildren() do
+              if fe.Name == "Container" then
+                fe.Visible = false
+              end
+            end
+            vb.TextTransparency = 0
+            vc.Visible = true
+          end)
+          return {
+            ToggleSetting = function(a, b, c, d, e)
+              if b then
+              end
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              (function(a)
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  ImageTransparency = a and 1
+                }):Play()
+                if va.Create or va.Create then
+                end
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Size = UDim2.new(1, -6, 1, -6)
+                }):Play()
+              end)(d)
+              ve(vb:Clone().MouseButton1Click, function()
+                va(not vb)
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  if vb.ToggleFrame.ToggleToggled or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+                  if vb.ToggleFrame or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            BindSetting = function(a, b, c, d, e)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              function SetValue(a)
+                va = false
+                vb = a or vb
+                if a then
+                end
+                vb = vb
+                vc.BText.Text = vb
+                vd.Settings[ve] = vb
+                SaveSettings()
+              end
+              SetValue(va.Settings[e] or d)
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  if va then
+                    return
+                  end
+                  va = true
+                  vb.BText.Text = "..."
+                end
+              end)
+              ve(vg.InputBegan, function(a)
+                if va:GetFocusedTextBox() then
+                  return
+                end
+                if vb then
+                  pcall(function()
+                    if vb then
+                      vd = vc.KeyCode
+                    end
+                  end)
+                  pcall(function()
+                    if va(vb, vc.UserInputType) and vb then
+                      vd = vc.UserInputType
+                    end
+                  end)
+                  if a then
+                  end
+                  SetValue(vg)
+                end
+              end)
+              spawn(function()
+                while not nil and not va do
+                  vb.Desc.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            Dropdown = function(a, b, c, d, e, g)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              vb:Clone().Main.Current.Text = va.Settings[g] or e
+              function Toggle()
+                va.Main.Holder.Visible = vb
+                if va.Main.Holder or not UDim2.new(1, 0, 0, va.Main.Holder.UIListLayout.AbsoluteContentSize.Y) then
+                end
+                va.Main.Holder.Size = UDim2.new(1, 0, 0, 0)
+                if not UDim2.new(1, 0, 0, 0) then
+                  if 0 + 1 > 190 then
+                    vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 6)
+                  end
+                else
+                  vc.CanvasSize = UDim2.new(0, 0, 0, vc.UIListLayout.AbsoluteContentSize.Y)
+                end
+                vd:Create(va.Main.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Rotation = vd or 0
+                }):Play()
+              end
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  va = not va
+                  Toggle()
+                end
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  vb.Main.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                  vb.Main.Holder.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                end
+              end);
+              (function(a)
+                spawn(function()
+                  for fd, fe in pairs(va) do
+                    vb:Clone().Parent = vc.Main.Holder
+                    vb:Clone().Text = fe
+                    vd(vb:Clone().MouseButton1Click, function()
+                      va = vb
+                      vc.Settings[vd] = va
+                      ve.Main.Current.Text = va
+                      SaveSettings()
+                    end)
+                    spawn(function()
+                      while not nil and va:IsRunning() do
+                        vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                      end
+                    end)
+                  end
+                end)
+              end)(d)
+            end
+          }
+        end
+      }:Tab("General"):BindSetting("Close Bind", "Hides/Shows the main window when pressed.", Enum.KeyCode.RightControl, "CloseBind")
+      {
+        Tab = function(a, b)
+          va:Clone().Parent = vc.TabHolder
+          va:Clone().Text = b
+          va:Clone().Size = UDim2.new(0, va:Clone().TextBounds.X, 1, 0)
+          vb:Clone().Parent = vc.ContainerFolder
+          vb:Clone().Visible = false
+          if not b then
+            va:Clone().TextTransparency = 0
+            vb:Clone().Visible = true
+            vd = false
+          end
+          ve(va:Clone().MouseButton1Click, function()
+            for fd, fe in next, va.TabHolder:GetChildren() do
+              if fe.Name == "Tab" then
+                fe.TextTransparency = 0,4
+              end
+            end
+            for fd, fe in next, va.ContainerFolder:GetChildren() do
+              if fe.Name == "Container" then
+                fe.Visible = false
+              end
+            end
+            vb.TextTransparency = 0
+            vc.Visible = true
+          end)
+          return {
+            ToggleSetting = function(a, b, c, d, e)
+              if b then
+              end
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              (function(a)
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  ImageTransparency = a and 1
+                }):Play()
+                if va.Create or va.Create then
+                end
+                va:Create(vb.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Size = UDim2.new(1, -6, 1, -6)
+                }):Play()
+              end)(d)
+              ve(vb:Clone().MouseButton1Click, function()
+                va(not vb)
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  if vb.ToggleFrame.ToggleToggled or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+                  if vb.ToggleFrame or not va.Themes[va.Settings.Theme].ToggleToggled then
+                  end
+                  vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            BindSetting = function(a, b, c, d, e)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              function SetValue(a)
+                va = false
+                vb = a or vb
+                if a then
+                end
+                vb = vb
+                vc.BText.Text = vb
+                vd.Settings[ve] = vb
+                SaveSettings()
+              end
+              SetValue(va.Settings[e] or d)
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  if va then
+                    return
+                  end
+                  va = true
+                  vb.BText.Text = "..."
+                end
+              end)
+              ve(vg.InputBegan, function(a)
+                if va:GetFocusedTextBox() then
+                  return
+                end
+                if vb then
+                  pcall(function()
+                    if vb then
+                      vd = vc.KeyCode
+                    end
+                  end)
+                  pcall(function()
+                    if va(vb, vc.UserInputType) and vb then
+                      vd = vc.UserInputType
+                    end
+                  end)
+                  if a then
+                  end
+                  SetValue(vg)
+                end
+              end)
+              spawn(function()
+                while not nil and not va do
+                  vb.Desc.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                end
+              end)
+            end,
+            Dropdown = function(a, b, c, d, e, g)
+              vb:Clone().Parent = vc
+              vb:Clone().Title.Text = b
+              vb:Clone().Desc.Text = c
+              vb:Clone().Main.Current.Text = va.Settings[g] or e
+              function Toggle()
+                va.Main.Holder.Visible = vb
+                if va.Main.Holder or not UDim2.new(1, 0, 0, va.Main.Holder.UIListLayout.AbsoluteContentSize.Y) then
+                end
+                va.Main.Holder.Size = UDim2.new(1, 0, 0, 0)
+                if not UDim2.new(1, 0, 0, 0) then
+                  if 0 + 1 > 190 then
+                    vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 6)
+                  end
+                else
+                  vc.CanvasSize = UDim2.new(0, 0, 0, vc.UIListLayout.AbsoluteContentSize.Y)
+                end
+                vd:Create(va.Main.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                  Rotation = vd or 0
+                }):Play()
+              end
+              ve(vb:Clone().InputEnded, function(a)
+                if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                  va = not va
+                  Toggle()
+                end
+              end)
+              spawn(function()
+                while wait() and va:IsRunning() do
+                  vb.Main.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                  vb.Main.Holder.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+                end
+              end);
+              (function(a)
+                spawn(function()
+                  for fd, fe in pairs(va) do
+                    vb:Clone().Parent = vc.Main.Holder
+                    vb:Clone().Text = fe
+                    vd(vb:Clone().MouseButton1Click, function()
+                      va = vb
+                      vc.Settings[vd] = va
+                      ve.Main.Current.Text = va
+                      SaveSettings()
+                    end)
+                    spawn(function()
+                      while not nil and va:IsRunning() do
+                        vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                      end
+                    end)
+                  end
+                end)
+              end)(d)
+            end
+          }
+        end
+      }:Tab("Appearance"):Dropdown("Theme", "The look of the user interface", {
+        "Default",
+        "Light",
+        "Discord",
+        "Red",
+        "Green",
+        "Blue"
+      }, "Default", "Theme")
+    end
+    (function()
+      game:GetObjects("rbxassetid://7037305928")[1].Parent = va
+      game:GetObjects("rbxassetid://7037305928")[1].ZIndex = 4
+      game:GetObjects("rbxassetid://7037305928")[1].Visible = vb.Settings.ShowFriendsOnLaunch
+      vc(vd.MouseButton1Click, function()
+        va.Visible = not va.Visible
+        vb.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible = false
+      end)
+      vc(game:GetObjects("rbxassetid://7037305928")[1].Frame.TopBar.CloseBtn.Ico.MouseEnter, function()
+        va:Create(vb.Frame.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+      end)
+      vc(game:GetObjects("rbxassetid://7037305928")[1].Frame.TopBar.CloseBtn.Ico.MouseLeave, function()
+        va:Create(vb.Frame.TopBar.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+      end)
+      vc(game:GetObjects("rbxassetid://7037305928")[1].Frame.TopBar.CloseBtn.MouseButton1Click, function()
+        va.Visible = false
+      end)
+      function MakePanel(a)
+      end
+      function InviteFriend(a)
+      end
+      function JoinFriend(a)
+      end
+      vh(game:GetObjects("rbxassetid://7037305928")[1].Frame.TopBar, game:GetObjects("rbxassetid://7037305928")[1])
+      for fh, fj in next, {}, nil do
+      end
+      spawn(function()
+        while not nil and not va do
+          vb.Frame.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+          vb.Frame.TopBar.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+          vb.Frame.TopBar.CloseBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        end
+      end)
+    end)()
+    MusicConstructor()
+    SettingsConstructor()
+    ve(va.MainFrame.TopBar.TabListBtn.MouseButton1Click, function()
+      va()
+    end)
+    ve(va.MainFrame.TabMenu.Menu.Top.MenuCloseBtn.MouseButton1Click, function()
+      va()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.SearchBtn.MouseButton1Click, function()
+      va.TopBar.ButtonHolder.SearchBtn.TextBox.Visible = not va.TopBar.ButtonHolder.SearchBtn.TextBox.Visible
+      va.TopBar.TopFrameTitle.Visible = not va.TopBar.TopFrameTitle.Visible
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.CloseBtn.MouseEnter, function()
+      va:Create(vb.TopBar.ButtonHolder.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.CloseBtn.MouseLeave, function()
+      va:Create(vb.TopBar.ButtonHolder.CloseBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.SearchBtn.MouseEnter, function()
+      va:Create(vb.TopBar.ButtonHolder.SearchBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.SearchBtn.MouseLeave, function()
+      va:Create(vb.TopBar.ButtonHolder.SearchBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.MenuBtn.MouseEnter, function()
+      va:Create(vb.TopBar.ButtonHolder.MenuBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.MenuBtn.MouseLeave, function()
+      va:Create(vb.TopBar.ButtonHolder.MenuBtn.Ico, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+    end)
+    ve(va.MainFrame.TopBar.TabListBtn.MouseEnter, function()
+      va:Create(vb.TopBar.TabListBtn, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+    end)
+    ve(va.MainFrame.TopBar.TabListBtn.MouseLeave, function()
+      va:Create(vb.TopBar.TabListBtn, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0,4}):Play()
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.MenuBtn.MouseButton1Click, function()
+      va.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible = not va.TopBar.ButtonHolder.MenuBtn.MenuFrame.Visible
+    end)
+    ve(va.MainFrame.TopBar.ButtonHolder.CloseBtn.MouseButton1Click, function()
+      va = not va
+      vb.Visible = va
+    end)
+    function SearchConstructor()
+      function StitchElements()
+        for fe, fg in next, va.CurrentTab:GetDescendants() do
+          if fg.Name:find("element") then
+            table.insert({}, fg)
+          end
+        end
+        return {}
+      end
+      vb(vc.TopBar.ButtonHolder.SearchBtn.TextBox:GetPropertyChangedSignal("Text"), function()
+        for fd, fe in pairs(StitchElements()) do
+          if va.TopBar.ButtonHolder.SearchBtn.TextBox.Text:len() > 1 then
+            if fe.Name:lower():sub(0, -8):find(va.TopBar.ButtonHolder.SearchBtn.TextBox.Text:lower()) then
+              fe.Visible = true
+            else
+              fe.Visible = false
+            end
+          else
+            fe.Visible = true
+          end
+        end
+      end)
+    end
+    SearchConstructor()
+    ve(vk.InputBegan, function(a)
+      if (a.KeyCode.Name == va.Settings.CloseBind or a.UserInputType.Name == va.Settings.CloseBind) and not vb then
+        vc = not vc
+        vd.Visible = vc
+      end
+    end)
+    vc:Notification("Notification", "Solaris has been loaded, press " .. vc.Settings.CloseBind .. " to open/close the UI.")
+    spawn(function()
+      while wait() and not va do
+        vb.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+        vb.TopBar.ImageColor3 = va.Themes[va.Settings.Theme].TopBar
+        vb.TopBar.ButtonHolder.CloseBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.ButtonHolder.MenuBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.ButtonHolder.SearchBtn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.TabListBtn.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.TopFrameTitle.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TabMenu.Menu.BackgroundColor3 = va.Themes[va.Settings.Theme].Menu
+        vb.TabMenu.Menu.Top.MenuCloseBtn.ImageLabel.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.ButtonHolder.SearchBtn.TextBox.BackgroundColor3 = va.Themes[va.Settings.Theme].MainFrame
+        vb.TopBar.ButtonHolder.SearchBtn.TextBox.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.ButtonHolder.SearchBtn.TextBox.PlaceholderColor3 = va.Themes[va.Settings.Theme].TextColor
+        vb.TopBar.ButtonHolder.MenuBtn.MenuFrame.Frame.BackgroundColor3 = va.Themes[va.Settings.Theme].TopBar
+      end
+    end)
+    return {
+      Tab = function(a, b)
+        va:Clone().AutoButtonColor = false
+        va:Clone().Parent = vb.TabMenu.Menu.Holder
+        va:Clone().Text = b
+        va:Clone().TextSize = 14
+        vc:Clone().Parent = vb.ContainerFolder
+        vc:Clone().Visible = false
+        if vd == false then
+          vd = true
+          vc:Clone().Visible = true
+          va:Clone().UIPadding.PaddingLeft = UDim.new(0, 10)
+          va:Clone().TextTransparency = 0
+          va:Clone().BackgroundTransparency = 0
+          ve.CurrentTab = vc:Clone()
+        end
+        spawn(function()
+          while wait() and va:IsRunning() do
+            vb.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+            vb.BackgroundColor3 = va.Themes[va.Settings.Theme].TabToggled
+            vc.CanvasSize = UDim2.new(0, 0, 0, 5 + 26)
+          end
+        end)
+        vg(va:Clone().MouseButton1Click, function()
+          for fd, fe in next, va.TabMenu.Menu.Holder:GetChildren() do
+            if fe:IsA("TextButton") then
+              vb:Create(fe, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0,4, BackgroundTransparency = 1}):Play()
+              vb:Create(fe.UIPadding, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                PaddingLeft = UDim.new(0, 5)
+              }):Play()
+            end
+            vb:Create(vc, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0, BackgroundTransparency = 0}):Play()
+            vb:Create(vc.UIPadding, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+              PaddingLeft = UDim.new(0, 10)
+            }):Play()
+          end
+          for fd, fe in next, va.ContainerFolder:GetChildren() do
+            if fe.Name == "Container" then
+              fe.Visible = false
+            end
+            vd.Visible = true
+          end
+          tabtoggledname = vc.Name
+          ve()
+        end)
+        return {
+          Section = function(a, b)
+            va:Clone().Parent = vb
+            va:Clone().SectionTitle.Text = b
+            spawn(function()
+              while not nil and va:IsRunning() do
+                vb.SectionTitle.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                vb.Size = UDim2.new(0,9, 0, 0, vb.UIListLayout.AbsoluteContentSize.Y)
+              end
+            end)
+            return {
+              Button = function(a, b, c)
+                game:GetObjects("rbxassetid://6937142338")[1].Parent = va
+                game:GetObjects("rbxassetid://6937142338")[1].Name = b .. "element"
+                game:GetObjects("rbxassetid://6937142338")[1].ButtonText.Text = b
+                game:GetObjects("rbxassetid://6937142338")[1].ClipsDescendants = true
+                vb(game:GetObjects("rbxassetid://6937142338")[1].MouseButton1Click, function()
+                  Ripple(va)
+                  vb()
+                end)
+                vb(game:GetObjects("rbxassetid://6937142338")[1].MouseEnter, function()
+                  va = true
+                end)
+                vb(game:GetObjects("rbxassetid://6937142338")[1].MouseLeave, function()
+                  va = false
+                end)
+                spawn(function()
+                  while not nil and va:IsRunning() do
+                    vb.BackgroundColor3 = vc and va.Themes[va.Settings.Theme].Button
+                    vb.ButtonText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+              end,
+              Toggle = function(a, b, c, d, e)
+                game:GetObjects("rbxassetid://6963155498")[1].Parent = va
+                game:GetObjects("rbxassetid://6963155498")[1].ToggleText.Text = b
+                game:GetObjects("rbxassetid://6963155498")[1].Name = b .. "element"
+                vc(game:GetObjects("rbxassetid://6963155498")[1].MouseButton1Click, function()
+                  va.Value = not va.Value
+                  va:Set(va.Value)
+                end)
+                spawn(function()
+                  while wait() and va:IsRunning() do
+                    if not vc.Value or vb.ToggleFrame.ToggleToggled then
+                    end
+                    vb.ToggleFrame.ToggleToggled.BackgroundColor3 = va.Themes[va.Settings.Theme].Toggle
+                    if vb.ToggleFrame or vb.ToggleFrame then
+                    end
+                    vb.ToggleFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].ToggleFrame
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Toggle
+                    vb.ToggleText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                spawn(function()
+                  va:Set(vb)
+                  vc.Flags[vd] = va
+                end)
+                return {
+                  Value = false,
+                  Set = function(a, b)
+                    va.Value = b
+                    if b or b then
+                    end
+                    vb:Create(vc.ToggleFrame.ToggleToggled.ToggleIco, TweenInfo.new(0,2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                      ImageTransparency = b or 1,
+                      Size = UDim2.new(1, -6, 1, -6)
+                    }):Play()
+                    return vd(va.Value)
+                  end
+                }
+              end,
+              Slider = function(a, b, c, d, e, g, h, j)
+                game:GetObjects("rbxassetid://6967573727")[1].Parent = va
+                game:GetObjects("rbxassetid://6967573727")[1].SliderText.Text = b
+                game:GetObjects("rbxassetid://6967573727")[1].Name = b .. "element"
+                vc(game:GetObjects("rbxassetid://6967573727")[1].SliderFrame.InputBegan, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    va = true
+                  end
+                end)
+                vc(game:GetObjects("rbxassetid://6967573727")[1].SliderFrame.InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    va = false
+                  end
+                end)
+                vc(game:GetService("UserInputService").InputChanged, function(a)
+                  if va and a.UserInputType == Enum.UserInputType.MouseMovement then
+                    vb(a)
+                  end
+                end)
+                spawn(function()
+                  while wait() and va:IsRunning() do
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Slider
+                    vb.SliderFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].SliderBar
+                    vb.SliderFrame.SliderCurrentFrame.BackgroundColor3 = va.Themes[va.Settings.Theme].SliderInc
+                    vb.SliderText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.SliderVal.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                spawn(function()
+                  va:Set(vb)
+                  vc.Flags[vd] = va
+                end)
+                return {
+                  Value = e,
+                  Set = function(a, b)
+                    if b then
+                    end
+                    vc.SliderVal.Text = tostring(0)
+                    vc.SliderFrame.SliderCurrentFrame.Size = UDim2.new((b or 0) / va, 0, 1, 0)
+                    vd.Value = b
+                    return ve(vd.Value)
+                  end
+                }
+              end,
+              Dropdown = function(a, b, c, d, e, g)
+                game:GetObjects("rbxassetid://7027964359")[1].Parent = va
+                game:GetObjects("rbxassetid://7027964359")[1].Btn.Title.Text = b
+                game:GetObjects("rbxassetid://7027964359")[1].Name = b .. "element"
+                vc(game:GetObjects("rbxassetid://7027964359")[1].Btn.MouseButton1Click, function()
+                  va()
+                end)
+                spawn(function()
+                  while not nil and va:IsRunning() do
+                    vb.Btn.BackgroundColor3 = va.Themes[va.Settings.Theme].Dropdown
+                    vb.Btn.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.Btn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                spawn(function()
+                  va:Refresh(vb, false)
+                  va:Set(vc)
+                  vd.Flags[ve] = va
+                end)
+                return {
+                  Value = nil,
+                  Toggled = false,
+                  Options = c,
+                  Refresh = function(a, b, c)
+                    if c then
+                      for fh, fj in pairs(va.Holder:GetChildren()) do
+                        if not b then
+                          fj:Destroy()
+                          if b or not UDim2.new(1, 0, 0, 6 + 13) then
+                          end
+                          va.Holder.Size = UDim2.new(1, 0, 0, 0)
+                          if not vb.Toggled or b then
+                          end
+                          va.Size = UDim2.new(1, 0, 0, 32)
+                        end
+                      end
+                    end
+                    vc(b)
+                  end,
+                  Set = function(a, b)
+                    va.Value = b
+                    vb.Btn.Title.Text = vc .. " - " .. b
+                    return vd(va.Value)
+                  end
+                }
+              end,
+              MultiDropdown = function(a, b, c, d, e, g)
+                game:GetObjects("rbxassetid://7027964359")[1].Parent = va
+                game:GetObjects("rbxassetid://7027964359")[1].Btn.Title.Text = b
+                game:GetObjects("rbxassetid://7027964359")[1].Name = b .. "element"
+                vc(game:GetObjects("rbxassetid://7027964359")[1].Btn.MouseButton1Click, function()
+                  va()
+                end)
+                spawn(function()
+                  while wait() and not va do
+                    vb.Btn.BackgroundColor3 = va.Themes[va.Settings.Theme].Dropdown
+                    vb.Btn.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.Btn.Ico.ImageColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                spawn(function()
+                  va:Refresh(vb, false)
+                  va:Set(vc)
+                  vd.Flags[ve] = va
+                end)
+                return {
+                  Value = {},
+                  Toggled = false,
+                  Options = c,
+                  Refresh = function(a, b, c)
+                    if not b then
+                      for fh, fj in pairs(va.Holder:GetChildren()) do
+                        if fj:IsA("TextButton") then
+                          fj:Destroy()
+                          va.Holder.Size = vb.Toggled and UDim2.new(1, 0, 0, 0)
+                          if b or not UDim2.new(1, 0, 0, 38 + 13) then
+                          end
+                          va.Size = UDim2.new(1, 0, 0, 32)
+                        end
+                      end
+                    end
+                    vc(b)
+                  end,
+                  Set = function(a, b)
+                    va.Value = b
+                    vb.Btn.Title.Text = vc .. " - " .. table.concat(va.Value, ", ")
+                    return vd(va.Value)
+                  end
+                }
+              end,
+              Colorpicker = function(a, b, c, d, e)
+                game:GetObjects("rbxassetid://7329998014")[1].Hue.Visible, game:GetObjects("rbxassetid://7329998014")[1].Color.Visible = {Value = c, Toggled = false}.Toggled, {Value = c, Toggled = false}.Toggled
+                game:GetObjects("rbxassetid://7329998014")[1].Parent = va
+                game:GetObjects("rbxassetid://7329998014")[1].Btn.Colorpicker.Text = b
+                game:GetObjects("rbxassetid://7329998014")[1].Name = b .. "element"
+                game:GetObjects("rbxassetid://7329998014")[1].Btn.Box.BackgroundColor3 = c
+                game:GetObjects("rbxassetid://7329998014")[1].Hue.HueGradient.Color = ColorSequence.new({
+                  ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 4)),
+                  ColorSequenceKeypoint.new(0,2, Color3.fromRGB(234, 255, 0)),
+                  ColorSequenceKeypoint.new(0,4, Color3.fromRGB(21, 255, 0)),
+                  ColorSequenceKeypoint.new(0,6, Color3.fromRGB(0, 255, 255)),
+                  ColorSequenceKeypoint.new(0,8, Color3.fromRGB(0, 17, 255)),
+                  ColorSequenceKeypoint.new(0,9, Color3.fromRGB(255, 0, 251)),
+                  ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 4))
+                })
+                vb(game:GetObjects("rbxassetid://7329998014")[1].Btn.MouseButton1Click, function()
+                  va.Toggled = not va.Toggled
+                  if vb or not UDim2.new(1, 0, 0, 120) then
+                  end
+                  vb:Create(vc, TweenInfo.new(0,15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                    Size = UDim2.new(1, 0, 0, 32)
+                  }):Play()
+                  vc.Hue.Visible, vc.Color.Visible = va.Toggled, va.Toggled
+                end)
+                game:GetObjects("rbxassetid://7329998014")[1].Btn.Box.BackgroundColor3 = c
+                game:GetObjects("rbxassetid://7329998014")[1].Color.BackgroundColor3 = c
+                pcall(e, game:GetObjects("rbxassetid://7329998014")[1].Btn.Box.BackgroundColor3)
+                vb(game:GetObjects("rbxassetid://7329998014")[1].Color.InputBegan, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    if not a then
+                      ColorInput:Disconnect()
+                    end
+                    ColorInput = va.RenderStepped:Connect(function()
+                      vd, vc.Position = math.clamp(va.X - vb.AbsolutePosition.X, 0, vb.AbsoluteSize.X) / vb.AbsoluteSize.X, UDim2.new(math.clamp(va.X - vb.AbsolutePosition.X, 0, vb.AbsoluteSize.X) / vb.AbsoluteSize.X, 0, math.clamp(va.Y - vb.AbsolutePosition.Y, 0, vb.AbsoluteSize.Y) / vb.AbsoluteSize.Y, 0)
+                      ve = 1 - math.clamp(va.Y - vb.AbsolutePosition.Y, 0, vb.AbsoluteSize.Y) / vb.AbsoluteSize.Y
+                      vg(true)
+                    end)
+                  end
+                end)
+                vb(game:GetObjects("rbxassetid://7329998014")[1].Color.InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 and not a then
+                    ColorInput:Disconnect()
+                  end
+                end)
+                vb(game:GetObjects("rbxassetid://7329998014")[1].Hue.InputBegan, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    if HueInput then
+                      HueInput:Disconnect()
+                    end
+                    HueInput = va.RenderStepped:Connect(function()
+                      vc.Position = UDim2.new(0,48, 0, math.clamp(va.Y - vb.AbsolutePosition.Y, 0, vb.AbsoluteSize.Y) / vb.AbsoluteSize.Y, 0)
+                      vd = 1 - math.clamp(va.Y - vb.AbsolutePosition.Y, 0, vb.AbsoluteSize.Y) / vb.AbsoluteSize.Y
+                      ve(true)
+                    end)
+                  end
+                end)
+                vb(game:GetObjects("rbxassetid://7329998014")[1].Hue.InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 and not a then
+                    HueInput:Disconnect()
+                  end
+                end)
+                spawn(function()
+                  while wait() and not va do
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Colorpicker
+                    vb.Btn.Colorpicker.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                return {Value = c, Toggled = false}
+              end,
+              Label = function(a, b)
+                game:GetObjects("rbxassetid://7032552322")[1].Parent = va
+                game:GetObjects("rbxassetid://7032552322")[1].Title.Text = b
+                game:GetObjects("rbxassetid://7032552322")[1].Name = b .. "element"
+                spawn(function()
+                  while not nil and va:IsRunning() do
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Label
+                    vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                return {
+                  Set = function(a, b)
+                    va.Title.Text = b
+                    va.Name = vb .. "element"
+                  end
+                }
+              end,
+              Textbox = function(a, b, c, d)
+                game:GetObjects("rbxassetid://7147292392")[1].Parent = va
+                game:GetObjects("rbxassetid://7147292392")[1].Title.Text = b
+                game:GetObjects("rbxassetid://7147292392")[1].Name = b .. "element"
+                vb(game:GetObjects("rbxassetid://7147292392")[1].Box.Changed, function()
+                  va.Box.Size = UDim2.new(0, 3 + 16, 0, 22)
+                end)
+                game:GetObjects("rbxassetid://7147292392")[1].Box.PlaceholderText = "                  "
+                vb(game:GetObjects("rbxassetid://7147292392")[1].InputBegan, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    va.Box:CaptureFocus()
+                  end
+                end)
+                vb(game:GetObjects("rbxassetid://7147292392")[1].Box.FocusLost, function()
+                  if vb then
+                    va.Box.Text = ""
+                  end
+                  return vc(va.Box.Text)
+                end)
+                vb(vc.InputBegan, function(a)
+                  if a.KeyCode == Enum.KeyCode.Escape and va.Box:IsFocused() then
+                    va.Box:ReleaseFocus()
+                  end
+                end)
+                spawn(function()
+                  while not nil and va:IsRunning() do
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Textbox
+                    vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.Box.BackgroundColor3 = va.Themes[va.Settings.Theme].TextboxFrame
+                    vb.Box.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                return {}
+              end,
+              Bind = function(a, b, c, d, e, g)
+                game:GetObjects("rbxassetid://7126874744")[1].Parent = va
+                game:GetObjects("rbxassetid://7126874744")[1].Title.Text = b
+                game:GetObjects("rbxassetid://7126874744")[1].Name = b .. "element"
+                vb(game:GetObjects("rbxassetid://7126874744")[1].InputEnded, function(a)
+                  if a.UserInputType == Enum.UserInputType.MouseButton1 then
+                    if va.Binding then
+                      return
+                    end
+                    va.Binding = true
+                    vb.BText.Text = "..."
+                  end
+                end)
+                vb(vc.InputBegan, function(a)
+                  if not a then
+                    return
+                  end
+                  if (a.KeyCode.Name == vb.Value or a.UserInputType.Name == vb.Value) and not vb.Binding then
+                    if vc then
+                      Holding = true
+                      vd(Holding)
+                    else
+                      vd()
+                    end
+                  elseif vb.Binding then
+                    pcall(function()
+                      if vb then
+                        vd = vc.KeyCode
+                      end
+                    end)
+                    pcall(function()
+                      if not vb and vb then
+                        vd = vc.UserInputType
+                      end
+                    end)
+                    if a then
+                    end
+                    vb:Set(vb.Value)
+                  end
+                end)
+                vb(vc.InputEnded, function(a)
+                  if (a.KeyCode.Name == va.Value or a.UserInputType.Name == va.Value) and not a and Holding then
+                    Holding = false
+                    vc(Holding)
+                  end
+                end)
+                spawn(function()
+                  while not nil and not va do
+                    vb.BackgroundColor3 = va.Themes[va.Settings.Theme].Bind
+                    vb.Title.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                    vb.BText.TextColor3 = va.Themes[va.Settings.Theme].TextColor
+                  end
+                end)
+                {
+                  Value,
+                  Binding = false,
+                  Holding = false,
+                  Set = function(a, b)
+                    a.Binding = false
+                    a.Value = b or a.Value
+                    a.Value = a.Value.Name or a.Value
+                    va.BText.Text = a.Value
+                  end
+                }:Set(c)
+                vh.Flags[e] = {
+                  Value,
+                  Binding = false,
+                  Holding = false,
+                  Set = function(a, b)
+                    a.Binding = false
+                    a.Value = b or a.Value
+                    a.Value = a.Value.Name or a.Value
+                    va.BText.Text = a.Value
+                  end
+                }
+                return {
+                  Value,
+                  Binding = false,
+                  Holding = false,
+                  Set = function(a, b)
+                    a.Binding = false
+                    a.Value = b or a.Value
+                    a.Value = a.Value.Name or a.Value
+                    va.BText.Text = a.Value
+                  end
+                }
+              end
+            }
+          end
+        }
+      end
+    }
+  end
+}
