@@ -1,2 +1,2 @@
 local plr = game.Players.LocalPlayer
-plr:Kick("Webhook deleted from my github until further notice")
+plr:Kick("Exploiting is a bannable offense. This action log has been submitted to ROBLOX")
