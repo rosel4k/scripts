@@ -15,13 +15,12 @@ local rewardButton = localPlayer.PlayerGui.react.rewardsPopup["1"]
 
 -- Remote Events
 local remoteEvents = game:GetService("ReplicatedStorage")["shared/network@eventDefinitions"]
-
 -- Code Redeem List
 local codeList = {"BUGFIXES2", "BUGFIXES1", "100MILLION1", "100MILLION2", "100MILLION3", "PATCH1", "PATCH2", "GLOBALBOSS4", "GLOBALBOSS3", "GLOBALBOSS2", "GLOBALBOSS1", "NEWHOTFIX12", "NEWHOTFIX11", "NEWHOTFIX10", "NEWHOTFIX9", "NEWHOTFIX8", "NEWHOTFIX7", "NEWHOTFIX6", "NEWHOTFIX5", "NEWHOTFIX3", "NEWHOTFIX4", "NEWHOTFIX1", "NEWHOTFIX2", "WELCOMETOACC", "ACCREWRITE", "NEWCODES", "LUCKBOOST", "UPDATESOON", "BUGFIX3", "BUGFIX", "BUGFIX2", "EMINENCEUPDATE", "HOTFIX10", "BUGFIXNOTUPDATE", "HOTFIX9", "HOTFIX8", "HOTFIX7", "THEUPDATE", "NOTTHEUPDATE", "100KLIKES", "HOTFIX6", "HOTFIX5", "HOTFIX3", "HOTFIX4", "HOTFIX1", "HOTFIX2", "10MILLION", "5MILLIONVISITS", "3MILLIONVISITS", "STPATRICKSDAY2025", "1MILLIONVISITS", "500KVISITS", "100KVISITS", "YAYCODES", "SORRYFORSHUTDOWN", "RELEASE"}
 
 -- Game Variables
 local explorationModes = {"easy", "medium", "hard", "extreme", "nightmare", "celestial"}
-local defaultTeam = {["position_4"] = "green_bomber:basic", ["position_3"] = "green_bomber:basic", ["position_2"] = "green_bomber:basic", ["position_1"] = "green_bomber:basic"}
+local defaultTeam = {["position_4"] = "green_bomber:gold", ["position_3"] = "green_bomber:gold", ["position_2"] = "green_bomber:gold", ["position_1"] = "green_bomber:gold"}
 local towerModes = {"potion", "base", "nightmare"}
 local towerNames = {"Potion Tower", "Infinite Tower", "Hardcore Tower", "Battle Tower"}
 local towerFloors = {"Floor 1"}
@@ -214,6 +213,25 @@ mainTab:Toggle({
     end
 })
 
+mainTab:Dropdown({
+    Title = "Select Tower",
+    Values = towerNames,
+    Value = "",
+    Callback = function(option)
+        selectedTowerMode = option
+    end
+})
+
+mainTab:Dropdown({
+    Title = "Select Floor",
+    Description = "For battle tower",
+    Values = towerFloors,
+    Value = "",
+    Callback = function(option)
+        selectedTowerFloor = option
+    end
+})
+
 mainTab:Toggle({
     Title = "Auto Tower",
     Desc = "Starts tower",
@@ -237,24 +255,6 @@ mainTab:Toggle({
     end
 })
 
-mainTab:Dropdown({
-    Title = "Select Tower",
-    Values = towerNames,
-    Value = "",
-    Callback = function(option)
-        selectedTowerMode = option
-    end
-})
-
-mainTab:Dropdown({
-    Title = "Select Floor",
-    Description = "For battle tower",
-    Values = towerFloors,
-    Value = "",
-    Callback = function(option)
-        selectedTowerFloor = option
-    end
-})
 
 mainTab:Toggle({
     Title = "Auto Global",
