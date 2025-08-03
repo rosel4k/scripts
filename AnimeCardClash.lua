@@ -15,6 +15,7 @@ local rewardButton = localPlayer.PlayerGui.react.rewardsPopup["1"]
 
 -- Remote Events
 local remoteEvents = game:GetService("ReplicatedStorage")["shared/network@eventDefinitions"]
+remoteEvents.setPartySlot:FireServer("slot_2")
 -- Code Redeem List
 local codeList = {"BUGFIXES2", "BUGFIXES1", "100MILLION1", "100MILLION2", "100MILLION3", "PATCH1", "PATCH2", "GLOBALBOSS4", "GLOBALBOSS3", "GLOBALBOSS2", "GLOBALBOSS1", "NEWHOTFIX12", "NEWHOTFIX11", "NEWHOTFIX10", "NEWHOTFIX9", "NEWHOTFIX8", "NEWHOTFIX7", "NEWHOTFIX6", "NEWHOTFIX5", "NEWHOTFIX3", "NEWHOTFIX4", "NEWHOTFIX1", "NEWHOTFIX2", "WELCOMETOACC", "ACCREWRITE", "NEWCODES", "LUCKBOOST", "UPDATESOON", "BUGFIX3", "BUGFIX", "BUGFIX2", "EMINENCEUPDATE", "HOTFIX10", "BUGFIXNOTUPDATE", "HOTFIX9", "HOTFIX8", "HOTFIX7", "THEUPDATE", "NOTTHEUPDATE", "100KLIKES", "HOTFIX6", "HOTFIX5", "HOTFIX3", "HOTFIX4", "HOTFIX1", "HOTFIX2", "10MILLION", "5MILLIONVISITS", "3MILLIONVISITS", "STPATRICKSDAY2025", "1MILLIONVISITS", "500KVISITS", "100KVISITS", "YAYCODES", "SORRYFORSHUTDOWN", "RELEASE"}
 
@@ -24,6 +25,7 @@ local defaultTeam = {["position_4"] = "green_bomber:gold", ["position_3"] = "gre
 local towerModes = {"potion", "base", "nightmare"}
 local towerNames = {"Potion Tower", "Infinite Tower", "Hardcore Tower", "Battle Tower"}
 local towerFloors = {"Floor 1"}
+
 for i = 5, 200, 5 do table.insert(towerFloors, "Floor " .. i) end
 
 local namesOfStats = {"Luck", "Roll Speed", "Potion Duration", "Border Chance", "Boss Chance"}
@@ -63,6 +65,27 @@ local selectedRaidMode = nil
 function floorLabelToNumber(label)
     local floor = tonumber(label:match("Floor (%d+)"))
     return floor == 1 and 1 or ((floor - 5) / 5) + 2
+end
+
+local function ClickButton(button)
+    local Signals = {
+        "Activated",
+        "MouseButton1Down",
+        "MouseButton1Click",
+        "MouseButton2Down",
+        "MouseButton2Click"
+    }
+
+    if button:IsA("TextButton") or button:IsA("ImageButton") then
+        for _, Signal in ipairs(Signals) do
+            local signalObj = button[Signal]
+            if typeof(signalObj) == "RBXScriptSignal" then
+                firesignal(signalObj)
+            end
+        end
+    else
+        warn("Provided instance is not a TextButton or ImageButton.")
+    end
 end
 
 -- UI Icons
@@ -306,11 +329,29 @@ local PriorityTog = mainTab:Toggle({
     Callback = function(priority)
         Bools.PriorityBool = priority
         while Bools.PriorityBool do task.wait(5)
-            if workspace.sky_king.sky_king:FindFirstChild("ProximityPrompt").Enabled then
-                remoteEvents.setPartySlot:FireServer("slot_2")
+            local BossAvb = workspace.sky_king.sky_king:FindFirstChild("ProximityPrompt").Enabled
+            if BossAvb then
+                local Slot1 = game:GetService("Players").LocalPlayer.PlayerGui.react["1"].navigation.Deck["2"]
+                ClickButton(Slot1)
+                wait(1)
+                local Slot2 = localPlayer.PlayerGui.react.deck.deck["2"]["3"].slot_2
+                ClickButton(Slot2)
+                wait(1)
+                local Slot3 = localPlayer.PlayerGui.react.deck.deck["3"]:GetChildren()[5]["2"]["6"]
+                ClickButton(Slot3)
+                repeat task.wait(1)
                 remoteEvents.fightGlobalBoss:FireServer(383)
-            elseif not workspace.sky_king.sky_king:FindFirstChild("ProximityPrompt").Enabled then
-                remoteEvents.setPartySlot:FireServer("slot_1")
+                until not BossAvb or not Bools.PriorityBool
+            elseif not BossAvb then
+                local Slot1 = game:GetService("Players").LocalPlayer.PlayerGui.react["1"].navigation.Deck["2"]
+                ClickButton(Slot1)
+                wait(1)
+                local Slot2 = localPlayer.PlayerGui.react.deck.deck["2"]["3"].slot_1
+                ClickButton(Slot2)
+                wait(1)
+                local Slot3 = localPlayer.PlayerGui.react.deck.deck["3"]:GetChildren()[5]["2"]["6"]
+                ClickButton(Slot3)
+                repeat task.wait(1)
                 if selectedTowerMode == towerNames[1] then
                     remoteEvents.fightInfinite:FireServer(towerModes[1])
                 elseif selectedTowerMode == towerNames[2] then
@@ -321,6 +362,7 @@ local PriorityTog = mainTab:Toggle({
                     local floorIndex = floorLabelToNumber(selectedTowerFloor)
                     remoteEvents.fightTowerWave:FireServer(tonumber(floorIndex))
                 end
+                until BossAvb or not Bools.PriorityBool
             end
         end
     end
