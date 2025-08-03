@@ -38,8 +38,8 @@ local Bools = {
     GlobalBool = false,
     RewardsBool = false,
     PacksBool = false,
-    RaidBool = false
-}
+    RaidBool = false,
+    PriorityBool = false}
 -- Global Config
 getgenv().RaidTeam= nil
 getgenv().GlobalBossTeam = nil
@@ -232,7 +232,7 @@ mainTab:Dropdown({
     end
 })
 
-mainTab:Toggle({
+local TowerFarm = mainTab:Toggle({
     Title = "Auto Tower",
     Desc = "Starts tower",
     Icon = "check",
@@ -256,7 +256,7 @@ mainTab:Toggle({
 })
 
 
-mainTab:Toggle({
+local GlobalFarm = mainTab:Toggle({
     Title = "Auto Global",
     Desc = "Global boss",
     Icon = "check",
@@ -284,7 +284,7 @@ mainTab:Dropdown({
     end
 })
 
-mainTab:Toggle({
+local BossFarm = mainTab:Toggle({
     Title = "Auto Raid Boss",
     Desc = "",
     Icon = "check",
@@ -297,7 +297,34 @@ mainTab:Toggle({
         end
     end
 })
-
+local PriorityTog = mainTab:Toggle({
+    Title = "Auto tower + global",
+    Desc = "",
+    Icon = "check",
+    Type = "Checkbox",
+    Default = false,
+    Callback = function(priority)
+        Bools.PriorityBool = priority
+        while Bools.PriorityBool do task.wait(5)
+            if workspace.sky_king.sky_king:FindFirstChild("ProximityPrompt") then
+                remoteEvents.setPartySlot:FireServer("slot_2")
+                remoteEvents.fightGlobalBoss:FireServer(383)
+            elseif not workspace.sky_king.sky_king:FindFirstChild("ProximityPrompt") then
+                remoteEvents.setPartySlot:FireServer("slot_1")
+                if selectedTowerMode == towerNames[1] then
+                    remoteEvents.fightInfinite:FireServer(towerModes[1])
+                elseif selectedTowerMode == towerNames[2] then
+                    remoteEvents.fightInfinite:FireServer(towerModes[2])
+                elseif selectedTowerMode == towerNames[3] then
+                    remoteEvents.fightInfinite:FireServer(towerModes[3])
+                elseif selectedTowerMode == towerNames[4] then
+                    local floorIndex = floorLabelToNumber(selectedTowerFloor)
+                    remoteEvents.fightTowerWave:FireServer(tonumber(floorIndex))
+                end
+            end
+        end
+    end
+})
 
 miscTab:Toggle({
     Title = "Disable Roll UI",
@@ -343,3 +370,4 @@ miscTab:Button({
         setclipboard(DiscordURL)
     end
 })
+
