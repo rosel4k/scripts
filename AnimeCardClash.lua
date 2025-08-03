@@ -22,8 +22,7 @@ local codeList = {"BUGFIXES2", "BUGFIXES1", "100MILLION1", "100MILLION2", "100MI
 -- Game Variables
 local explorationModes = {"easy", "medium", "hard", "extreme", "nightmare", "celestial"}
 local defaultTeam = {["position_4"] = "green_bomber:gold", ["position_3"] = "green_bomber:gold", ["position_2"] = "green_bomber:gold", ["position_1"] = "green_bomber:gold"}
-local towerModes = {"potion", "base", "nightmare"}
-local towerNames = {"Potion Tower", "Infinite Tower", "Hardcore Tower", "Battle Tower"}
+local towerNames = {"Potion Tower", "Infinite Tower", "Hardcore Tower"}
 local towerFloors = {"Floor 1"}
 
 for i = 5, 200, 5 do table.insert(towerFloors, "Floor " .. i) end
@@ -329,41 +328,39 @@ local PriorityTog = mainTab:Toggle({
     Callback = function(priority)
         Bools.PriorityBool = priority
         while Bools.PriorityBool do task.wait(5)
-            local BossAvb = workspace.sky_king.sky_king:FindFirstChild("ProximityPrompt").Enabled
-            if BossAvb then
-                local Slot1 = game:GetService("Players").LocalPlayer.PlayerGui.react["1"].navigation.Deck["2"]
-                ClickButton(Slot1)
-                wait(1)
-                local Slot2 = localPlayer.PlayerGui.react.deck.deck["2"]["3"].slot_2
-                ClickButton(Slot2)
-                wait(1)
-                local Slot3 = localPlayer.PlayerGui.react.deck.deck["3"]:GetChildren()[5]["2"]["6"]
-                ClickButton(Slot3)
-                repeat task.wait(1)
-                remoteEvents.fightGlobalBoss:FireServer(383)
-                until not BossAvb or not Bools.PriorityBool
-            elseif not BossAvb then
-                local Slot1 = game:GetService("Players").LocalPlayer.PlayerGui.react["1"].navigation.Deck["2"]
-                ClickButton(Slot1)
-                wait(1)
-                local Slot2 = localPlayer.PlayerGui.react.deck.deck["2"]["3"].slot_1
-                ClickButton(Slot2)
-                wait(1)
-                local Slot3 = localPlayer.PlayerGui.react.deck.deck["3"]:GetChildren()[5]["2"]["6"]
-                ClickButton(Slot3)
-                repeat task.wait(1)
-                if selectedTowerMode == towerNames[1] then
-                    remoteEvents.fightInfinite:FireServer(towerModes[1])
-                elseif selectedTowerMode == towerNames[2] then
-                    remoteEvents.fightInfinite:FireServer(towerModes[2])
-                elseif selectedTowerMode == towerNames[3] then
-                    remoteEvents.fightInfinite:FireServer(towerModes[3])
-                elseif selectedTowerMode == towerNames[4] then
-                    local floorIndex = floorLabelToNumber(selectedTowerFloor)
-                    remoteEvents.fightTowerWave:FireServer(tonumber(floorIndex))
+                local BossAvb = workspace.sky_king:FindFirstChild("sky_king"):FindFirstChild("ProximityPrompt").Enabled
+                if BossAvb then
+                    local Slot1 = game:GetService("Players").LocalPlayer.PlayerGui.react["1"].navigation.Deck["2"]
+                    ClickButton(Slot1)
+                    wait(1)
+                    local Slot2 = localPlayer.PlayerGui.react.deck.deck["2"]["3"].slot_2
+                    ClickButton(Slot2)
+                    wait(1)
+                    local Slot3 = localPlayer.PlayerGui.react.deck.deck["3"]:GetChildren()[5]["2"]["6"]
+                    ClickButton(Slot3)
+                    repeat task.wait(1)
+                        remoteEvents.fightGlobalBoss:FireServer(383)
+                    until not BossAvb or not Bools.PriorityBool
+                else
+                    local Slot1 = game:GetService("Players").LocalPlayer.PlayerGui.react["1"].navigation.Deck["2"]
+                    ClickButton(Slot1)
+                    wait(1)
+                    local Slot2 = localPlayer.PlayerGui.react.deck.deck["2"]["3"].slot_1
+                    ClickButton(Slot2)
+                    wait(1)
+                    local Slot3 = localPlayer.PlayerGui.react.deck.deck["3"]:GetChildren()[5]["2"]["6"]
+                    ClickButton(Slot3)
+                    repeat task.wait(1)
+                        if selectedTowerMode == towerNames[1] then
+                            remoteEvents.fightInfinite:FireServer("potion")
+                        elseif selectedTowerMode == towerNames[2] then
+                            remoteEvents.fightInfinite:FireServer("base")
+                        elseif selectedTowerMode == towerNames[3] then
+                            remoteEvents.fightInfinite:FireServer("nightmare")
+                        end
+                    until BossAvb or not Bools.PriorityBool
                 end
-                until BossAvb or not Bools.PriorityBool
-            end
+
         end
     end
 })
