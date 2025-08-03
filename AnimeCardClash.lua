@@ -306,10 +306,10 @@ local PriorityTog = mainTab:Toggle({
     Callback = function(priority)
         Bools.PriorityBool = priority
         while Bools.PriorityBool do task.wait(5)
-            if workspace.sky_king.sky_king:FindFirstChild("ProximityPrompt") then
+            if workspace.sky_king.sky_king:FindFirstChild("ProximityPrompt").Enabled then
                 remoteEvents.setPartySlot:FireServer("slot_2")
                 remoteEvents.fightGlobalBoss:FireServer(383)
-            elseif not workspace.sky_king.sky_king:FindFirstChild("ProximityPrompt") then
+            elseif not workspace.sky_king.sky_king:FindFirstChild("ProximityPrompt").Enabled then
                 remoteEvents.setPartySlot:FireServer("slot_1")
                 if selectedTowerMode == towerNames[1] then
                     remoteEvents.fightInfinite:FireServer(towerModes[1])
