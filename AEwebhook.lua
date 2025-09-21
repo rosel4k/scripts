@@ -65,7 +65,6 @@ local function ParseDropMessage(msg)
     end
 end
 
--- Parse avatar drops
 local function ParseAvatarDrop(msg)
     local cleanMsg = msg:gsub('<[^>]->', '')
     local playerName, category, rank, rest = cleanMsg:match('(%S+) got a (%[.-%]) RANK (%S+) %[(.-)%] (.+)')
