@@ -71,8 +71,7 @@ local function ParseAvatarDrop(msg)
     if playerName and playerName == Player.Name and category and rank and itemName then
         local data = AVATAR_RARITY_MAP[rank:upper()]
         if data then
-            local description = string.format("%s\n%s - %s | %s",
-                data.label, category, rank, itemName)
+            local description = string.format("**%s\n%s - %s | %s**", data.label, category, rank, itemName)
             return {
                 playerName = playerName,
                 description = description,
