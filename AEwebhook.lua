@@ -58,7 +58,7 @@ local function ParseDropMessage(msg)
 
     if playerName and playerName == Player.Name and category and rarity and itemName then
         local title = '**Notification for ' .. playerName .. '**'
-        local description = string.format("**%s**\n[%s] - %s | %s",
+        local description = string.format("**%s\n[%s] - %s | %s**",
             rarity, category, rarity, itemName)
         SendEmbed(title, description, GetDropRarityColor(rarity))
     end
