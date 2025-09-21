@@ -7,11 +7,17 @@ local TCS = game:GetService('TextChatService')
 local WEBHOOK_USERNAME = 'Anime Eternal Notificator'
 local WEBHOOK_AVATAR = 'https://i.imgur.com/SX41gmf.png'
 
-local function GetRarityColor(rarity)
-    rarity = rarity:lower()
-    if rarity == 'supreme' then
+local AVATAR_RARITY_MAP = {
+    S   = {label = "MYTHICAL", color = 0xff0000},
+    SS  = {label = "PHANTOM",  color = 0x5b00b5},
+    SSS = {label = "SUPREME",  color = 0xff7100}
+}
+
+local function GetDropRarityColor(rarity)
+    rarity = rarity:upper()
+    if rarity == 'SUPREME' then
         return 0xff7100
-    elseif rarity == 'phantom' then
+    elseif rarity == 'PHANTOM' then
         return 0x5b00b5
     else
         return 0x00ff00
@@ -19,19 +25,15 @@ local function GetRarityColor(rarity)
 end
 
 local function SendEmbed(title, description, color)
-    if not V.WebhookMode or V.WebhookURL == '' then
-        return
-    end
+    if not V.WebhookMode or V.WebhookURL == '' then return end
     local ts = os.time()
     local body = {
         content = nil,
-        embeds = {
-            {
-                title = title,
-                description = description .. '\n<t:' .. ts .. ':T>',
-                color = color,
-            },
-        },
+        embeds = {{
+            title = title,
+            description = description .. '\n<t:' .. ts .. ':T>',
+            color = color,
+        }},
         username = WEBHOOK_USERNAME,
         avatar_url = WEBHOOK_AVATAR,
         attachments = {},
@@ -40,7 +42,7 @@ local function SendEmbed(title, description, color)
         request({
             Url = V.WebhookURL,
             Method = 'POST',
-            Headers = { ['Content-Type'] = 'application/json' },
+            Headers = {['Content-Type'] = 'application/json'},
             Body = HttpService:JSONEncode(body),
         })
     end)
@@ -53,19 +55,41 @@ end
 
 local function ParseDropMessage(msg)
     local cleanMsg = msg:gsub('<[^>]->', '')
-    local playerName, category, rarity, itemName =
-        cleanMsg:match('(%S+) got a %[(.-)%]%s*(%S+)%s*(.+)')
+    local playerName, category, rarity, itemName = cleanMsg:match('(%S+) got a %[(.-)%]%s*(%S+)%s*(.+)')
+
     if playerName and category and rarity and itemName then
-        print('Drop detected:', playerName, category, rarity, itemName)
         local title = '**Notification for ' .. playerName .. '**'
-        local description =
-            string.format('**%s**\n**[%s] - %s**', rarity, category, itemName)
-        SendEmbed(title, description, GetRarityColor(rarity))
+        local description = string.format("**%s**\n[%s] - %s | %s",
+            rarity, category, rarity, itemName)
+        SendEmbed(title, description, GetDropRarityColor(rarity))
     end
+end
+
+local function ParseAvatarDrop(msg)
+    local cleanMsg = msg:gsub('<[^>]->', '')
+    local playerName, category, rank, rest = cleanMsg:match('(%S+) got a (%[.-%]) %- (%S+) %[(.-)%] (.+)')
+
+    if playerName and category and rank and rest then
+        local data = AVATAR_RARITY_MAP[rank:upper()]
+        if data then
+            rest = rest:gsub("%[Av%]%s*", "")
+            local description = string.format("%s\n%s - %s | %s",
+                data.label, category, rank, rest)
+            return {playerName = playerName, description = description, color = data.color}
+        end
+    end
+    return nil
 end
 
 local function HandleMessage(msg)
     print('Chat detected:', msg)
+    local avatarDrop = ParseAvatarDrop(msg)
+    if avatarDrop then
+        local title = '**Notification for ' .. avatarDrop.playerName .. '**'
+        SendEmbed(title, avatarDrop.description, avatarDrop.color)
+        return
+    end
+
     ParseDropMessage(msg)
 end
 
@@ -78,24 +102,20 @@ if TCS then
             end
         end)
     end
+
     task.spawn(function()
-        repeat
-            task.wait()
-        until TCS.TextChannels
+        repeat task.wait() until TCS.TextChannels
         for _, channel in pairs(TCS.TextChannels:GetChildren()) do
             ConnectChannel(channel)
         end
-        TCS.TextChannels.ChildAdded:Connect(function(channel)
-            ConnectChannel(channel)
-        end)
+        TCS.TextChannels.ChildAdded:Connect(ConnectChannel)
     end)
 end
 
 local function HookLegacyChat()
     local ChatGui = Player:WaitForChild('PlayerGui'):WaitForChild('Chat')
-    local Frame = ChatGui:WaitForChild('Frame')
-        :WaitForChild('ChatChannelParentFrame')
-        :WaitForChild('Frame_MessageLogDisplay')
+    local Frame = ChatGui:WaitForChild('Frame'):WaitForChild('ChatChannelParentFrame'):WaitForChild('Frame_MessageLogDisplay')
+
     Frame.ChildAdded:Connect(function(child)
         task.wait(0.05)
         local msgLabel = child:FindFirstChildWhichIsA('TextLabel', true)
@@ -107,39 +127,28 @@ end
 
 task.spawn(function()
     local ChatGui = Player:WaitForChild('PlayerGui'):WaitForChild('Chat')
-    if ChatGui then
-        HookLegacyChat()
-    end
+    if ChatGui then HookLegacyChat() end
 end)
 
 local function SendStats()
     local Gui = Player:WaitForChild('PlayerGui')
     local PlayerHUD = Gui:WaitForChild('PlayerHUD', 10)
-    local LeftDisplays = Gui:WaitForChild('Main', 10)
-        :WaitForChild('Left_Side', 10)
-        :WaitForChild('Displays', 10)
+    local LeftDisplays = Gui:WaitForChild('Main', 10):WaitForChild('Left_Side', 10):WaitForChild('Displays', 10)
+
     if not PlayerHUD or not LeftDisplays then
         warn('Stats GUI not loaded yet, skipping stats send')
         return
     end
-    local LevelHud = PlayerHUD:WaitForChild('Player_Levels', 10)
-        :WaitForChild('Main', 10)
-    local Coins = LeftDisplays:WaitForChild('Coins', 10)
-        :WaitForChild('Main', 10)
-        :WaitForChild('TextLabel', 10).Text
-    local Energy = LeftDisplays:WaitForChild('Energy', 10)
-        :WaitForChild('Main', 10)
-        :WaitForChild('TextLabel', 10).Text
+
+    local LevelHud = PlayerHUD:WaitForChild('Player_Levels', 10):WaitForChild('Main', 10)
+    local Coins = LeftDisplays:WaitForChild('Coins', 10):WaitForChild('Main', 10):WaitForChild('TextLabel', 10).Text
+    local Energy = LeftDisplays:WaitForChild('Energy', 10):WaitForChild('Main', 10):WaitForChild('TextLabel', 10).Text
     local Rank = Player.leaderstats.Rank.Value
     local Level = LevelHud:WaitForChild('Current_Level', 10).Text
     local Exp = LevelHud:WaitForChild('EXP_Counter', 10).Text
+
     local title = '**Notification for ' .. Player.Name .. '**'
-    local description = table.concat({
-        '**' .. Coins .. '**',
-        '**' .. Energy .. '**',
-        '**Rank: ' .. Rank .. '**',
-        '**' .. Level .. ', ' .. Exp .. '**',
-    }, '\n')
+    local description = table.concat({'**' .. Coins .. '**','**' .. Energy .. '**','**Rank: ' .. Rank .. '**','**' .. Level .. ', ' .. Exp .. '**',}, '\n')
     SendEmbed(title, description, 0x00ff00)
 end
 
