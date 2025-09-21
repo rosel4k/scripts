@@ -64,17 +64,15 @@ local function ParseDropMessage(msg)
     end
 end
 
+-- Parse avatar drops
 local function ParseAvatarDrop(msg)
     local cleanMsg = msg:gsub('<[^>]->', '')
-    local playerName, category, rank, rest = cleanMsg:match('(%S+) got a (%[.-%]) RANK (%S+) %[(.-)%] (.+)')
-
-    if playerName and playerName == Player.Name and category and rank and rest then
+    local playerName, category, rank, itemName = cleanMsg:match('(%S+) got a (%[.-%]) RANK (%S+) %[Av%]%s*(.+)')
+    if playerName and playerName == Player.Name and category and rank and itemName then
         local data = AVATAR_RARITY_MAP[rank:upper()]
         if data then
-            rest = rest:gsub("%[Av%]%s*", "")
             local description = string.format("%s\n%s - %s | %s",
-                data.label, category, rank, rest)
-
+                data.label, category, rank, itemName)
             return {
                 playerName = playerName,
                 description = description,
@@ -84,6 +82,7 @@ local function ParseAvatarDrop(msg)
     end
     return nil
 end
+
 
 
 
