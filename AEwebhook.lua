@@ -65,17 +65,18 @@ local function ParseDropMessage(msg)
     end
 end
 
+-- Parse avatar drops
 local function ParseAvatarDrop(msg)
     local cleanMsg = msg:gsub('<[^>]->', '')
-    local playerName, category, rank, rest =cleanMsg:match('(%S+) got a (%[.-%]) %- (%S+) %[(.-)%] (.+)')
+    local playerName, category, rank, rest = cleanMsg:match('(%S+) got a (%[.-%]) RANK (%S+) %[(.-)%] (.+)')
 
     if playerName and category and rank and rest then
         local data = AVATAR_RARITY_MAP[rank:upper()]
         if data then
             rest = rest:gsub("%[Av%]%s*", "")
-
-            local description = string.format("%s\n%s | %s",
-                data.label, category, rest)
+            
+            local description = string.format("%s\n%s - %s | %s",
+                data.label, category, rank, rest)
 
             return {
                 playerName = playerName,
@@ -86,6 +87,7 @@ local function ParseAvatarDrop(msg)
     end
     return nil
 end
+
 
 local function HandleMessage(msg)
     print('Chat detected:', msg)
