@@ -52,12 +52,11 @@ local function SendEmbed(title, description, color)
         print('Webhook sent:', title)
     end
 end
-
 local function ParseDropMessage(msg)
     local cleanMsg = msg:gsub('<[^>]->', '')
     local playerName, category, rarity, itemName = cleanMsg:match('(%S+) got a %[(.-)%]%s*(%S+)%s*(.+)')
 
-    if playerName and category and rarity and itemName then
+    if playerName and playerName == Player.Name and category and rarity and itemName then
         local title = '**Notification for ' .. playerName .. '**'
         local description = string.format("**%s**\n[%s] - %s | %s",
             rarity, category, rarity, itemName)
@@ -69,11 +68,10 @@ local function ParseAvatarDrop(msg)
     local cleanMsg = msg:gsub('<[^>]->', '')
     local playerName, category, rank, rest = cleanMsg:match('(%S+) got a (%[.-%]) RANK (%S+) %[(.-)%] (.+)')
 
-    if playerName and category and rank and rest then
+    if playerName and playerName == Player.Name and category and rank and rest then
         local data = AVATAR_RARITY_MAP[rank:upper()]
         if data then
             rest = rest:gsub("%[Av%]%s*", "")
-            
             local description = string.format("%s\n%s - %s | %s",
                 data.label, category, rank, rest)
 
@@ -86,6 +84,7 @@ local function ParseAvatarDrop(msg)
     end
     return nil
 end
+
 
 
 local function HandleMessage(msg)
