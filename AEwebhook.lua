@@ -52,38 +52,43 @@ local function SendEmbed(title, description, color)
         print('Webhook sent:', title)
     end
 end
+
+local function ShouldPing(rarity)
+    rarity = rarity:upper()
+    return rarity == "SS" or rarity == "SSS" or rarity == "PHANTOM" or rarity == "SUPREME"
+end
+
+local function GetPing()
+    if V.UserId and V.UserId ~= "" then
+        return "<@" .. V.UserId .. ">"
+    end
+    return ""
+end
+
 local function ParseDropMessage(msg)
     local cleanMsg = msg:gsub('<[^>]->', '')
     local playerName, category, rarity, itemName = cleanMsg:match('(%S+) got a %[(.-)%]%s*(%S+)%s*(.+)')
-
     if playerName and playerName == Player.Name and category and rarity and itemName then
+        local ping = ShouldPing(rarity) and GetPing() or ""
         local title = '**Notification for ' .. playerName .. '**'
-        local description = string.format("**%s\n[%s] - %s | %s**",
-            rarity, category, rarity, itemName)
+        local description = string.format("%s **%s\n[%s] - %s | %s**", ping, rarity, category, rarity, itemName)
         SendEmbed(title, description, GetDropRarityColor(rarity))
     end
 end
 
--- Parse avatar drops
 local function ParseAvatarDrop(msg)
     local cleanMsg = msg:gsub('<[^>]->', '')
     local playerName, category, rank, itemName = cleanMsg:match('(%S+) got a (%[.-%]) RANK (%S+) %[Av%]%s*(.+)')
     if playerName and playerName == Player.Name and category and rank and itemName then
         local data = AVATAR_RARITY_MAP[rank:upper()]
         if data then
-            local description = string.format("**%s\n%s - %s | %s**", data.label, category, rank, itemName)
-            return {
-                playerName = playerName,
-                description = description,
-                color = data.color
-            }
+            local ping = GetPing()
+            local description = string.format("%s **%s\n%s - %s | %s**", ping, data.label, category, rank, itemName)
+            return {playerName = playerName, description = description, color = data.color}
         end
     end
     return nil
 end
-
-
-
 
 local function HandleMessage(msg)
     print('Chat detected:', msg)
