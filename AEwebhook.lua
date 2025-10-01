@@ -125,13 +125,35 @@ local function ParseAvatarDrop(msg)
     return nil
 end
 
+local function ParseShadowsDrop(msg)
+    local clean = msg:gsub("<[^>]->","")
+    local playerName, category, rank, item = clean:match("(%S+) got a (%[Shadows%]) RANK (%S+) %[%S+%] (.+)")
+    if playerName == Player.Name and playerName and category and rank and item then
+        local data = AVATAR_RARITY_MAP[rank:upper()]
+        if data then
+            return {
+                playerName = playerName,
+                desc = string.format("**%s\n%s - %s | %s**", data.label, category, rank, item),
+                color = data.color
+            }
+        end
+    end
+    return nil
+end
 
 local function HandleMessage(msg)
-    local avatar = ParseAvatarDrop(msg)
-    if avatar then
-        SendEmbed("**Notification for "..avatar.playerName.."**",avatar.desc,avatar.color,true)
+    local shadows = ParseShadowsDrop(msg)
+    if shadows then
+        SendEmbed("**Notification for "..shadows.playerName.."**", shadows.desc, shadows.color, true)
         return
     end
+
+    local avatar = ParseAvatarDrop(msg)
+    if avatar then
+        SendEmbed("**Notification for "..avatar.playerName.."**", avatar.desc, avatar.color, true)
+        return
+    end
+
     ParseDropMessage(msg)
 end
 
