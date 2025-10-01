@@ -176,15 +176,14 @@ local function SendStats()
     local expText = PHUD:WaitForChild("Player_Levels",10):WaitForChild("Main",10):WaitForChild("EXP_Counter",10).Text
     local currentExp = parseNumber(expText:match("EXP:%s*(.-)%s*/"))
     local NeedExp = CanPrestige and 0 or math.max(0,nextXP-currentExp)
-
-    local energyText = LeftD:WaitForChild("Energy",10):WaitForChild("Main",10):WaitForChild("TextLabel",10).Text
+    local energyText = LeftD:WaitForChild("Energy",10):WaitForChild("Energy",10):WaitForChild("Main",10):WaitForChild("TextLabel",10).Text
     local currentEnergy = parseNumber(energyText:match("Energy:%s*(.-)$"))
     local rankStat = Player.leaderstats:WaitForChild("Rank")
     local currentRank = tonumber(rankStat.Value) or 0
     local nextRank = currentRank + 1
     local NeedEnergy = nextRank<=Max_Levels and math.max(0,(RankReq[nextRank] or 0)-currentEnergy) or 0
 
-    local CoinsText = LeftD:WaitForChild("Coins",10):WaitForChild("Main",10):WaitForChild("TextLabel",10).Text
+    local CoinsText = LeftD:WaitForChild("Energy",10):WaitForChild("Coins",10):WaitForChild("Main",10):WaitForChild("TextLabel",10).Text
 
     local now = tick()
     local dt = math.max(now-getgenv().PrevStats.Time,1)/60
