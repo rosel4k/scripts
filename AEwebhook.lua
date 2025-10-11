@@ -249,7 +249,7 @@ local function SendStats()
 		"**Prestige: "..tostring(prestige).."**",
 		"**Level: "..level..", EXP: "..formatNumber(currentExp).." / "..formatNumber(nextXP)..(CanPrestige and ", Ready to Prestige**" or ", Need: "..formatNumber(NeedExp).." to Level Up**"),
 		"",
-		"**Calculations per minute:**",
+		"**Calculations:**",
 		"**EXP per minute: "..formatNumber(expPerMin).."**",
 		"**Energy per minute: "..EPM.."**",
         "**Time to rank up: "..TTRU.."**",
