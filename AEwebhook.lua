@@ -8,6 +8,13 @@ local WEBHOOK_USERNAME = "Anime Eternal Notificator"
 local WEBHOOK_AVATAR = "https://i.imgur.com/SX41gmf.png"
 
 local suffixList = {{"UNCENT",1e306},{"CENT",1e303},{"NONONGNTL",1e300},{"OTNONGNTL",1e297},{"SPNONGNTL",1e294},{"SXNONGNTL",1e291},{"QNNONGNTL",1e288},{"QTNONGNTL",1e285},{"TNONGNTL",1e282},{"DNONGNTL",1e279},{"UNONGNTL",1e276},{"NONGNTL",1e273},{"NVOTGNTL",1e270},{"OTOTGNTL",1e267},{"SPOTGNTL",1e264},{"SXOTGNTL",1e261},{"QNOTGNTL",1e258},{"QTOTGNTL",1e255},{"TOTGNTL",1e252},{"DOTGNTL",1e249},{"UOTGNTL",1e246},{"OTGNTL",1e243},{"NVSPTGNTL",1e240},{"OSPTGNTL",1e237},{"SPSPTGNTL",1e234},{"SXSPTGNTL",1e231},{"QNSPTGNTL",1e228},{"QTSPTGNTL",1e225},{"TSPTGNTL",1e222},{"DSPTGNTL",1e219},{"USPTGNTL",1e216},{"SPTGNTL",1e213},{"NVSXGNTL",1e210},{"OSXGNTL",1e207},{"SPSXGNTL",1e204},{"SXSXGNTL",1e201},{"QNSXGNTL",1e198},{"QTSXGNTL",1e195},{"TSXGNTL",1e192},{"DSXGNTL",1e189},{"USXGNTL",1e186},{"SXGNTL",1e183},{"NQQGNT",1e180},{"OQQGNT",1e177},{"SpQGNT",1e174},{"sxQGNT",1e171},{"QnQGNT",1e168},{"qdQGNT",1e165},{"tQGNT",1e162},{"dQGNT",1e159},{"uQGNT",1e156},{"qQGNT",1e153},{"NQDDr",1e150},{"OQDDr",1e147},{"SpQDR",1e144},{"sxQDR",1e141},{"QnQDR",1e138},{"qdQDR",1e135},{"tQDR",1e132},{"dQDR",1e129},{"uQDR",1e126},{"QdDR",1e123},{"NoTG",1e120},{"OcTG",1e117},{"SpTG",1e114},{"ssTG",1e111},{"QnTG",1e108},{"qtTG",1e105},{"tsTG",1e102},{"DTG",1e99},{"UTG",1e96},{"TGN",1e93},{"NVG",1e90},{"OVG",1e87},{"SPG",1e84},{"SeV",1e81},{"QnV",1e78},{"qtV",1e75},{"TVg",1e72},{"DVg",1e69},{"UVg",1e66},{"Vgn",1e63},{"NvD",1e60},{"OcD",1e57},{"SpD",1e54},{"sxD",1e51},{"QnD",1e48},{"qdD",1e45},{"tdD",1e42},{"DD",1e39},{"Ud",1e36},{"de",1e33},{"N",1e30},{"O",1e27},{"Sp",1e24},{"sx",1e21},{"Qn",1e18},{"qd",1e15},{"T",1e12},{"B",1e9},{"M",1e6},{"k",1e3}}
+local PlrData
+local a = require(game:GetService("ReplicatedStorage").Common.ReplicatedService.ReplicaController)
+for i,v in pairs(a._replicas) do
+    if v.Data.Inventory then
+        PlrData = v.Data
+    end
+end
 
 local function parseNumber(str)
     if not str then return 0 end
