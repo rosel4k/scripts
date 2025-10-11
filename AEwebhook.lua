@@ -184,51 +184,75 @@ task.spawn(function()
     if ChatGui then HookLegacyChat() end
 end)
 
+local function formatTime(seconds)
+	if not seconds or seconds == math.huge then return "∞" end
+	local h = math.floor(seconds / 3600)
+	local m = math.floor((seconds % 3600) / 60)
+	local s = math.floor(seconds % 60)
+	if h > 0 then
+		return string.format("%dh %dm %ds", h, m, s)
+	elseif m > 0 then
+		return string.format("%dm %ds", m, s)
+	else
+		return string.format("%ds", s)
+	end
+end
+
 local function SendStats()
-    local gui = Player:WaitForChild("PlayerGui")
-    local PHUD = gui:WaitForChild("PlayerHUD",10)
-    local LeftD = gui:WaitForChild("Main",10):WaitForChild("Left_Side",10):WaitForChild("Displays",10)
-    if not PHUD or not LeftD then return end
+	local gui = Player:WaitForChild("PlayerGui")
+	local PHUD = gui:WaitForChild("PlayerHUD",10)
+	local LeftD = gui:WaitForChild("Main",10):WaitForChild("Left_Side",10):WaitForChild("Displays",10)
+	if not PHUD or not LeftD then return end
 
-    local lvlStat = Player.leaderstats:WaitForChild("Level (Prestige)")
-    local level,prestige = lvlStat.Value:match("(%d+)%s*%((%d+)%)")
-    level,prestige = tonumber(level),tonumber(prestige)
-    local nextXP,CanPrestige = getNextXP(level,prestige)
+	local lvlStat = Player.leaderstats:WaitForChild("Level (Prestige)")
+	local level,prestige = lvlStat.Value:match("(%d+)%s*%((%d+)%)")
+	level,prestige = tonumber(level),tonumber(prestige)
+	local nextXP,CanPrestige = getNextXP(level,prestige)
 
-    local expText = PHUD:WaitForChild("Player_Levels",10):WaitForChild("Main",10):WaitForChild("EXP_Counter",10).Text
-    local currentExp = parseNumber(expText:match("EXP:%s*(.-)%s*/"))
-    local NeedExp = CanPrestige and 0 or math.max(0,nextXP-currentExp)
-    local energyText = LeftD:WaitForChild("Energy",10):WaitForChild("Energy",10):WaitForChild("Main",10):WaitForChild("TextLabel",10).Text
-    local currentEnergy = parseNumber(energyText:match("Energy:%s*(.-)$"))
-    local rankStat = Player.leaderstats:WaitForChild("Rank")
-    local currentRank = tonumber(rankStat.Value) or 0
-    local nextRank = currentRank + 1
-    local NeedEnergy = nextRank<=Max_Levels and math.max(0,(RankReq[nextRank] or 0)-currentEnergy) or 0
+	local expText = PHUD:WaitForChild("Player_Levels",10):WaitForChild("Main",10):WaitForChild("EXP_Counter",10).Text
+	local currentExp = parseNumber(expText:match("EXP:%s*(.-)%s*/"))
+	local NeedExp = CanPrestige and 0 or math.max(0,nextXP-currentExp)
 
-    local CoinsText = LeftD:WaitForChild("Energy",10):WaitForChild("Coins",10):WaitForChild("Main",10):WaitForChild("TextLabel",10).Text
+	local energyText = LeftD:WaitForChild("Energy",10):WaitForChild("Energy",10):WaitForChild("Main",10):WaitForChild("TextLabel",10).Text
+	local currentEnergy = parseNumber(energyText:match("Energy:%s*(.-)$"))
+	local rankStat = Player.leaderstats:WaitForChild("Rank")
+	local currentRank = tonumber(rankStat.Value) or 0
+	local nextRank = currentRank + 1
+	local NeedEnergy = nextRank<=Max_Levels and math.max(0,(RankReq[nextRank] or 0)-currentEnergy) or 0
 
-    local now = tick()
-    local dt = math.max(now-getgenv().PrevStats.Time,1)/60
-    local expPerMin = (currentExp-getgenv().PrevStats.Exp)/dt
-    local energyPerMin = (currentEnergy-getgenv().PrevStats.Energy)/dt
-    getgenv().PrevStats.Exp = currentExp
-    getgenv().PrevStats.Energy = currentEnergy
-    getgenv().PrevStats.Time = now
+	local CoinsText = LeftD:WaitForChild("Energy",10):WaitForChild("Coins",10):WaitForChild("Main",10):WaitForChild("TextLabel",10).Text
 
-    local description = table.concat({
-        "**"..CoinsText.."**",
-        "**Rank: "..currentRank.."**",
-        "**Energy: "..formatNumber(currentEnergy)..(NeedEnergy>0 and ", Need: "..formatNumber(NeedEnergy).." to Rank Up**" or "**"),
-        "**Prestige: "..tostring(prestige).."**",
-        "**Level: "..level..", EXP: "..formatNumber(currentExp).." / "..formatNumber(nextXP)..(CanPrestige and ", Ready to Prestige**" or ", Need: "..formatNumber(NeedExp).." to Level Up**"),
-        "",
-        "**Calculations per minute:**",
-        "**EXP per minute: "..formatNumber(expPerMin).."**",
-        "**Energy per minute: "..formatNumber(energyPerMin).."**",
-        "*Calculations might be wrong some times*"
-    },"\n")
+	local now = tick()
+	local dt = math.max(now-getgenv().PrevStats.Time,1)/60
+	local expPerMin = (currentExp-getgenv().PrevStats.Exp)/dt
+	getgenv().PrevStats.Exp = currentExp
+	getgenv().PrevStats.Time = now
 
-    SendEmbed("**Notification for "..Player.Name.."**",description,0x00ff00)
+	local Energy = (PlrData and PlrData.Stats and PlrData.Stats.Total and PlrData.Stats.Total["Energy"]) or 0
+	local EnergyPerSecond = Energy * 5.886
+	local EnergyPerMinute = EnergyPerSecond * 60
+	local TTNR = NeedEnergy / (EnergyPerSecond > 0 and EnergyPerSecond or 1)
+
+	local EPC = formatNumber(Energy)
+	local EPS = formatNumber(EnergyPerSecond)
+	local EPM = formatNumber(EnergyPerMinute)
+	local TTRU = formatTime(TTNR)
+
+	local description = table.concat({
+		"**"..CoinsText.."**",
+		"**Rank: "..currentRank.."**",
+		"**Energy: "..formatNumber(currentEnergy)..(NeedEnergy>0 and ", Need: "..formatNumber(NeedEnergy).." to Rank Up**" or "**"),
+		"**Prestige: "..tostring(prestige).."**",
+		"**Level: "..level..", EXP: "..formatNumber(currentExp).." / "..formatNumber(nextXP)..(CanPrestige and ", Ready to Prestige**" or ", Need: "..formatNumber(NeedExp).." to Level Up**"),
+		"",
+		"**Calculations per minute:**",
+		"**EXP per minute: "..expPerMin.."**",
+		"**Energy per minute: "..formatNumber(EPM).."**",
+        "**Time to rank up: "..TTRU.."**",
+		"*Calculations might be wrong sometimes*"
+	}, "\n")
+
+	SendEmbed("**Notification for "..Player.Name.."**", description, 0x00ff00)
 end
 
 SendStats()
