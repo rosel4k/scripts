@@ -232,9 +232,6 @@ local function SendStats()
 	local EnergyPerSecond = Energy * 5.886
 	local EnergyPerMinute = EnergyPerSecond * 60
 	local TTNR = NeedEnergy / (EnergyPerSecond > 0 and EnergyPerSecond or 1)
-
-	local EPC = formatNumber(Energy)
-	local EPS = formatNumber(EnergyPerSecond)
 	local EPM = formatNumber(EnergyPerMinute)
 	local TTRU = formatTime(TTNR)
 
@@ -246,14 +243,15 @@ local function SendStats()
 		"**Level: "..level..", EXP: "..formatNumber(currentExp).." / "..formatNumber(nextXP)..(CanPrestige and ", Ready to Prestige**" or ", Need: "..formatNumber(NeedExp).." to Level Up**"),
 		"",
 		"**Calculations per minute:**",
-		"**EXP per minute: "..expPerMin.."**",
-		"**Energy per minute: "..formatNumber(EPM).."**",
+		"**EXP per minute: "..formatNumber(expPerMin).."**",
+		"**Energy per minute: "..EPM.."**",
         "**Time to rank up: "..TTRU.."**",
 		"*Calculations might be wrong sometimes*"
 	}, "\n")
 
 	SendEmbed("**Notification for "..Player.Name.."**", description, 0x00ff00)
 end
+
 
 SendStats()
 task.spawn(function() while task.wait((V.WebhookTimer or 1)*60) do SendStats() end end)
