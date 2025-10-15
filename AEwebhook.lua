@@ -1,3 +1,4 @@
+repeat task.wait() until game:IsLoaded()
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
 local TCS = game:GetService("TextChatService")
