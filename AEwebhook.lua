@@ -18,7 +18,7 @@ for i,v in pairs(a._replicas) do
     end
 end
 
-local function table.find(tbl, value)
+local function tablefind(tbl,value)
     for i, v in ipairs(tbl) do
         if v == value then
             return i
@@ -121,7 +121,7 @@ local function ParseDropMessage(msg)
     local playerName, category, rarity, item = clean:match("(%S+) got a %[(.-)%]%s*(%S+)%s*(.+)")
     if playerName == Player.Name and playerName and category and rarity and item then
         rarity = rarity:upper()
-        if not table.find(V.NotifyRarities, rarity) then return end
+        if not tablefind(V.NotifyRarities, rarity) then return end
         SendEmbed("**Notification for " .. playerName .. "**", string.format("**%s\n[%s] - %s | %s**", rarity, category, rarity, item), GetDropColor(rarity), true)
     end
 end
@@ -130,7 +130,7 @@ local function ParseAvatarDrop(msg)
     local playerName, category, rank, item = clean:match("(%S+) got a (%[.-%]) RANK (%S+) %[Av%]%s*(.+)")
     if playerName == Player.Name and playerName and category and rank and item then
         local data = AVATAR_RARITY_MAP[rank:upper()]
-        if data and table.find(V.NotifyRarities, data.label) then
+        if data and tablefind(V.NotifyRarities, data.label) then
             return {
                 playerName = playerName,
                 desc = string.format("**%s\n%s - %s | %s**", data.label, category, rank, item),
@@ -145,7 +145,7 @@ local function ParseShadowsDrop(msg)
     local playerName, category, rank, item = clean:match("(%S+) got a (%[Shadows%]) RANK (%S+) %[%S+%] (.+)")
     if playerName == Player.Name and playerName and category and rank and item then
         local data = AVATAR_RARITY_MAP[rank:upper()]
-        if data and table.find(V.NotifyRarities, data.label) then
+        if data and tablefind(V.NotifyRarities, data.label) then
             return {
                 playerName = playerName,
                 desc = string.format("**%s\n%s - %s | %s**", data.label, category, rank, item),
