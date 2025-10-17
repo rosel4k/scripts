@@ -36,6 +36,7 @@ local suffixList = {{'UNCENT',1e306},{'CENT',1e303},{'NONONGNTL',1e300},{'OTNONG
 local PlrData
 local Players = game:GetService('Players')
 local Player = Players.LocalPlayer
+local Event = game:GetService("ReplicatedStorage").Events.To_Server
 local gui = Player:WaitForChild('PlayerGui')
 local LeftD = gui:WaitForChild('Main', 10):WaitForChild('Left_Side', 10):WaitForChild('Displays', 10)
 local visited, Max_Levels, RankReq = {}, 0, {}
@@ -354,7 +355,6 @@ local CalculationsTab = Window:CreateTab('Calculations', 'calculator')
 local ToolsTab = Window:CreateTab('Tools', 'hammer')
 
 local WebSec = WebhookTab:CreateSection('Webhook Settings')
-
 local WebTog = WebhookTab:CreateToggle({
     Name = 'Enable Webhook',
     CurrentValue = false,
@@ -391,7 +391,6 @@ local WebInput = WebhookTab:CreateInput({
         end
     end,
 })
-
 local WebTimer = WebhookTab:CreateSlider({
     Name = 'Webhooks Interval',
     Range = { 0, 30 },
@@ -403,7 +402,6 @@ local WebTimer = WebhookTab:CreateSlider({
         V.WebhookTimer = tonumber(Value)
     end,
 })
-
 local WebDrops = WebhookTab:CreateToggle({
     Name = 'Enable Drops Notification',
     CurrentValue = false,
@@ -412,7 +410,6 @@ local WebDrops = WebhookTab:CreateToggle({
         V.GameNotifications = Value
     end,
 })
-
 local WebDropsSelect = WebhookTab:CreateDropdown({
     Name = 'Rarity To Notify',
     Options = { 'SUPREME', 'PHANTOM' },
@@ -455,7 +452,65 @@ local function UpdateParas()
     EnergyPara6:Set({ Title = 'Energy Per Hour:', Content = E.EnergyPerHour })
     EnergyPara7:Set({ Title = 'Time To Rank Up:', Content = E.TimeToRankUp })
 end
+
 UpdateParas()
+
+local PunchAuto = ToolsTab:CreateButton({
+    Name = "Get Punching Machine",
+    Callback = function()
+        local Char = Player.Character or Player.CharacterAdded:Wait()
+        local RP = Char:WaitForChild("HumanoidRootPart")
+        local Counter = 0
+        repeat task.wait()
+            Event:FireServer({Id = "2301", Type = "Remove", Action = "_Quest"})
+            task.wait(1)
+            Event:FireServer({Id = "2301", Type = "Accept", Action = "_Quest"})
+            task.wait(2)
+            Counter = Counter + 1
+        until workspace:FindFirstChild("Punching_Machine") or Counter >= 5
+        local path = workspace:FindFirstChild("Punching_Machine")
+        if path and #path:GetChildren() >= 1 then
+            for _, v in pairs(path:GetChildren()) do
+                if (RP.CFrame.Position - v.CFrame.Position).Magnitude > 5 then
+                    RP.CFrame = v.CFrame
+                    task.wait(0.5)
+                    for _, k in pairs(v:GetDescendants()) do
+                        if k:IsA("ProximityPrompt") then
+                            fireproximityprompt(k)
+                            task.wait(3)
+                            Event:FireServer({["Id"] = "2301",["Type"] = "Complete",["Action"] = "_Quest"})
+                        end
+                    end
+                end
+            end
+        end   
+    end,
+})
+
+local AutoBuy = ToolsTab:CreateToggle({
+    Name = "Auto buy Stat Resets (10k x2)",
+    CurrentValue = false,
+    Flag = "StatResets",
+    Callback = function(Value)
+        while Value do task.wait(10)
+            Event:FireServer({["Amount"] = 1,["Product_Id"] = 7,["Action"] = "Merchant_Purchase",["Bench_Name"] = "Exchange_Shop_Products"})
+        end
+    end,
+})
+local AutoDaily = ToolsTab:CreateToggle({
+    Name = "Auto Accept Daily Quests",
+    CurrentValue = false,
+    Flag = "DailyQuests",
+    Callback = function(Value)
+        while Value do task.wait()
+            for i = 1, 7 do task.wait(1)
+                Event:FireServer({["Id"] = "200"..i,["Type"] = "Accept",["Action"] = "_Quest"})
+            end
+            task.wait(10)
+        end
+    end,
+})
+
 Rayfield:LoadConfiguration()
 local energyText = LeftD:WaitForChild('Energy', 10):WaitForChild('Energy', 10):WaitForChild('Main', 10):WaitForChild('TextLabel', 10)
 local lastUpdate = 0
