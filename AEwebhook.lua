@@ -1,8 +1,20 @@
+local Players = game:GetService('Players')
+local Player = Players.LocalPlayer
+
+if game.PlaceId ~= 90462358603255 then
+    Player:Kick("Wrong game buddy")
+end
 repeat task.wait() until game:IsLoaded()
-local virtualUser = game:GetService('VirtualUser')
-game:GetService('Players').LocalPlayer.Idled:Connect(function()
-    virtualUser:CaptureController()
-    virtualUser:ClickButton2(Vector2.new())
+
+local ReplicatedStorage = game:GetService('ReplicatedStorage')
+local Event = ReplicatedStorage.Events.To_Server
+local HttpService = game:GetService('HttpService')
+local TCS = game:GetService('TextChatService')
+local VirtualUser = game:GetService('VirtualUser')
+
+Player.Idled:Connect(function()
+    VirtualUser:CaptureController()
+    VirtualUser:ClickButton2(Vector2.new())
 end)
 
 getgenv().Values = {
@@ -28,19 +40,17 @@ getgenv().EnergyInfo = {
 }
 local E = getgenv().EnergyInfo
 
-local HttpService = game:GetService('HttpService')
-local TCS = game:GetService('TextChatService')
 local WEBHOOK_USERNAME = 'Anime Eternal Notificator'
 local WEBHOOK_AVATAR = 'https://i.imgur.com/SX41gmf.png'
+
 local suffixList = {{'UNCENT',1e306},{'CENT',1e303},{'NONONGNTL',1e300},{'OTNONGNTL',1e297},{'SPNONGNTL',1e294},{'SXNONGNTL',1e291},{'QNNONGNTL',1e288},{'QTNONGNTL',1e285},{'TNONGNTL',1e282},{'DNONGNTL',1e279},{'UNONGNTL',1e276},{'NONGNTL',1e273},{'NVOTGNTL',1e270},{'OTOTGNTL',1e267},{'SPOTGNTL',1e264},{'SXOTGNTL',1e261},{'QNOTGNTL',1e258},{'QTOTGNTL',1e255},{'TOTGNTL',1e252},{'DOTGNTL',1e249},{'UOTGNTL',1e246},{'OTGNTL',1e243},{'NVSPTGNTL',1e240},{'OSPTGNTL',1e237},{'SPSPTGNTL',1e234},{'SXSPTGNTL',1e231},{'QNSPTGNTL',1e228},{'QTSPTGNTL',1e225},{'TSPTGNTL',1e222},{'DSPTGNTL',1e219},{'USPTGNTL',1e216},{'SPTGNTL',1e213},{'NVSXGNTL',1e210},{'OSXGNTL',1e207},{'SPSXGNTL',1e204},{'SXSXGNTL',1e201},{'QNSXGNTL',1e198},{'QTSXGNTL',1e195},{'TSXGNTL',1e192},{'DSXGNTL',1e189},{'USXGNTL',1e186},{'SXGNTL',1e183},{'NQQGNT',1e180},{'OQQGNT',1e177},{'SpQGNT',1e174},{'sxQGNT',1e171},{'QnQGNT',1e168},{'qdQGNT',1e165},{'tQGNT',1e162},{'dQGNT',1e159},{'uQGNT',1e156},{'qQGNT',1e153},{'NQDDr',1e150},{'OQDDr',1e147},{'SpQDR',1e144},{'sxQDR',1e141},{'QnQDR',1e138},{'qdQDR',1e135},{'tQDR',1e132},{'dQDR',1e129},{'uQDR',1e126},{'QdDR',1e123},{'NoTG',1e120},{'OcTG',1e117},{'SpTG',1e114},{'ssTG',1e111},{'QnTG',1e108},{'qtTG',1e105},{'tsTG',1e102},{'DTG',1e99},{'UTG',1e96},{'TGN',1e93},{'NVG',1e90},{'OVG',1e87},{'SPG',1e84},{'SeV',1e81},{'QnV',1e78},{'qtV',1e75},{'TVg',1e72},{'DVg',1e69},{'UVg',1e66},{'Vgn',1e63},{'NvD',1e60},{'OcD',1e57},{'SpD',1e54},{'sxD',1e51},{'QnD',1e48},{'qdD',1e45},{'tdD',1e42},{'DD',1e39},{'Ud',1e36},{'de',1e33},{'N',1e30},{'O',1e27},{'Sp',1e24},{'sx',1e21},{'Qn',1e18},{'qd',1e15},{'T',1e12},{'B',1e9},{'M',1e6},{'k',1e3}}
+
 local PlrData
-local Players = game:GetService('Players')
-local Player = Players.LocalPlayer
-local Event = game:GetService("ReplicatedStorage").Events.To_Server
 local gui = Player:WaitForChild('PlayerGui')
 local LeftD = gui:WaitForChild('Main', 10):WaitForChild('Left_Side', 10):WaitForChild('Displays', 10)
 local visited, Max_Levels, RankReq = {}, 0, {}
-local a = require(game:GetService('ReplicatedStorage').Common.ReplicatedService.ReplicaController)
+
+local a = require(ReplicatedStorage.Common.ReplicatedService.ReplicaController)
 
 for i, v in pairs(a._replicas) do
     if v.Data.Inventory then
@@ -77,11 +87,18 @@ local function formatNumber(n)
     for _, p in ipairs(suffixList) do
         if absn >= p[2] then
             local x = n / p[2]
-            return x % 1 == 0 and ('%d%s'):format(x, p[1])
-                or ('%.2f%s'):format(x, p[1])
+            if x % 1 == 0 then
+                return ('%d%s'):format(x, p[1])
+            else
+                return ('%.2f%s'):format(x, p[1])
+            end
         end
     end
-    return n % 1 == 0 and ('%d'):format(n) or ('%.2f'):format(n)
+    if n % 1 == 0 then
+        return ('%d'):format(n)
+    else
+        return ('%.2f'):format(n)
+    end
 end
 
 local function scan(tbl)
@@ -111,6 +128,7 @@ for _, v in pairs(getgc(true)) do
 end
 
 local LevelCaps, XPReq = {}, {}
+
 for _, t in ipairs(getgc(true)) do
     if type(t) == 'table' then
         if rawget(t, 'Id') and rawget(t, 'Level_Cap') then
@@ -159,13 +177,18 @@ local function SendEmbed(title, desc, color, doPing)
     local ts = os.time()
     local body = {
         content = doPing and ('<@' .. (V.UserId or '') .. '>') or '',
-        embeds = {{   title = title, description = desc .. '\n<t:' .. ts .. ':T>', color = color,},},
+        embeds = {{ title = title, description = desc .. '\n<t:' .. ts .. ':T>', color = color }},
         username = WEBHOOK_USERNAME,
         avatar_url = WEBHOOK_AVATAR,
         attachments = {},
     }
     pcall(function()
-        request({ Url = V.WebhookURL, Method = 'POST', Headers = { ['Content-Type'] = 'application/json' }, Body = HttpService:JSONEncode(body),})
+        request({
+            Url = V.WebhookURL,
+            Method = 'POST',
+            Headers = { ['Content-Type'] = 'application/json' },
+            Body = HttpService:JSONEncode(body),
+        })
     end)
 end
 local function ParseDropMessage(msg)
@@ -176,44 +199,60 @@ local function ParseDropMessage(msg)
         if not tablefind(V.NotifyRarities, rarity) then
             return
         end
-        SendEmbed('**Notification for ' .. playerName .. '**',string.format('**%s\n[%s] - %s | %s**',rarity,category,rarity,item),GetDropColor(rarity),true )
+        SendEmbed('**Notification for ' .. playerName .. '**',
+            string.format('**%s\n[%s] - %s | %s**', rarity, category, rarity, item),
+            GetDropColor(rarity),
+            true
+        )
     end
 end
+
 local function ParseAvatarDrop(msg)
     local clean = msg:gsub('<[^>]->', '')
     local playerName, category, rank, item = clean:match('(%S+) got a (%[.-%]) RANK (%S+) %[Av%]%s*(.+)')
     if playerName == Player.Name and playerName and category and rank and item then
         local data = AVATAR_RARITY_MAP[rank:upper()]
         if data and tablefind(V.NotifyRarities, data.label) then
-            return {playerName = playerName,desc = string.format('**%s\n%s - %s | %s**',data.label,category,rank,item),color = data.color,}
+            return {
+                playerName = playerName,
+                desc = string.format('**%s\n%s - %s | %s**', data.label, category, rank, item),
+                color = data.color,
+            }
         end
     end
     return nil
 end
+
 local function ParseShadowsDrop(msg)
     local clean = msg:gsub('<[^>]->', '')
     local playerName, category, rank, item = clean:match('(%S+) got a (%[Shadows%]) RANK (%S+) %[%S+%] (.+)')
     if playerName == Player.Name and playerName and category and rank and item then
         local data = AVATAR_RARITY_MAP[rank:upper()]
         if data and tablefind(V.NotifyRarities, data.label) then
-            return {playerName = playerName,desc = string.format('**%s\n%s - %s | %s**',data.label,category,rank,item),color = data.color,}
+            return {
+                playerName = playerName,
+                desc = string.format('**%s\n%s - %s | %s**', data.label, category, rank, item),
+                color = data.color,
+            }
         end
     end
     return nil
 end
+
 local function HandleMessage(msg)
     local shadows = ParseShadowsDrop(msg)
     if shadows then
-        SendEmbed('**Notification for ' .. shadows.playerName .. '**',shadows.desc,shadows.color,true)
+        SendEmbed('**Notification for ' .. shadows.playerName .. '**', shadows.desc, shadows.color, true)
         return
     end
     local avatar = ParseAvatarDrop(msg)
     if avatar then
-        SendEmbed('**Notification for ' .. avatar.playerName .. '**',avatar.desc,avatar.color,true)
+        SendEmbed('**Notification for ' .. avatar.playerName .. '**', avatar.desc, avatar.color, true)
         return
     end
     ParseDropMessage(msg)
 end
+
 if TCS then
     local function ConnectChannel(channel)
         channel.MessageReceived:Connect(function(message)
@@ -223,15 +262,14 @@ if TCS then
         end)
     end
     task.spawn(function()
-        repeat
-            task.wait()
-        until TCS.TextChannels
+        repeat task.wait() until TCS.TextChannels
         for _, c in pairs(TCS.TextChannels:GetChildren()) do
             ConnectChannel(c)
         end
         TCS.TextChannels.ChildAdded:Connect(ConnectChannel)
     end)
 end
+
 local function HookLegacyChat()
     local ChatGui = Player:WaitForChild('PlayerGui'):WaitForChild('Chat')
     local Frame = ChatGui:WaitForChild('Frame'):WaitForChild('ChatChannelParentFrame'):WaitForChild('Frame_MessageLogDisplay')
@@ -243,12 +281,14 @@ local function HookLegacyChat()
         end
     end)
 end
+
 task.spawn(function()
     local ChatGui = Player:WaitForChild('PlayerGui'):WaitForChild('Chat')
     if ChatGui then
         HookLegacyChat()
     end
 end)
+
 local function formatTime(seconds)
     if not seconds or seconds == math.huge then
         return '∞'
@@ -264,6 +304,7 @@ local function formatTime(seconds)
         return string.format('%ds', s)
     end
 end
+
 local function EnergyCalculator()
     local energyText = LeftD:WaitForChild('Energy', 10):WaitForChild('Energy', 10):WaitForChild('Main', 10):WaitForChild('TextLabel', 10).Text
     local EnergyMatched = energyText:match('Energy:%s*(.-)$')
@@ -293,7 +334,6 @@ local function EnergyCalculator()
         TimeToRankUp = TTRU or '',
     }
 end
-
 
 local function SendStats()
     local PHUD = gui:WaitForChild('PlayerHUD', 10)
@@ -327,7 +367,7 @@ local function SendStats()
         '**Time to rank up: ' .. E.TimeToRankUp .. '**',
         '*Calculations might be wrong sometimes*',
     }, '\n')
-    SendEmbed('**Notification for ' .. Player.Name .. '**',description, 0x00ff00)
+    SendEmbed('**Notification for ' .. Player.Name .. '**', description, 0x00ff00)
 end
 
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
@@ -348,8 +388,6 @@ local Window = Rayfield:CreateWindow({
     },
     KeySystem = false,
 })
-
-    
 local WebhookTab = Window:CreateTab('Webhook', 'webhook')
 local CalculationsTab = Window:CreateTab('Calculations', 'calculator')
 local ToolsTab = Window:CreateTab('Tools', 'hammer')
@@ -360,21 +398,21 @@ local WebTog = WebhookTab:CreateToggle({
     CurrentValue = false,
     Flag = 'WebTog',
     Callback = function(Value)
+        V.WebhookMode = Value
         if Value then
-            V.WebhookMode = Value
             EnergyCalculator()
             SendStats()
             task.spawn(function()
-                while V.WebhookMode do task.wait((V.WebhookTimer or 1) * 60)
+                while V.WebhookMode do
+                    task.wait((V.WebhookTimer or 1) * 60)
                     EnergyCalculator()
                     SendStats()
                 end
             end)
-        else
-            V.WebhookMode = Value or false
         end
     end,
 })
+
 local WebURLPara = WebhookTab:CreateParagraph({ Title = 'Current URL:', Content = '' })
 local WebInput = WebhookTab:CreateInput({
     Name = 'Webhook URL',
@@ -387,10 +425,11 @@ local WebInput = WebhookTab:CreateInput({
             WebURLPara:Set({ Title = 'Current URL:', Content = Text })
             V.WebhookURL = Text
         else
-            WebURLPara:Set({Title = 'Current URL:',Content = 'WRONG URL OR NOT EVEN AN ULR',})
+            WebURLPara:Set({ Title = 'Current URL:', Content = 'WRONG URL OR NOT EVEN AN URL' })
         end
     end,
 })
+
 local WebTimer = WebhookTab:CreateSlider({
     Name = 'Webhooks Interval',
     Range = { 0, 30 },
@@ -402,6 +441,7 @@ local WebTimer = WebhookTab:CreateSlider({
         V.WebhookTimer = tonumber(Value)
     end,
 })
+
 local WebDrops = WebhookTab:CreateToggle({
     Name = 'Enable Drops Notification',
     CurrentValue = false,
@@ -410,6 +450,7 @@ local WebDrops = WebhookTab:CreateToggle({
         V.GameNotifications = Value
     end,
 })
+
 local WebDropsSelect = WebhookTab:CreateDropdown({
     Name = 'Rarity To Notify',
     Options = { 'SUPREME', 'PHANTOM' },
@@ -420,9 +461,10 @@ local WebDropsSelect = WebhookTab:CreateDropdown({
         V.NotifyRarities = Options
     end,
 })
+
 local WebIDPara = WebhookTab:CreateParagraph({ Title = 'Current Id:', Content = '' })
 local WebIDInput = WebhookTab:CreateInput({
-    Name = 'Discourd User Id',
+    Name = 'Discord User Id',
     CurrentValue = '',
     PlaceholderText = 'ID HERE',
     RemoveTextAfterFocusLost = true,
@@ -434,21 +476,21 @@ local WebIDInput = WebhookTab:CreateInput({
 })
 
 local EnergyPara1 = CalculationsTab:CreateParagraph({ Title = 'Current Energy:', Content = '' })
-local EnergyPara2 = CalculationsTab:CreateParagraph({Title = 'Energy To Reach Next Rank:',Content = '',})
-local EnergyPara3 = CalculationsTab:CreateParagraph({Title = 'Energy Per Click:',Content = '',})
-local EnergyPara4 = CalculationsTab:CreateParagraph({Title = 'Energy Per Second:',Content = '',})
-local EnergyPara5 = CalculationsTab:CreateParagraph({Title = 'Energy Per Minute:',Content = '',})
-local EnergyPara6 = CalculationsTab:CreateParagraph({Title = 'Energy Per Hour:',Content = '',})
-local EnergyPara7 = CalculationsTab:CreateParagraph({Title = 'Time To Rank Up:',Content = '',})
+local EnergyPara2 = CalculationsTab:CreateParagraph({ Title = 'Energy To Reach Next Rank:', Content = '' })
+local EnergyPara3 = CalculationsTab:CreateParagraph({ Title = 'Energy Per Click:', Content = '' })
+local EnergyPara4 = CalculationsTab:CreateParagraph({ Title = 'Energy Per Second:', Content = '' })
+local EnergyPara5 = CalculationsTab:CreateParagraph({ Title = 'Energy Per Minute:', Content = '' })
+local EnergyPara6 = CalculationsTab:CreateParagraph({ Title = 'Energy Per Hour:', Content = '' })
+local EnergyPara7 = CalculationsTab:CreateParagraph({ Title = 'Time To Rank Up:', Content = '' })
 
 local function UpdateParas()
     EnergyCalculator()
     local E = getgenv().EnergyInfo
     EnergyPara1:Set({ Title = 'Current Energy:', Content = E.EnergyText })
-    EnergyPara2:Set({Title = 'Energy To Reach Next Rank:',Content = formatNumber(E.EnergyUntilRank)})
-    EnergyPara3:Set({ Title = 'Energy Per Click:', Content = formatNumber(E.EnergyPerClick)})
-    EnergyPara4:Set({Title = 'Energy Per Second:',Content = E.EnergyPerSecond,})
-    EnergyPara5:Set({Title = 'Energy Per Minute:',Content = E.EnergyPerMinute,})
+    EnergyPara2:Set({ Title = 'Energy To Reach Next Rank:', Content = formatNumber(E.EnergyUntilRank) })
+    EnergyPara3:Set({ Title = 'Energy Per Click:', Content = formatNumber(E.EnergyPerClick) })
+    EnergyPara4:Set({ Title = 'Energy Per Second:', Content = E.EnergyPerSecond })
+    EnergyPara5:Set({ Title = 'Energy Per Minute:', Content = E.EnergyPerMinute })
     EnergyPara6:Set({ Title = 'Energy Per Hour:', Content = E.EnergyPerHour })
     EnergyPara7:Set({ Title = 'Time To Rank Up:', Content = E.TimeToRankUp })
 end
@@ -461,13 +503,15 @@ local PunchAuto = ToolsTab:CreateButton({
         local Char = Player.Character or Player.CharacterAdded:Wait()
         local RP = Char:WaitForChild("HumanoidRootPart")
         local Counter = 0
-        repeat task.wait()
+        repeat
+            task.wait()
             Event:FireServer({Id = "2301", Type = "Remove", Action = "_Quest"})
             task.wait(1)
             Event:FireServer({Id = "2301", Type = "Accept", Action = "_Quest"})
             task.wait(2)
             Counter = Counter + 1
         until workspace:FindFirstChild("Punching_Machine") or Counter >= 5
+
         local path = workspace:FindFirstChild("Punching_Machine")
         if path and #path:GetChildren() >= 1 then
             for _, v in pairs(path:GetChildren()) do
@@ -478,12 +522,12 @@ local PunchAuto = ToolsTab:CreateButton({
                         if k:IsA("ProximityPrompt") then
                             fireproximityprompt(k)
                             task.wait(3)
-                            Event:FireServer({["Id"] = "2301",["Type"] = "Complete",["Action"] = "_Quest"})
+                            Event:FireServer({["Id"] = "2301", ["Type"] = "Complete", ["Action"] = "_Quest"})
                         end
                     end
                 end
             end
-        end   
+        end
     end,
 })
 
@@ -492,19 +536,23 @@ local AutoBuy = ToolsTab:CreateToggle({
     CurrentValue = false,
     Flag = "StatResets",
     Callback = function(Value)
-        while Value do task.wait(10)
-            Event:FireServer({["Amount"] = 1,["Product_Id"] = 7,["Action"] = "Merchant_Purchase",["Bench_Name"] = "Exchange_Shop_Products"})
+        while Value do
+            task.wait(10)
+            Event:FireServer({["Amount"] = 1, ["Product_Id"] = 7, ["Action"] = "Merchant_Purchase", ["Bench_Name"] = "Exchange_Shop_Products"})
         end
     end,
 })
+
 local AutoDaily = ToolsTab:CreateToggle({
     Name = "Auto Accept Daily Quests",
     CurrentValue = false,
     Flag = "DailyQuests",
     Callback = function(Value)
-        while Value do task.wait()
-            for i = 1, 7 do task.wait(1)
-                Event:FireServer({["Id"] = "200"..i,["Type"] = "Accept",["Action"] = "_Quest"})
+        while Value do
+            task.wait()
+            for i = 1, 7 do
+                task.wait(1)
+                Event:FireServer({["Id"] = "200"..i, ["Type"] = "Accept", ["Action"] = "_Quest"})
             end
             task.wait(10)
         end
@@ -512,6 +560,7 @@ local AutoDaily = ToolsTab:CreateToggle({
 })
 
 Rayfield:LoadConfiguration()
+
 local energyText = LeftD:WaitForChild('Energy', 10):WaitForChild('Energy', 10):WaitForChild('Main', 10):WaitForChild('TextLabel', 10)
 local lastUpdate = 0
 energyText:GetPropertyChangedSignal('Text'):Connect(function()
