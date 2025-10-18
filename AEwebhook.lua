@@ -425,7 +425,7 @@ local Window = Fluent:CreateWindow({
     TabWidth = 160,
     Size = UDim2.fromOffset(460, 380),
     Acrylic = false,
-    Theme = "Light",
+    Theme = "Darker",
     MinimizeKey = Enum.KeyCode.L
 })
 local Tabs = {
@@ -524,13 +524,13 @@ local EnergyPara7 = Calculations:AddParagraph({ Title = "Time To Rank Up", Conte
 local function UpdateParas()
     EnergyCalculator()
     local E = getgenv().EnergyInfo
-    EnergyPara1:SetDesc('Current Energy:\n'.. E.EnergyText )
-    EnergyPara2:SetDesc('Energy To Reach Next Rank:\n'.. formatNumber(E.EnergyUntilRank) )
-    EnergyPara3:SetDesc('Energy Per Click:\n'.. formatNumber(E.EnergyPerClick) )
-    EnergyPara4:SetDesc('Energy Per Second:\n'.. E.EnergyPerSecond )
-    EnergyPara5:SetDesc('Energy Per Minute:\n'.. E.EnergyPerMinute )
-    EnergyPara6:SetDesc('Energy Per Hour:\n'.. E.EnergyPerHour )
-    EnergyPara7:SetDesc('Time To Rank Up:\n'.. E.TimeToRankUp )
+    EnergyPara1:SetDesc(E.EnergyText )
+    EnergyPara2:SetDesc(formatNumber(E.EnergyUntilRank) )
+    EnergyPara3:SetDesc(formatNumber(E.EnergyPerClick) )
+    EnergyPara4:SetDesc(E.EnergyPerSecond )
+    EnergyPara5:SetDesc(E.EnergyPerMinute )
+    EnergyPara6:SetDesc(E.EnergyPerHour )
+    EnergyPara7:SetDesc(E.TimeToRankUp )
 end
 
 UpdateParas()
