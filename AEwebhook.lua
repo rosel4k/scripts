@@ -370,135 +370,130 @@ local function SendStats()
     SendEmbed('**Notification for ' .. Player.Name .. '**', description, 0x00ff00)
 end
 
-local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
-local Window = Rayfield:CreateWindow({
-    Name = 'AE Helper by rosel4k',
-    Icon = 'info',
-    LoadingTitle = '',
-    LoadingSubtitle = '',
-    ShowText = '',
-    Theme = 'Default',
-    ToggleUIKeybind = 'K',
-    DisableRayfieldPrompts = false,
-    DisableBuildWarnings = false,
-    ConfigurationSaving = {
-        Enabled = true,
-        FolderName = 'Rosel4kScripts',
-        FileName = 'AE_Helper',
-    },
-    KeySystem = false,
-})
-local WebhookTab = Window:CreateTab('Webhook', 'webhook')
-local CalculationsTab = Window:CreateTab('Calculations', 'calculator')
-local ToolsTab = Window:CreateTab('Tools', 'hammer')
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 
-local WebSec = WebhookTab:CreateSection('Webhook Settings')
-local WebTog = WebhookTab:CreateToggle({
-    Name = 'Enable Webhook',
-    CurrentValue = false,
-    Flag = 'WebTog',
+local Window = Fluent:CreateWindow({
+    Title = "AE Helper",
+    SubTitle = "by rosel4k",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(460, 380),
+    Acrylic = false,
+    Theme = "Light",
+    MinimizeKey = Enum.KeyCode.RightShift
+})
+local Tabs = {
+    WebhookTab = Window:AddTab({ Title = "Webhook", Icon = "webhook" }),
+    CalculationsTab = Window:AddTab({ Title = "Calculations", Icon = "calculator" }),
+    ToolsTab = Window:AddTab({ Title = "Tools", Icon = "hammer" }),
+    Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
+}
+
+local WebSec = Tabs.WebhookTab:AddSection("Webhook Setting") 
+local Calculations = Tabs.CalculationsTab:AddSection("Energy Calculations")
+local Tools = Tabs.ToolsTab:AddSection("Tools")
+
+local Options = Fluent.Options
+
+local WebTog = WebSec:AddToggle("WebTog", {Title = "Enable Webhook", Default = false})
+Options.WebTog:OnChanged(function(Value)
+    V.WebhookMode = Value
+    if Value then
+        EnergyCalculator()
+        SendStats()
+        task.spawn(function()
+            while V.WebhookMode do
+                task.wait((V.WebhookTimer or 1) * 60)
+                EnergyCalculator()
+                SendStats()
+            end
+        end)
+    end
+end)
+local WebURLPara = WebSec:AddParagraph({Title = "Current URL:",Content = ""})
+local WebInput = WebSec:AddInput("WebInput", {
+    Title = "Webhook URL",
+    Default = "",
+    Placeholder = "URL HERE",
+    Numeric = false,
+    Finished = true,
     Callback = function(Value)
-        V.WebhookMode = Value
-        if Value then
-            EnergyCalculator()
-            SendStats()
-            task.spawn(function()
-                while V.WebhookMode do
-                    task.wait((V.WebhookTimer or 1) * 60)
-                    EnergyCalculator()
-                    SendStats()
-                end
-            end)
-        end
-    end,
-})
-
-local WebURLPara = WebhookTab:CreateParagraph({ Title = 'Current URL:', Content = '' })
-local WebInput = WebhookTab:CreateInput({
-    Name = 'Webhook URL',
-    CurrentValue = '',
-    PlaceholderText = 'URL HERE',
-    RemoveTextAfterFocusLost = true,
-    Flag = 'WebInput',
-    Callback = function(Text)
-        if string.find(Text, 'https://discord.com/api/webhooks') then
-            WebURLPara:Set({ Title = 'Current URL:', Content = Text })
-            V.WebhookURL = Text
+        if string.find(Value, 'https://discord.com/api/webhooks') then
+            WebURLPara:SetDesc(Value)
+            V.WebhookURL = Value
         else
-            WebURLPara:Set({ Title = 'Current URL:', Content = 'WRONG URL OR NOT EVEN AN URL' })
+            WebURLPara:SetDesc('Webhook URL:\nWRONG URL OR NOT EVEN AN URL')
         end
-    end,
+    end
 })
-
-local WebTimer = WebhookTab:CreateSlider({
-    Name = 'Webhooks Interval',
-    Range = { 0, 30 },
-    Increment = 1,
-    Suffix = 'Minutes',
-    CurrentValue = 5,
-    Flag = 'WebTimer',
+local WebTimer = WebSec:AddSlider("WebTimer", {
+    Title = "Webhooks\nInterval",
+    Description = "Minutes",
+    Default = 5,
+    Min = 1,
+    Max = 30,
+    Rounding = 1,
     Callback = function(Value)
         V.WebhookTimer = tonumber(Value)
-    end,
+    end
 })
+local WebDrops = WebSec:AddToggle("WebDrops", {Title = "Enable Drops Notification", Default = false})
+Options.WebDrops:OnChanged(function(Value)
+    V.GameNotifications = Value
+end)
 
-local WebDrops = WebhookTab:CreateToggle({
-    Name = 'Enable Drops Notification',
-    CurrentValue = false,
-    Flag = 'WebDrops',
+local WebDropsSelect = WebSec:AddDropdown("WebDropsSelect", {
+    Title = "Rarity To\nNotify",
+    Values = { 'SUPREME', 'PHANTOM' },
+    Multi = true,
+    Default = { 'SUPREME', 'PHANTOM' },
+})
+WebDropsSelect:OnChanged(function(Value)
+    V.NotifyRarities = Value
+end)
+
+local WebIDPara = WebSec:AddParagraph({Title = "Current Id:",Content = ""})
+local WebIDInput = WebSec:AddInput("WebIDInput", {
+    Title = "Discord User Id",
+    Default = "",
+    Placeholder = "Id HERE",
+    Numeric = false,
+    Finished = true,
     Callback = function(Value)
-        V.GameNotifications = Value
-    end,
-})
-
-local WebDropsSelect = WebhookTab:CreateDropdown({
-    Name = 'Rarity To Notify',
-    Options = { 'SUPREME', 'PHANTOM' },
-    CurrentOption = { 'SUPREME', 'PHANTOM' },
-    MultipleOptions = true,
-    Flag = 'WebDropsSelect',
-    Callback = function(Options)
-        V.NotifyRarities = Options
-    end,
-})
-
-local WebIDPara = WebhookTab:CreateParagraph({ Title = 'Current Id:', Content = '' })
-local WebIDInput = WebhookTab:CreateInput({
-    Name = 'Discord User Id',
-    CurrentValue = '',
-    PlaceholderText = 'ID HERE',
-    RemoveTextAfterFocusLost = true,
-    Flag = 'WebIDInput',
-    Callback = function(Text)
-        WebIDPara:Set({ Title = 'Current Id:', Content = Text })
+        WebIDPara:SetDesc("User ID: \n"..Value)
         V.UserId = Text
-    end,
+    end
 })
 
-local EnergyPara1 = CalculationsTab:CreateParagraph({ Title = 'Current Energy:', Content = '' })
-local EnergyPara2 = CalculationsTab:CreateParagraph({ Title = 'Energy To Reach Next Rank:', Content = '' })
-local EnergyPara3 = CalculationsTab:CreateParagraph({ Title = 'Energy Per Click:', Content = '' })
-local EnergyPara4 = CalculationsTab:CreateParagraph({ Title = 'Energy Per Second:', Content = '' })
-local EnergyPara5 = CalculationsTab:CreateParagraph({ Title = 'Energy Per Minute:', Content = '' })
-local EnergyPara6 = CalculationsTab:CreateParagraph({ Title = 'Energy Per Hour:', Content = '' })
-local EnergyPara7 = CalculationsTab:CreateParagraph({ Title = 'Time To Rank Up:', Content = '' })
+
+local EnergyPara1 = Calculations:AddParagraph({ Title = "Current Energy", Content = "" })
+local EnergyPara2 = Calculations:AddParagraph({ Title = "Energy To Reach Next Rank", Content = "" })
+local EnergyPara3 = Calculations:AddParagraph({ Title = "Energy Per Click", Content = "" })
+local EnergyPara4 = Calculations:AddParagraph({ Title = "Energy Per Second", Content = "" })
+local EnergyPara5 = Calculations:AddParagraph({ Title = "Energy Per Minute", Content = "" })
+local EnergyPara6 = Calculations:AddParagraph({ Title = "Energy Per Hour", Content = "" })
+local EnergyPara7 = Calculations:AddParagraph({ Title = "Time To Rank Up", Content = "" })
+
 
 local function UpdateParas()
     EnergyCalculator()
     local E = getgenv().EnergyInfo
-    EnergyPara1:Set({ Title = 'Current Energy:', Content = E.EnergyText })
-    EnergyPara2:Set({ Title = 'Energy To Reach Next Rank:', Content = formatNumber(E.EnergyUntilRank) })
-    EnergyPara3:Set({ Title = 'Energy Per Click:', Content = formatNumber(E.EnergyPerClick) })
-    EnergyPara4:Set({ Title = 'Energy Per Second:', Content = E.EnergyPerSecond })
-    EnergyPara5:Set({ Title = 'Energy Per Minute:', Content = E.EnergyPerMinute })
-    EnergyPara6:Set({ Title = 'Energy Per Hour:', Content = E.EnergyPerHour })
-    EnergyPara7:Set({ Title = 'Time To Rank Up:', Content = E.TimeToRankUp })
+    EnergyPara1:SetDesc('Current Energy:\n'.. E.EnergyText )
+    EnergyPara2:SetDesc('Energy To Reach Next Rank:\n'.. formatNumber(E.EnergyUntilRank) )
+    EnergyPara3:SetDesc('Energy Per Click:\n'.. formatNumber(E.EnergyPerClick) )
+    EnergyPara4:SetDesc('Energy Per Second:\n'.. E.EnergyPerSecond )
+    EnergyPara5:SetDesc('Energy Per Minute:\n'.. E.EnergyPerMinute )
+    EnergyPara6:SetDesc('Energy Per Hour:\n'.. E.EnergyPerHour )
+    EnergyPara7:SetDesc('Time To Rank Up:\n'.. E.TimeToRankUp )
 end
 
 UpdateParas()
 
-local PunchAuto = ToolsTab:CreateButton({
-    Name = "Get Punching Machine",
+
+local PunchAuto = Tools:AddButton({
+    Title = "Get Punching Machine",
+    Description = "",
     Callback = function()
         local Char = Player.Character or Player.CharacterAdded:Wait()
         local RP = Char:WaitForChild("HumanoidRootPart")
@@ -528,38 +523,40 @@ local PunchAuto = ToolsTab:CreateButton({
                 end
             end
         end
-    end,
+    end
 })
 
-local AutoBuy = ToolsTab:CreateToggle({
-    Name = "Auto buy Stat Resets (10k x2)",
-    CurrentValue = false,
-    Flag = "StatResets",
-    Callback = function(Value)
-        while Value do
-            task.wait(10)
-            Event:FireServer({["Amount"] = 1, ["Product_Id"] = 7, ["Action"] = "Merchant_Purchase", ["Bench_Name"] = "Exchange_Shop_Products"})
+local StatResets = Tools:AddToggle("StatResets", {Title = "Auto buy Stat Resets (10k x2)", Default = false })
+Options.StatResets:OnChanged(function(Value)
+    while Value do
+        task.wait(10)
+        Event:FireServer({["Amount"] = 1, ["Product_Id"] = 7, ["Action"] = "Merchant_Purchase", ["Bench_Name"] = "Exchange_Shop_Products"})
+    end
+end)
+
+local DailyQuests = Tools:AddToggle("DailyQuests", {Title = "Auto Accept Daily Quests", Default = false })
+Options.DailyQuests:OnChanged(function(Value)
+    while Value do
+        task.wait()
+        for i = 1, 7 do
+            task.wait(1)
+            Event:FireServer({["Id"] = "200"..i, ["Type"] = "Accept", ["Action"] = "_Quest"})
         end
-    end,
-})
+        task.wait(10)
+    end
+end)
 
-local AutoDaily = ToolsTab:CreateToggle({
-    Name = "Auto Accept Daily Quests",
-    CurrentValue = false,
-    Flag = "DailyQuests",
-    Callback = function(Value)
-        while Value do
-            task.wait()
-            for i = 1, 7 do
-                task.wait(1)
-                Event:FireServer({["Id"] = "200"..i, ["Type"] = "Accept", ["Action"] = "_Quest"})
-            end
-            task.wait(10)
-        end
-    end,
-})
 
-Rayfield:LoadConfiguration()
+SaveManager:SetLibrary(Fluent)
+InterfaceManager:SetLibrary(Fluent)
+SaveManager:IgnoreThemeSettings()
+SaveManager:SetIgnoreIndexes({})
+InterfaceManager:SetFolder("FluentScriptHub")
+SaveManager:SetFolder("FluentScriptHub/specific-game")
+InterfaceManager:BuildInterfaceSection(Tabs.Settings)
+SaveManager:BuildConfigSection(Tabs.Settings)
+Window:SelectTab(1)
+SaveManager:LoadAutoloadConfig()
 
 local energyText = LeftD:WaitForChild('Energy', 10):WaitForChild('Energy', 10):WaitForChild('Main', 10):WaitForChild('TextLabel', 10)
 local lastUpdate = 0
