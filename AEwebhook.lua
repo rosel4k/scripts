@@ -370,6 +370,51 @@ local function SendStats()
     SendEmbed('**Notification for ' .. Player.Name .. '**', description, 0x00ff00)
 end
 
+local gui = Instance.new("ScreenGui")
+gui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+local buttonFrame = Instance.new("Frame")
+buttonFrame.Size = UDim2.new(0, 100, 0, 40)
+buttonFrame.Position = UDim2.new(0.5, 100, 0, 10)
+buttonFrame.BackgroundTransparency = 1
+buttonFrame.Parent = gui
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(1, 0, 1, 0)
+button.Text = "Press L"
+button.Parent = buttonFrame
+local isDragging = false
+local offset = Vector2.new()
+local function startDrag(input)
+    isDragging = true
+    offset = buttonFrame.Position - UDim2.new(0, input.Position.X, 0, input.Position.Y)
+end
+local function stopDrag()
+    isDragging = false
+end
+local function updateDrag(input)
+    if isDragging then
+        buttonFrame.Position = UDim2.new(0, input.Position.X, 0, input.Position.Y) + offset
+    end
+end
+button.MouseButton1Click:Connect(function()
+    game:GetService('VirtualInputManager'):SendKeyEvent(true, 'L', false,uwu)
+    print("Pressed L")
+end)
+button.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        startDrag(input)
+    end
+end)
+button.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        stopDrag()
+    end
+end)
+game:GetService("UserInputService").InputChanged:Connect(updateDrag)
+
+
+
+
+
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -381,7 +426,7 @@ local Window = Fluent:CreateWindow({
     Size = UDim2.fromOffset(460, 380),
     Acrylic = false,
     Theme = "Light",
-    MinimizeKey = Enum.KeyCode.RightShift
+    MinimizeKey = Enum.KeyCode.L
 })
 local Tabs = {
     WebhookTab = Window:AddTab({ Title = "Webhook", Icon = "webhook" }),
@@ -423,7 +468,7 @@ local WebInput = WebSec:AddInput("WebInput", {
             WebURLPara:SetDesc(Value)
             V.WebhookURL = Value
         else
-            WebURLPara:SetDesc('Webhook URL:\nWRONG URL OR NOT EVEN AN URL')
+            WebURLPara:SetDesc('WRONG URL OR NOT EVEN AN URL')
         end
     end
 })
@@ -461,7 +506,7 @@ local WebIDInput = WebSec:AddInput("WebIDInput", {
     Numeric = false,
     Finished = true,
     Callback = function(Value)
-        WebIDPara:SetDesc("User ID: \n"..Value)
+        WebIDPara:SetDesc(Value)
         V.UserId = Text
     end
 })
