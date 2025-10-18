@@ -495,7 +495,11 @@ local WebDropsSelect = WebSec:AddDropdown("WebDropsSelect", {
     Default = { 'SUPREME', 'PHANTOM' },
 })
 WebDropsSelect:OnChanged(function(Value)
-    V.NotifyRarities = Value
+    for i,v in pairs(Value) do
+        if not table.find(V.NotifyRarities, i) then
+            table.insert(V.NotifyRarities, i)
+        end
+    end
 end)
 
 local WebIDPara = WebSec:AddParagraph({Title = "Current Id:",Content = ""})
@@ -507,7 +511,7 @@ local WebIDInput = WebSec:AddInput("WebIDInput", {
     Finished = true,
     Callback = function(Value)
         WebIDPara:SetDesc(Value)
-        V.UserId = Text
+        V.UserId = tostring(Value)
     end
 })
 
