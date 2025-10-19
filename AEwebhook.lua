@@ -502,15 +502,11 @@ local T = getgenv().Toggles
 local WebTog = WebSec:AddToggle("WebTog", {Title = "Enable Webhook", Default = false})
 Options.WebTog:OnChanged(function(Value)
     T.Webhook = Value
-    if T.Webhook then
+    V.WebhookMode = Value
+    while T.Webhook do
         EnergyCalculator()
         SendStats()
-        task.spawn(function()
-            while T.Webhook do task.wait((V.WebhookTimer or 1) * 60)
-                EnergyCalculator()
-                SendStats()
-            end
-        end)
+        task.wait((V.WebhookTimer or 1) * 60)
     end
 end)
 local WebURLPara = WebSec:AddParagraph({Title = "Current URL:",Content = ""})
@@ -635,26 +631,22 @@ local PunchAuto = Tools:AddButton({
 local StatResets = Tools:AddToggle("StatResets", {Title = "Auto buy Stat Resets (10k x2)", Default = false })
 Options.StatResets:OnChanged(function(Value)
     T.StatResets = Value
-    task.spawn(function()
-        while T.StatResets do task.wait(10)
-            Event:FireServer({Amount = 1,Product_Id = 7,Action = "Merchant_Purchase",Bench_Name = "Exchange_Shop_Products"})
-        end
-    end)
+    while T.StatResets do task.wait(10)
+        Event:FireServer({Amount = 1,Product_Id = 7,Action = "Merchant_Purchase",Bench_Name = "Exchange_Shop_Products"})
+    end
 end)
 
 local DailyQuests = Tools:AddToggle("DailyQuests", {Title = "Auto Accept Daily Quests", Default = false })
 Options.DailyQuests:OnChanged(function(Value)
     T.DailyQuests = Value
-    task.spawn(function()
-        while T.DailyQuests do
-            for i = 1, 7 do
-                if not T.DailyQuests then break end
-                task.wait(1)
-                Event:FireServer({Id = "200" .. i,Type = "Accept",Action = "_Quest"})
-            end
-            task.wait(10)
+    while T.DailyQuests do
+        for i = 1, 7 do
+            if not T.DailyQuests then break end
+            task.wait(1)
+            Event:FireServer({Id = "200" .. i,Type = "Accept",Action = "_Quest"})
         end
-    end)
+        task.wait(10)
+    end
 end)
 
 local RarityDrop = Tools:AddDropdown("RarityDropdown", {
@@ -682,21 +674,19 @@ local RarityDrop = Tools:AddDropdown("RarityDropdown", {
 local AutoDelete = Tools:AddToggle("AutoDelete", {Title = "Auto Delete Pets", Default = false })
 Options.AutoDelete:OnChanged(function(Value)
     T.AutoDelete = Value
-    task.spawn(function()
-        while T.AutoDelete do task.wait(1)
-            local ToDelete = {}
-            for i, v in pairs(PlrData.Inventory.Items) do
-                if table.find(PetsID, v.Id) then
-                    if v.Stats and v.Stats.Energy and not v.Locked and not v.Equipped and table.find(getgenv().SelectedRarityDel, v.Rarity) then
-                        table.insert(ToDelete, i)
-                    end
+    while T.AutoDelete do task.wait(1)
+        local ToDelete = {}
+        for i, v in pairs(PlrData.Inventory.Items) do
+            if table.find(PetsID, v.Id) then
+                if v.Stats and v.Stats.Energy and not v.Locked and not v.Equipped and table.find(getgenv().SelectedRarityDel, v.Rarity) then
+                    table.insert(ToDelete, i)
                 end
             end
-            if #ToDelete > 0 then
-                InventoryEvent:FireServer({Selected = ToDelete,Action = "Mass_Delete",Category = "Pets"})
-            end
         end
-    end)
+        if #ToDelete > 0 then
+            InventoryEvent:FireServer({Selected = ToDelete,Action = "Mass_Delete",Category = "Pets"})
+        end
+    end
 end)
 
 
