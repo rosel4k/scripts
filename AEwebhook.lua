@@ -649,7 +649,7 @@ local AutoDelete = Tools:AddToggle("AutoDelete", {Title = "Auto Delete Pets", De
 Options.AutoDelete:OnChanged(function(Value)
     T.AutoDelete = Value
     task.spawn(function()
-        while T.AutoDelete do task.wait(3)
+        while T.AutoDelete do task.wait(1)
             local ToDelete = {}
             for i, v in pairs(PlrData.Inventory.Items) do
                 if table.find(PetsID, v.Id) then
