@@ -398,7 +398,7 @@ gui.Parent = player:WaitForChild("PlayerGui")
 
 local buttonFrame = Instance.new("Frame")
 buttonFrame.Size = UDim2.new(0, 100, 0, 40)
-buttonFrame.Position = UDim2.new(0.5, 150, 0, 10)
+buttonFrame.Position = UDim2.new(0.5, 150, 0, -40)
 buttonFrame.BackgroundTransparency = 0.3
 buttonFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 buttonFrame.BorderSizePixel = 0
