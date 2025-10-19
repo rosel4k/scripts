@@ -18,9 +18,6 @@ Player.Idled:Connect(function()
     VirtualUser:ClickButton2(Vector2.new())
 end)
 
-getgenv().Toggles = {}
-local T = getgenv().Toggles
-
 getgenv().Values = {
     WebhookURL = '',
     WebhookMode = false,
@@ -358,7 +355,6 @@ local function EnergyCalculator()
         TimeToRankUp = TTRU or '',
     }
 end
-
 local function SendStats()
     local PHUD = gui:WaitForChild('PlayerHUD', 10)
     if not PHUD or not LeftD then
@@ -394,6 +390,7 @@ local function SendStats()
     SendEmbed('**Notification for ' .. Player.Name .. '**', description, 0x00ff00)
 end
 
+---GUI BUTTON OPEN/CLOSE GUI
 local player = game.Players.LocalPlayer
 local gui = Instance.new("ScreenGui")
 gui.ResetOnSpawn = false
@@ -468,9 +465,7 @@ UserInputService.InputChanged:Connect(function(input)
 	end
 end)
 
-
-
-
+---GUI PART
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -496,15 +491,22 @@ local Calculations = Tabs.CalculationsTab:AddSection("Energy Calculations")
 local Tools = Tabs.ToolsTab:AddSection("Tools")
 
 local Options = Fluent.Options
+getgenv().Toggles = {
+    StatResets = false,
+    DailyQuests = false,
+    AutoDelete = false,
+    Webhook = false
+}
+local T = getgenv().Toggles
 
 local WebTog = WebSec:AddToggle("WebTog", {Title = "Enable Webhook", Default = false})
 Options.WebTog:OnChanged(function(Value)
-    T.WebhookMode = Value
-    if T.WebhookMode then
+    T.Webhook = Value
+    if T.Webhook then
         EnergyCalculator()
         SendStats()
         task.spawn(function()
-            while T.WebhookMode do task.wait((V.WebhookTimer or 1) * 60)
+            while T.Webhook do task.wait((V.WebhookTimer or 1) * 60)
                 EnergyCalculator()
                 SendStats()
             end
@@ -702,8 +704,8 @@ SaveManager:SetLibrary(Fluent)
 InterfaceManager:SetLibrary(Fluent)
 SaveManager:IgnoreThemeSettings()
 SaveManager:SetIgnoreIndexes({})
-InterfaceManager:SetFolder("FluentScriptHub")
-SaveManager:SetFolder("FluentScriptHub/specific-game")
+InterfaceManager:SetFolder("Rosel4k")
+SaveManager:SetFolder("Rosel4k/AEhelper")
 InterfaceManager:BuildInterfaceSection(Tabs.Settings)
 SaveManager:BuildConfigSection(Tabs.Settings)
 Window:SelectTab(1)
