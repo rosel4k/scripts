@@ -7,6 +7,7 @@ end
 repeat task.wait() until game:IsLoaded()
 
 local ReplicatedStorage = game:GetService('ReplicatedStorage')
+local InventoryEvent = ReplicatedStorage.Events.Inventory
 local Event = ReplicatedStorage.Events.To_Server
 local HttpService = game:GetService('HttpService')
 local TCS = game:GetService('TextChatService')
@@ -40,22 +41,42 @@ getgenv().EnergyInfo = {
 }
 local E = getgenv().EnergyInfo
 
+getgenv().SelectedRarities = {}
+getgenv().SelectedRarityDel = {}
+
 local WEBHOOK_USERNAME = 'Anime Eternal Notificator'
 local WEBHOOK_AVATAR = 'https://i.imgur.com/SX41gmf.png'
 
 local suffixList = {{'UNCENT',1e306},{'CENT',1e303},{'NONONGNTL',1e300},{'OTNONGNTL',1e297},{'SPNONGNTL',1e294},{'SXNONGNTL',1e291},{'QNNONGNTL',1e288},{'QTNONGNTL',1e285},{'TNONGNTL',1e282},{'DNONGNTL',1e279},{'UNONGNTL',1e276},{'NONGNTL',1e273},{'NVOTGNTL',1e270},{'OTOTGNTL',1e267},{'SPOTGNTL',1e264},{'SXOTGNTL',1e261},{'QNOTGNTL',1e258},{'QTOTGNTL',1e255},{'TOTGNTL',1e252},{'DOTGNTL',1e249},{'UOTGNTL',1e246},{'OTGNTL',1e243},{'NVSPTGNTL',1e240},{'OSPTGNTL',1e237},{'SPSPTGNTL',1e234},{'SXSPTGNTL',1e231},{'QNSPTGNTL',1e228},{'QTSPTGNTL',1e225},{'TSPTGNTL',1e222},{'DSPTGNTL',1e219},{'USPTGNTL',1e216},{'SPTGNTL',1e213},{'NVSXGNTL',1e210},{'OSXGNTL',1e207},{'SPSXGNTL',1e204},{'SXSXGNTL',1e201},{'QNSXGNTL',1e198},{'QTSXGNTL',1e195},{'TSXGNTL',1e192},{'DSXGNTL',1e189},{'USXGNTL',1e186},{'SXGNTL',1e183},{'NQQGNT',1e180},{'OQQGNT',1e177},{'SpQGNT',1e174},{'sxQGNT',1e171},{'QnQGNT',1e168},{'qdQGNT',1e165},{'tQGNT',1e162},{'dQGNT',1e159},{'uQGNT',1e156},{'qQGNT',1e153},{'NQDDr',1e150},{'OQDDr',1e147},{'SpQDR',1e144},{'sxQDR',1e141},{'QnQDR',1e138},{'qdQDR',1e135},{'tQDR',1e132},{'dQDR',1e129},{'uQDR',1e126},{'QdDR',1e123},{'NoTG',1e120},{'OcTG',1e117},{'SpTG',1e114},{'ssTG',1e111},{'QnTG',1e108},{'qtTG',1e105},{'tsTG',1e102},{'DTG',1e99},{'UTG',1e96},{'TGN',1e93},{'NVG',1e90},{'OVG',1e87},{'SPG',1e84},{'SeV',1e81},{'QnV',1e78},{'qtV',1e75},{'TVg',1e72},{'DVg',1e69},{'UVg',1e66},{'Vgn',1e63},{'NvD',1e60},{'OcD',1e57},{'SpD',1e54},{'sxD',1e51},{'QnD',1e48},{'qdD',1e45},{'tdD',1e42},{'DD',1e39},{'Ud',1e36},{'de',1e33},{'N',1e30},{'O',1e27},{'Sp',1e24},{'sx',1e21},{'Qn',1e18},{'qd',1e15},{'T',1e12},{'B',1e9},{'M',1e6},{'k',1e3}}
+local Rarities = {
+    "Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythical", "Phantom", "Supreme"
+}
+local RarityToNumber = {}
+for i, rarity in ipairs(Rarities) do
+    RarityToNumber[rarity] = i
+end
 
-local PlrData
 local gui = Player:WaitForChild('PlayerGui')
 local LeftD = gui:WaitForChild('Main', 10):WaitForChild('Left_Side', 10):WaitForChild('Displays', 10)
 local visited, Max_Levels, RankReq = {}, 0, {}
-
 local a = require(ReplicatedStorage.Common.ReplicatedService.ReplicaController)
+local PetsID = {}
+local PlrData,GameData
 
 for i, v in pairs(a._replicas) do
-    if v.Data.Inventory then
-        PlrData = v.Data
-    end
+	if v.Data.Inventory then
+		PlrData = v.Data
+	else
+		GameData = v.Data
+	end
+end
+
+for i,v in pairs(GameData.Items) do
+	if v.Category == "Pets" then
+		if not table.find(PetsID, v.Id) then
+			table.insert(PetsID, v.Id)
+		end
+	end
 end
 
 local function tablefind(tbl, value)
@@ -592,6 +613,41 @@ Options.DailyQuests:OnChanged(function(Value)
             Event:FireServer({["Id"] = "200"..i, ["Type"] = "Accept", ["Action"] = "_Quest"})
         end
         task.wait(10)
+    end
+end)
+
+local RarityDrop = Tools:AddDropdown("RarityDropdown", {
+    Title = "Select Rarity\nTo Delete",
+    Description = "",
+    Values = Rarities,
+    Multi = true,
+    Default = {},
+    Callback = function(Value)
+        local SelectedRarities = {}
+        getgenv().SelectedRarityDel = {}
+        for i,v in pairs(Value) do
+            if not table.find(SelectedRarities, i) then
+                table.insert(SelectedRarities, i)
+            end
+        end
+        for _, rarity in ipairs(SelectedRarities) do
+            local num = RarityToNumber[rarity]
+            if num and not table.find(getgenv().SelectedRarityDel, num) then
+                table.insert(getgenv().SelectedRarityDel, num)
+            end
+        end
+    end
+})
+local AutoDelete = Tools:AddToggle("AutoDelete", {Title = "Auto Delete Pets", Default = false })
+Options.AutoDelete:OnChanged(function(Value)
+    while Value do task.wait(3)
+        for i, v in pairs(PlrData.Inventory.Items) do
+            if table.find(PetsID, v.Id) then
+                if v.Stats and v.Stats.Energy and not v.Locked and not v.Equipped and table.find(getgenv().SelectedRarityDel, v.Rarity) then
+                    InventoryEvent:FireServer({["Selected"] = {[1] = i},["Action"] = "Mass_Delete",["Category"] = "Pets"})
+                end
+            end
+        end
     end
 end)
 
