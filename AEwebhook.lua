@@ -602,8 +602,6 @@ local PunchAuto = Tools:AddButton({
         local Counter = 0
         repeat
             task.wait()
-            Event:FireServer({Id = "2301", Type = "Remove", Action = "_Quest"})
-            task.wait(1)
             Event:FireServer({Id = "2301", Type = "Accept", Action = "_Quest"})
             task.wait(2)
             Counter = Counter + 1
