@@ -626,6 +626,39 @@ local PunchAuto = Tools:AddButton({
     end
 })
 
+local FruitAuto = Tools:AddButton({
+    Title = "Get Devil Fruit",
+    Description = "",
+    Callback = function()
+        local Char = Player.Character or Player.CharacterAdded:Wait()
+        local RP = Char:WaitForChild("HumanoidRootPart")
+        local Counter = 0
+        repeat
+            task.wait()
+            Event:FireServer({Id = "2302", Type = "Accept", Action = "_Quest"})
+            task.wait(2)
+            Counter = Counter + 1
+        until workspace:FindFirstChild("Demon_fruit") or Counter >= 5
+
+        local path = workspace:FindFirstChild("Demon_Fruit")
+        if path and #path:GetChildren() >= 1 then
+            for _, v in pairs(path:GetChildren()) do
+                if (RP.CFrame.Position - v.CFrame.Position).Magnitude > 5 then
+                    RP.CFrame = v.CFrame
+                    task.wait(0.5)
+                    for _, k in pairs(v:GetDescendants()) do
+                        if k:IsA("ProximityPrompt") then
+                            fireproximityprompt(k)
+                            task.wait(3)
+                            Event:FireServer({["Id"] = "2302", ["Type"] = "Complete", ["Action"] = "_Quest"})
+                        end
+                    end
+                end
+            end
+        end
+    end
+})
+
 local StatResets = Tools:AddToggle("StatResets", {Title = "Auto buy Stat Resets (10k x2)", Default = false })
 Options.StatResets:OnChanged(function(Value)
     T.StatResets = Value
