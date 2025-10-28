@@ -5,6 +5,22 @@ if game.PlaceId ~= 90462358603255 then
     Player:Kick("Wrong game buddy")
 end
 repeat task.wait() until game:IsLoaded()
+task.spawn(function()
+    repeat task.wait() until game.CoreGui:FindFirstChild('RobloxPromptGui')
+
+    local lp = game:GetService('Players').LocalPlayer
+    local po = game.CoreGui.RobloxPromptGui.promptOverlay
+    local ts = game:GetService('TeleportService')
+
+    po.ChildAdded:Connect(function(a)
+        if a.Name == 'ErrorPrompt' then
+            repeat
+                ts:Teleport(game.PlaceId)
+                task.wait(2)
+            until false
+        end
+    end)
+end)
 
 local ReplicatedStorage = game:GetService('ReplicatedStorage')
 local InventoryEvent = ReplicatedStorage.Events.Inventory
