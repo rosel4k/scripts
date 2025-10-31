@@ -1,13 +1,17 @@
 local success, errorOrValue = pcall(function()
     local Players = game:GetService('Players')
     local Player = Players.LocalPlayer
+    repeat task.wait() until game:IsLoaded()
+    task.wait(5)
+    local Players = game:GetService("Players")
+    local Player = Players.LocalPlayer
+    repeat task.wait() until Players and Player and Player.Parent
 
     if game.PlaceId ~= 90462358603255 then
         Player:Kick("Wrong game buddy")
     end
-    repeat task.wait() until game:IsLoaded()
-    if game:IsLoaded() then task.wait(5) end
 
+        
     local ReplicatedStorage = game:GetService('ReplicatedStorage')
     local InventoryEvent = ReplicatedStorage.Events.Inventory
     local Event = ReplicatedStorage.Events.To_Server
@@ -19,11 +23,10 @@ local success, errorOrValue = pcall(function()
     local LocalPlayer = cloneref(Players.LocalPlayer)
     local PromptGui = CoreGui:WaitForChild("RobloxPromptGui", 10)
     local Overlay = PromptGui and PromptGui:WaitForChild("promptOverlay", 10)
-
-    Player.Idled:Connect(function()
-        VirtualUser:CaptureController()
-        VirtualUser:ClickButton2(Vector2.new())
-    end)
+        Player.Idled:Connect(function()
+            VirtualUser:CaptureController()
+            VirtualUser:ClickButton2(Vector2.new())
+        end)
 
     local function IsPlayerKicked(): boolean
         if not Overlay then return false end
