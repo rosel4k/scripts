@@ -6,6 +6,7 @@ local success, errorOrValue = pcall(function()
         Player:Kick("Wrong game buddy")
     end
     repeat task.wait() until game:IsLoaded()
+    if game:IsLoaded() then task.wait(5) end
 
     local ReplicatedStorage = game:GetService('ReplicatedStorage')
     local InventoryEvent = ReplicatedStorage.Events.Inventory
