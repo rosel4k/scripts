@@ -770,8 +770,8 @@ local success, errorOrValue = pcall(function()
     local AutoUpgrade = Tools:AddToggle("AutoUpgrade", {Title = "Auto Put Points", Default = false })
     Options.AutoUpgrade:OnChanged(function(Value)
         T.AutoUpgrade = Value
-        while T.AutoUpgrade do task.wait(1)
-            local tbl = {['Name'] = getgenv().SelectedStat,['Action'] = 'Assign_Level_Stats',['Amount'] = 10,}
+        while T.AutoUpgrade do task.wait(0.1)
+            local tbl = {['Name'] = getgenv().SelectedStat,['Action'] = 'Assign_Level_Stats',['Amount'] = 1,}
             Event:FireServer(tbl)
         end
     end)
