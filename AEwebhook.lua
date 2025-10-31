@@ -91,6 +91,14 @@ local success, errorOrValue = pcall(function()
 
     getgenv().SelectedRarities = {}
     getgenv().SelectedRarityDel = {}
+    getgenv().SelectedStat = ""
+
+    local PrimaryUpgrades = {
+        ["Damage"] = "Primary_Damage",
+        ["Energy"] = "Primary_Energy",
+        ["Coins"] = "Primary_Coins",
+        ["Luck"] = "Primary_Luck"
+    }
 
     local WEBHOOK_USERNAME = 'Anime Eternal Notificator'
     local WEBHOOK_AVATAR = 'https://i.imgur.com/SX41gmf.png'
@@ -543,7 +551,8 @@ local success, errorOrValue = pcall(function()
         StatResets = false,
         DailyQuests = false,
         AutoDelete = false,
-        Webhook = false
+        Webhook = false,
+        AutoUpgrade = false
     }
     local T = getgenv().Toggles
 
@@ -742,6 +751,28 @@ local success, errorOrValue = pcall(function()
         end
     end)
 
+    local StatDropDown = Tools:AddDropdown("StatDropDown", {
+        Title = "Select Stat\nTo Put Points",
+        Description = "",
+        Values = {"Damage", "Energy", "Coins", "Luck"},
+        Multi = false,
+        Default = "",
+        Callback = function(Value)
+            if type(Value) == "string" then
+                getgenv().SelectedStat = PrimaryUpgrades[Value] or ""
+            end
+        end
+    })
+    local AutoUpgrade = Tools:AddToggle("AutoUpgrade", {Title = "Auto Put Points", Default = false })
+    Options.AutoUpgrade:OnChanged(function(Value)
+        T.AutoUpgrade = Value
+        while T.AutoUpgrade do task.wait(1)
+            local tbl = {['Name'] = getgenv().SelectedStat,['Action'] = 'Assign_Level_Stats',['Amount'] = 10,}
+            Event:FireServer(tbl)
+        end
+    end)
+
+    
     local RarityDrop = Tools:AddDropdown("RarityDropdown", {
         Title = "Select Rarity\nTo Delete",
         Description = "",
@@ -781,7 +812,6 @@ local success, errorOrValue = pcall(function()
             end
         end
     end)
-
 
     SaveManager:SetLibrary(Fluent)
     InterfaceManager:SetLibrary(Fluent)
