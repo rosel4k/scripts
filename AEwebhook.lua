@@ -13,11 +13,58 @@ local success, errorOrValue = pcall(function()
     local HttpService = game:GetService('HttpService')
     local TCS = game:GetService('TextChatService')
     local VirtualUser = game:GetService('VirtualUser')
+    local TeleportService = cloneref(game:GetService("TeleportService"))
+    local CoreGui = cloneref(game:GetService("CoreGui"))
+    local LocalPlayer = cloneref(Players.LocalPlayer)
+    local PromptGui = CoreGui:WaitForChild("RobloxPromptGui", 10)
+    local Overlay = PromptGui and PromptGui:WaitForChild("promptOverlay", 10)
 
     Player.Idled:Connect(function()
         VirtualUser:CaptureController()
         VirtualUser:ClickButton2(Vector2.new())
     end)
+
+    local function IsPlayerKicked(): boolean
+        if not Overlay then return false end
+        for _, child in ipairs(Overlay:GetChildren()) do
+            if child:IsA("Frame") and child.Name == "ErrorPrompt" then
+                return true
+            end
+        end
+        return false
+    end
+
+    local function Reconnect()
+        local playersCount = #Players:GetPlayers()
+        if playersCount <= 1 then
+            warn("[AutoReconnect] Player kicked — rejoining new server...")
+            LocalPlayer:Kick("\n\nReconnecting...")
+            task.wait(0.75)
+            TeleportService:Teleport(game.PlaceId, LocalPlayer)
+        else
+            warn("[AutoReconnect] Player kicked — rejoining current instance...")
+            TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, LocalPlayer)
+        end
+    end
+
+    task.spawn(function()
+        while task.wait(2) do
+            if IsPlayerKicked() then
+                Reconnect()
+            end
+        end
+    end)
+
+    if Overlay then
+        Overlay.ChildAdded:Connect(function(child)
+            if child.Name == "ErrorPrompt" then
+                task.wait(1)
+                Reconnect()
+            end
+        end)
+    end
+
+    warn("[AutoReconnect] Loaded and monitoring for kicks.")
 
     getgenv().Values = {
         WebhookURL = '',
@@ -603,8 +650,6 @@ local success, errorOrValue = pcall(function()
             local Counter = 0
             repeat
                 task.wait()
-                Event:FireServer({Id = "2301", Type = "Remove", Action = "_Quest"})
-                task.wait(1)
                 Event:FireServer({Id = "2301", Type = "Accept", Action = "_Quest"})
                 task.wait(2)
                 Counter = Counter + 1
@@ -626,6 +671,53 @@ local success, errorOrValue = pcall(function()
                     end
                 end
             end
+        end
+    })
+
+    local FruitAuto = Tools:AddButton({
+        Title = "Get Demon Fruit",
+        Description = "",
+        Callback = function()
+            local Char = Player.Character or Player.CharacterAdded:Wait()
+            local RP = Char:WaitForChild("HumanoidRootPart")
+            local Counter = 0
+            repeat
+                task.wait()
+                Event:FireServer({Id = "2302", Type = "Accept", Action = "_Quest"})
+                task.wait(2)
+                Counter = Counter + 1
+            until workspace:FindFirstChild("Demon_Fruit") or Counter >= 5
+
+            local path = workspace:FindFirstChild("Demon_Fruit")
+            if path and #path:GetChildren() >= 1 then
+                for _, v in pairs(path:GetChildren()) do
+                    if (RP.CFrame.Position - v.CFrame.Position).Magnitude > 5 then
+                        RP.CFrame = v.CFrame
+                        task.wait(0.5)
+                        for _, k in pairs(v:GetDescendants()) do
+                            if k:IsA("ProximityPrompt") then
+                                fireproximityprompt(k)
+                                task.wait(3)
+                                Event:FireServer({["Id"] = "2302", ["Type"] = "Complete", ["Action"] = "_Quest"})
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    })
+    local RejoinButton = Tools:AddButton({
+        Title = "Rejoin Game",
+        Description = "",
+        Callback = function()
+            TeleportService:Teleport(game.PlaceId, LocalPlayer)
+        end
+    })
+    local RejoinServerButton = Tools:AddButton({
+        Title = "Rejoin Current Server",
+        Description = "",
+        Callback = function()
+            TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, LocalPlayer)
         end
     })
 
@@ -712,7 +804,7 @@ local success, errorOrValue = pcall(function()
     end)
 end)
 if success then
-    print("No errors occurred.")
+    warn("[AE Helper] Loaded, made by @rosel4k (discord)")
 else
-    print("An error occurred:", errorOrValue)
+    print("[AE Helper] An error occurred:", errorOrValue, "\n Please send it to @rosel4k on discord")
 end
