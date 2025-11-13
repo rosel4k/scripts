@@ -3,8 +3,6 @@ local success, errorOrValue = pcall(function()
     local Player = Players.LocalPlayer
     repeat task.wait() until game:IsLoaded()
     task.wait(5)
-    local Players = game:GetService("Players")
-    local Player = Players.LocalPlayer
     repeat task.wait() until Players and Player and Player.Parent
 
     if game.PlaceId ~= 90462358603255 then
