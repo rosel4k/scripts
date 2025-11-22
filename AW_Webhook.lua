@@ -1,5 +1,4 @@
 repeat task.wait() until game:IsLoaded()
-
 local S = getgenv().Settings
 local HttpService = game:GetService("HttpService")
 local WEBHOOK_USERNAME = "Anime Weapons Notificator"
@@ -63,37 +62,39 @@ end
 
 while S.WebMode do
     if S.WebMode then
-        local S = getgenv().Settings
-        local Coins = PlrGUI.Screen.Hud.left.yen.text.Text
-        local Mastery = PLR.leaderstats.Mastery.Value
-        local Rank = PLR.leaderstats.Rank.Value
-        local Fast = PlrGUI.Screen.Hud.botton.fast.enabled
-        local CPS
-        if Fast.Image == "rbxassetid://96188222717246" then
-            CPS = 6.666
-        elseif Fast.Image == "rbxassetid://137979607008446" then
-            CPS = 5.000
-        end
-        local Required = 30000 * (8.4 ^ Rank)
-        local percent = (ParseFormatted(Mastery) / Required) * 100
-        local filled = math.floor(percent / 10)
-        local empty = 10 - filled
-        local coloredProgressBar = "**["..string.rep("🟩", filled)..string.rep("🟥", empty).."] "..math.floor(percent + 0.5).."%**"
-        local MPC = "1"
-        for _,C in pairs(game.Players.LocalPlayer.PlayerGui.Screen.Popups:GetDescendants()) do
-            if C.Name == "image" and C.Image == "rbxassetid://135008180293316" then
-                MPC = C.Parent.text.Text:gsub("+", "")
-                break
+        pcall(function()
+            local S = getgenv().Settings
+            local Coins = PlrGUI.Screen.Hud.left.yen.text.Text
+            local Mastery = PLR.leaderstats.Mastery.Value
+            local Rank = PLR.leaderstats.Rank.Value
+            local Fast = PlrGUI.Screen.Hud.botton.fast.enabled
+            local CPS
+            if Fast.Image == "rbxassetid://96188222717246" then
+                CPS = 6.666
+            elseif Fast.Image == "rbxassetid://137979607008446" then
+                CPS = 5.000
             end
-        end
-        local MPS = ParseFormatted(MPC) * CPS
-        local MPM = MPS * 60
-        local NM = Required - ParseFormatted(Mastery)
-        local STR = NM / MPS
-        local TTR = formatTime(STR)
-        local desc = "**Coins: "..Coins.."**\n*//////////*\n**Rank: "..Rank.."**\n**Mastery: "..Mastery.." / "..FormatNumber(Required).."**\n"..coloredProgressBar.."\n*//////////*\nTime to rank up: "..TTR.."\n*//////////*\nMastery per click: "..MPC.."\nMastery per second: "..FormatNumber(MPS).."\nMastery per minute: "..FormatNumber(MPM).."\n*//////////*"
-        local title = "Notification for "..PLR.Name
-        SendEmbed(title,desc)
-        task.wait(S.WebTime*60)
+            local Required = 30000 * (8.4 ^ Rank)
+            local percent = (ParseFormatted(Mastery) / Required) * 100
+            local filled = math.floor(percent / 10)
+            local empty = 10 - filled
+            local coloredProgressBar = "**["..string.rep("🟩", filled)..string.rep("🟥", empty).."] "..math.floor(percent + 0.5).."%**"
+            local MPC = "1"
+            for _,C in pairs(game.Players.LocalPlayer.PlayerGui.Screen.Popups:GetDescendants()) do
+                if C.Name == "image" and C.Image == "rbxassetid://135008180293316" then
+                    MPC = C.Parent.text.Text:gsub("+", "")
+                    break
+                end
+            end
+            local MPS = ParseFormatted(MPC) * CPS
+            local MPM = MPS * 60
+            local NM = Required - ParseFormatted(Mastery)
+            local STR = NM / MPS
+            local TTR = formatTime(STR)
+            local desc = "**Coins: "..Coins.."**\n*//////////*\n**Rank: "..Rank.."**\n**Mastery: "..Mastery.." / "..FormatNumber(Required).."**\n"..coloredProgressBar.."\n*//////////*\n**Time to rank up: "..TTR.."**\n*//////////*\n**Mastery per click: "..MPC.."**\n**Mastery per second: "..FormatNumber(MPS).."**\n**Mastery per minute: "..FormatNumber(MPM).."**\n*//////////*"
+            local title = "Notification for "..PLR.Name
+            SendEmbed(title,desc)
+            task.wait(S.WebTime*60)
+        end)
     end
 end
