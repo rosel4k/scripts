@@ -96,6 +96,9 @@ while S.WebMode do
             local NM = Required - ParseFormatted(Mastery)
             local STR = NM / MPS
             local TTR = formatTime(STR)
+            if percent >= 100 then
+                TTR = "Ready to rank up"
+            end
             local desc = "**Coins: "..Coins.."**\n*//////////*\n**Rank: "..Rank.."**\n**Mastery: "..Mastery.." / "..FormatNumber(Required).."**\n"..coloredProgressBar.."\n*//////////*\n**Time to rank up: "..TTR.."**\n*//////////*\n**Mastery per click: "..MPC.."**\n**Mastery per second: "..FormatNumber(MPS).."**\n**Mastery per minute: "..FormatNumber(MPM).."**\n*//////////*"
             local title = "Notification for "..PLR.Name
             SendEmbed(title,desc)
