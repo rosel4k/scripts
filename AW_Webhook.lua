@@ -78,6 +78,11 @@ while S.WebMode do
             local percent = (ParseFormatted(Mastery) / Required) * 100
             local filled = math.floor(percent / 10)
             local empty = 10 - filled
+            if filled >= 10 then
+                filled = 10
+            end
+
+        
             local coloredProgressBar = "**["..string.rep("🟩", filled)..string.rep("🟥", empty).."] "..math.floor(percent + 0.5).."%**"
             local MPC = "1"
             for _,C in pairs(game.Players.LocalPlayer.PlayerGui.Screen.Popups:GetDescendants()) do
