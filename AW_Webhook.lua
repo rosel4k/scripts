@@ -33,7 +33,7 @@ local function Reconnect()
     if playersCount <= 1 then
         warn("[AutoReconnect] Player kicked — rejoining new server...")
         PLR:Kick("\n\nReconnecting...")
-        task.wait(0.75)
+        task.wait(5)
         TeleportService:Teleport(game.PlaceId, PLR)
     else
         warn("[AutoReconnect] Player kicked — rejoining current instance...")
