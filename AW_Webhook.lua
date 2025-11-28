@@ -8,6 +8,59 @@ local Players = cloneref(game:GetService("Players"))
 local PLR = Players.LocalPlayer
 local PlrGUI = PLR.PlayerGui
 
+local VirtualUser = game:GetService('VirtualUser')
+local TeleportService = cloneref(game:GetService("TeleportService"))
+local CoreGui = cloneref(game:GetService("CoreGui"))
+local PromptGui = CoreGui:WaitForChild("RobloxPromptGui", 10)
+local Overlay = PromptGui and PromptGui:WaitForChild("promptOverlay", 10)
+    Player.Idled:Connect(function()
+        VirtualUser:CaptureController()
+        VirtualUser:ClickButton2(Vector2.new())
+    end)
+
+local function IsPlayerKicked(): boolean
+    if not Overlay then return false end
+    for _, child in ipairs(Overlay:GetChildren()) do
+        if child:IsA("Frame") and child.Name == "ErrorPrompt" then
+            return true
+        end
+    end
+    return false
+end
+
+local function Reconnect()
+    local playersCount = #Players:GetPlayers()
+    if playersCount <= 1 then
+        warn("[AutoReconnect] Player kicked — rejoining new server...")
+        PLR:Kick("\n\nReconnecting...")
+        task.wait(0.75)
+        TeleportService:Teleport(game.PlaceId, PLR)
+    else
+        warn("[AutoReconnect] Player kicked — rejoining current instance...")
+        TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, PLR)
+    end
+end
+
+task.spawn(function()
+    while task.wait(2) do
+        if IsPlayerKicked() then
+            Reconnect()
+        end
+    end
+end)
+
+if Overlay then
+    Overlay.ChildAdded:Connect(function(child)
+        if child.Name == "ErrorPrompt" then
+            task.wait(1)
+            Reconnect()
+        end
+    end)
+end
+
+warn("[AutoReconnect] Loaded and monitoring for kicks.")
+
+
 local suffixes = {"","K","M","B","T","Qa","Qi","Sx","Sp","Oc","No","Dc","Ud","Dd","Td","Qad","Qid","Sxd","Spd","Ocd","Nod","Dec","Und","Duo","Tri","Qua","Qui","Six","Sep","Oct","Nuo"}
 
 local function FormatNumber(Number)
