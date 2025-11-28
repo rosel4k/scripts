@@ -4,7 +4,7 @@ local HttpService = game:GetService("HttpService")
 local WEBHOOK_USERNAME = "Anime Weapons Notificator"
 local WEBHOOK_AVATAR = "https://i.imgur.com/miwzA7x.png"
 
-local Players = cloneref(game:GetService("Players"))
+local Players = game:GetService("Players")
 local PLR = Players.LocalPlayer
 local PlrGUI = PLR.PlayerGui
 
