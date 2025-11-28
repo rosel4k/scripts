@@ -13,10 +13,10 @@ local TeleportService = cloneref(game:GetService("TeleportService"))
 local CoreGui = cloneref(game:GetService("CoreGui"))
 local PromptGui = CoreGui:WaitForChild("RobloxPromptGui", 10)
 local Overlay = PromptGui and PromptGui:WaitForChild("promptOverlay", 10)
-    Player.Idled:Connect(function()
-        VirtualUser:CaptureController()
-        VirtualUser:ClickButton2(Vector2.new())
-    end)
+PLR.Idled:Connect(function()
+    VirtualUser:CaptureController()
+    VirtualUser:ClickButton2(Vector2.new())
+end)
 
 local function IsPlayerKicked(): boolean
     if not Overlay then return false end
