@@ -126,9 +126,9 @@ while S.WebMode do
             local Fast = PlrGUI.Screen.Hud.botton.fast.enabled
             local CPS
             if Fast.Image == "rbxassetid://96188222717246" then
-                CPS = 6.666
+                CPS = 6.66666667
             elseif Fast.Image == "rbxassetid://137979607008446" then
-                CPS = 5.000
+                CPS = 5
             end
             local Required = ReqRank.GetRequirement(tonumber(Rank))
             local percent = (ParseFormatted(Mastery) / Required) * 100
