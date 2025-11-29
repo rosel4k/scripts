@@ -9,6 +9,9 @@ local PLR = Players.LocalPlayer
 local PlrGUI = PLR.PlayerGui
 
 local VirtualUser = game:GetService('VirtualUser')
+local RStorage = game:GetService("ReplicatedStorage")
+local RankMod = RStorage.Scripts.Configs.Machines.RankUp
+local ReqRank = require(RankMod)
 local TeleportService = cloneref(game:GetService("TeleportService"))
 local CoreGui = cloneref(game:GetService("CoreGui"))
 local PromptGui = CoreGui:WaitForChild("RobloxPromptGui", 10)
@@ -127,12 +130,7 @@ while S.WebMode do
             elseif Fast.Image == "rbxassetid://137979607008446" then
                 CPS = 5.000
             end
-            local Required
-            if tonumber(Rank) > 38 then
-                Required = 30000 * (8.9 ^ Rank)
-            else
-                Required = 30000 * (8.4 ^ Rank)
-            end
+            local Required = ReqRank.GetRequirement(tonumber(Rank))
             local percent = (ParseFormatted(Mastery) / Required) * 100
             local filled = math.floor(percent / 10)
             local empty = 10 - filled
