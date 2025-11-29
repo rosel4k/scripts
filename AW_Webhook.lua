@@ -129,7 +129,7 @@ while S.WebMode do
             end
             local Required
             if tonumber(Rank) > 38 then
-                Required = 30000 * (8.7 ^ Rank)
+                Required = 30000 * (8.9 ^ Rank)
             else
                 Required = 30000 * (8.4 ^ Rank)
             end
