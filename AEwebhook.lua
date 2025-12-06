@@ -460,6 +460,7 @@ local success, errorOrValue = pcall(function()
             '**' .. (CanPrestige and ', Ready to Prestige**' or ', Need: ' .. formatNumber(NeedExp) .. ' to Level Up**'),
             '*///////////*',
             '**Calculations:**',
+            '*///////////*',       
             '**EXP per minute: ' .. formatNumber(expPerMin) .. '**',
             '*///////////*',
             '**Energy per click: ' .. formatNumber(E.EnergyPerClick) .. '**',
