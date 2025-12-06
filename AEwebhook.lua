@@ -455,7 +455,7 @@ local success, errorOrValue = pcall(function()
             '**Time to rank up: ' .. E.TimeToRankUp .. '**',
             '*///////////*',
             '**Prestige: ' .. tostring(prestige) .. '**',
-            '**Level: '.. tostring(level) .. ' / ' .. LevelCap .. '**',
+            '**Level: '.. tostring(level) .. ' / ' .. LevelCaps[prestige] .. '**',
             '** EXP: ' .. formatNumber(currentExp) .. ' / ' .. formatNumber(nextXP) .. (CanPrestige and ', Ready to Prestige**' or ', Need: ' .. formatNumber(NeedExp) .. ' to Level Up**'),
             '*///////////*',
             '**Calculations:**',
