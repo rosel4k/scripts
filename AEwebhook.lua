@@ -387,89 +387,113 @@ local success, errorOrValue = pcall(function()
     end
 
     local function EnergyCalculator()
-        local energyText = LeftD:WaitForChild('Energy', 10):WaitForChild('Energy', 10):WaitForChild('Main', 10):WaitForChild('TextLabel', 10).Text
-        local EnergyMatched = energyText:match('Energy:%s*(.-)$')
-        local currentEnergy = parseNumber(EnergyMatched)
-        local rankStat = Player.leaderstats:WaitForChild('Rank')
-        local currentRank = tonumber(rankStat.Value) or 0
-        local nextRank = currentRank + 1
-        local NeedEnergy = nextRank <= Max_Levels and math.max(0, (RankReq[nextRank] or 0) - currentEnergy) or 0
-        local Energy = (PlrData and PlrData.Stats and PlrData.Stats.Total and PlrData.Stats.Total['Energy']) or 0
-        local EnergyPerSecond = Energy * 5.886
-        local EnergyPerMinute = EnergyPerSecond * 60
-        local EnergyPerHour = EnergyPerMinute * 60
-        local TTNR = NeedEnergy / (EnergyPerSecond > 0 and EnergyPerSecond or 1)
-        local EPS = formatNumber(EnergyPerSecond)
-        local EPM = formatNumber(EnergyPerMinute)
-        local EPH = formatNumber(EnergyPerHour)
-        local TTRU = formatTime(TTNR)
-        local percent = (currentEnergy / RankReq[nextRank]) * 100
-        local filled = math.floor(percent / 10)
-        local empty = 10 - filled
-        if filled >= 10 then
-            filled = 10
+        local success, errorOrValue = pcall(function()
+            local energyText = LeftD:WaitForChild('Energy', 10):WaitForChild('Energy', 10):WaitForChild('Main', 10):WaitForChild('TextLabel', 10).Text
+            local EnergyMatched = energyText:match('Energy:%s*(.-)$')
+            local currentEnergy = parseNumber(EnergyMatched)
+            local rankStat = Player.leaderstats:WaitForChild('Rank')
+            local currentRank = tonumber(rankStat.Value) or 0
+            local nextRank = currentRank + 1
+            local NeedEnergy = nextRank <= Max_Levels and math.max(0, (RankReq[nextRank] or 0) - currentEnergy) or 0
+            local Energy = (PlrData and PlrData.Stats and PlrData.Stats.Total and PlrData.Stats.Total['Energy']) or 0
+            local EnergyPerSecond = Energy * 5.886
+            local EnergyPerMinute = EnergyPerSecond * 60
+            local EnergyPerHour = EnergyPerMinute * 60
+            local TTNR = NeedEnergy / (EnergyPerSecond > 0 and EnergyPerSecond or 1)
+            local EPS = formatNumber(EnergyPerSecond)
+            local EPM = formatNumber(EnergyPerMinute)
+            local EPH = formatNumber(EnergyPerHour)
+            local TTRU = formatTime(TTNR)
+            local percent = (currentEnergy / RankReq[nextRank]) * 100
+            local filled = math.floor(percent / 10)
+            local empty = 10 - filled
+            if filled >= 10 then
+                filled = 10
+            end
+            if empty <= 0 then
+                empty = 0
+            end
+            local coloredProgressBar = "**["..string.rep("🟩", filled)..string.rep("🟥", empty).."] "..math.floor(percent + 0.5).."%**"
+            getgenv().EnergyInfo = {
+                EnergyText = tostring(EnergyMatched) or '',
+                CurrentRank = tostring(currentRank) or '',
+                NextRank = tostring(nextRank) or '',
+                EnergyUntilRank = NeedEnergy or 0,
+                EnergyPerClick = Energy or 0,
+                EnergyPerSecond = EPS or '',
+                EnergyPerMinute = EPM or '',
+                EnergyPerHour = EPH or '',
+                TimeToRankUp = TTRU or '',
+                ColoredBar = coloredProgressBar or ''
+            }
+        end)
+        if not success then
+            print("[AE Helper] An error occurred:", errorOrValue, "\n Please send it to @rosel4k on discord")
         end
-        if empty <= 0 then
-            empty = 0
-        end
-        local coloredProgressBar = "**["..string.rep("🟩", filled)..string.rep("🟥", empty).."] "..math.floor(percent + 0.5).."%**"
-        getgenv().EnergyInfo = {
-            EnergyText = tostring(EnergyMatched) or '',
-            CurrentRank = tostring(currentRank) or '',
-            NextRank = tostring(nextRank) or '',
-            EnergyUntilRank = NeedEnergy or 0,
-            EnergyPerClick = Energy or 0,
-            EnergyPerSecond = EPS or '',
-            EnergyPerMinute = EPM or '',
-            EnergyPerHour = EPH or '',
-            TimeToRankUp = TTRU or '',
-            ColoredBar = coloredProgressBar or ''
-        }
     end
     local function SendStats()
-        local PHUD = gui:WaitForChild('PlayerHUD', 10)
-        if not PHUD or not LeftD then
-            return
+        local success, errorOrValue = pcall(function()
+            local PHUD = gui:WaitForChild('PlayerHUD', 10)
+            if not PHUD or not LeftD then
+                return
+            end
+            local lvlStat = Player.leaderstats:WaitForChild('Level (Prestige)')
+            local level, prestige = lvlStat.Value:match('(%d+)%s*%((%d+)%)')
+            level, prestige = tonumber(level), tonumber(prestige)
+            local nextXP, CanPrestige, LevelCap = getNextXP(level, prestige, LevelCap)
+            local expText = PHUD:WaitForChild('Player_Levels', 10):WaitForChild('Main', 10):WaitForChild('EXP_Counter', 10).Text
+            local currentExp = parseNumber(expText:match('EXP:%s*(.-)%s*/'))
+            local NeedExp = CanPrestige and 0 or math.max(0, nextXP - currentExp)
+            local CoinsText = LeftD:WaitForChild('Energy', 10):WaitForChild('Coins', 10):WaitForChild('Main', 10):WaitForChild('TextLabel', 10).Text
+            local now = tick()
+            local dt = math.max(now - getgenv().PrevStats.Time, 1) / 60
+            local expPerMin = (currentExp - getgenv().PrevStats.Exp) / dt
+            local lvlpercent = (currentExp / nextXP) * 100
+            local lvlfilled = math.floor(lvlpercent / 10)
+            if lvlfilled >= 10 then
+                lvlfilled = 10
+            end
+            local lvlempty = 10 - lvlfilled
+            if lvlempty >= 10 then
+                lvlempty = 10
+            elseif lvlempty <= 0 then
+                lvlempty = 0
+            end
+
+            local lvlcolorbar = "**["..string.rep("🟩", lvlfilled)..string.rep("🟥", lvlempty).."] "..math.floor(lvlpercent + 0.5).."%**"
+
+            getgenv().PrevStats.Exp = currentExp
+            getgenv().PrevStats.Time = now
+            local E = getgenv().EnergyInfo
+            local description = table.concat({
+                '**' .. CoinsText .. '**',
+                '*///////////*',
+                '**Rank: ' .. E.CurrentRank .. ' / '.. tostring(Max_Levels) .. '**',
+                '**Energy: '.. E.EnergyText .. (E.EnergyUntilRank > 0 and ' / ' .. formatNumber(E.EnergyUntilRank) .. '**' or '**'),
+                '' .. E.ColoredBar ..'',
+                '*///////////*',
+                '**Time to rank up: ' .. E.TimeToRankUp .. '**',
+                '*///////////*',
+                '**Prestige: ' .. tostring(prestige) .. '**',
+                '**Level: '.. tostring(level) .. ' / ' .. tostring(LevelCap) .. '**',
+                '** EXP: ' .. formatNumber(currentExp) .. ' / ' .. formatNumber(nextXP) ..'**',
+                '**' .. (CanPrestige and 'Ready to Prestige**' or lvlcolorbar .. '**'),
+                '*///////////*',
+                '**Calculations:**',
+                '*///////////*',       
+                '**EXP per minute: ' .. formatNumber(expPerMin) .. '**',
+                '*///////////*',
+                '**Energy per click: ' .. formatNumber(E.EnergyPerClick) .. '**',
+                '**Energy per minute: ' .. E.EnergyPerMinute .. '**',
+                '**Energy per hour: ' .. E.EnergyPerHour .. '**',
+                '*///////////*',
+                '*Calculations might be wrong sometimes*\n',
+            }, '\n')
+            SendEmbed('**Notification for ' .. Player.Name .. '**', description, 0x00ff00)
+        end)
+        if not success then
+            print("[AE Helper] An error occurred:", errorOrValue, "\n Please send it to @rosel4k on discord")
         end
-        local lvlStat = Player.leaderstats:WaitForChild('Level (Prestige)')
-        local level, prestige = lvlStat.Value:match('(%d+)%s*%((%d+)%)')
-        level, prestige = tonumber(level), tonumber(prestige)
-        local nextXP, CanPrestige, LevelCap = getNextXP(level, prestige, LevelCap)
-        local expText = PHUD:WaitForChild('Player_Levels', 10):WaitForChild('Main', 10):WaitForChild('EXP_Counter', 10).Text
-        local currentExp = parseNumber(expText:match('EXP:%s*(.-)%s*/'))
-        local NeedExp = CanPrestige and 0 or math.max(0, nextXP - currentExp)
-        local CoinsText = LeftD:WaitForChild('Energy', 10):WaitForChild('Coins', 10):WaitForChild('Main', 10):WaitForChild('TextLabel', 10).Text
-        local now = tick()
-        local dt = math.max(now - getgenv().PrevStats.Time, 1) / 60
-        local expPerMin = (currentExp - getgenv().PrevStats.Exp) / dt
-        getgenv().PrevStats.Exp = currentExp
-        getgenv().PrevStats.Time = now
-        local E = getgenv().EnergyInfo
-        local description = table.concat({
-            '**' .. CoinsText .. '**',
-            '*///////////*',
-            '**Rank: ' .. E.CurrentRank .. ' / '.. tostring(LevelCaps[prestige]) .. '**',
-            '**Energy: '.. E.EnergyText .. (E.EnergyUntilRank > 0 and ' / ' .. formatNumber(E.EnergyUntilRank) .. '**' or '**'),
-            '' .. E.ColoredBar ..'',
-            '*///////////*',
-            '**Time to rank up: ' .. E.TimeToRankUp .. '**',
-            '*///////////*',
-            '**Prestige: ' .. tostring(prestige) .. '**',
-            '**Level: '.. tostring(level) .. ' / ' .. LevelCaps[prestige] .. '**',
-            '** EXP: ' .. formatNumber(currentExp) .. ' / ' .. formatNumber(nextXP) '**',
-            '**' .. (CanPrestige and ', Ready to Prestige**' or ', Need: ' .. formatNumber(NeedExp) .. ' to Level Up**'),
-            '*///////////*',
-            '**Calculations:**',
-            '*///////////*',       
-            '**EXP per minute: ' .. formatNumber(expPerMin) .. '**',
-            '*///////////*',
-            '**Energy per click: ' .. formatNumber(E.EnergyPerClick) .. '**',
-            '**Energy per minute: ' .. E.EnergyPerMinute .. '**',
-            '**Energy per hour: ' .. E.EnergyPerHour .. '**',
-            '*///////////*',
-            '*Calculations might be wrong sometimes*\n',
-        }, '\n')
-        SendEmbed('**Notification for ' .. Player.Name .. '**', description, 0x00ff00)
     end
 
     ---GUI BUTTON OPEN/CLOSE GUI
@@ -864,4 +888,3 @@ if success then
 else
     print("[AE Helper] An error occurred:", errorOrValue, "\n Please send it to @rosel4k on discord")
 end
-
