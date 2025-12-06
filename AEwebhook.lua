@@ -1,5 +1,5 @@
 local success, errorOrValue = pcall(function()
-    local Players = game:GetService('Players')
+    local Players = cloneref(game:GetService('Players'))
     local Player = Players.LocalPlayer
     repeat task.wait() until game:IsLoaded()
     task.wait(5)
@@ -9,7 +9,6 @@ local success, errorOrValue = pcall(function()
         Player:Kick("Wrong game buddy")
     end
 
-        
     local ReplicatedStorage = game:GetService('ReplicatedStorage')
     local InventoryEvent = ReplicatedStorage.Events.Inventory
     local Event = ReplicatedStorage.Events.To_Server
@@ -222,12 +221,12 @@ local success, errorOrValue = pcall(function()
         end
     end
 
-    local function getNextXP(level, prestige)
+    local function getNextXP(level, prestige, lvlcap)
         local cap = LevelCaps[prestige] or math.huge
         if level >= cap then
-            return 0, true
+            return 0, true, cap
         end
-        return XPReq[level + 1] or 0, false
+        return XPReq[level + 1] or 0, false, cap
     end
 
     getgenv().PrevStats = getgenv().PrevStats or { Exp = 0, Time = tick() }
@@ -259,7 +258,7 @@ local success, errorOrValue = pcall(function()
         local ts = os.time()
         local body = {
             content = doPing and ('<@' .. (V.UserId or '') .. '>') or '',
-            embeds = {{ title = title, description = desc .. '\n<t:' .. ts .. ':T>', color = color }},
+            embeds = {{ title = title, description = desc .. '\n<t:' .. ts .. ':T>\n*made by @rosel4k*', color = color }},
             username = WEBHOOK_USERNAME,
             avatar_url = WEBHOOK_AVATAR,
             attachments = {},
@@ -404,6 +403,16 @@ local success, errorOrValue = pcall(function()
         local EPM = formatNumber(EnergyPerMinute)
         local EPH = formatNumber(EnergyPerHour)
         local TTRU = formatTime(TTNR)
+        local percent = (currentEnergy / RankReq[nextRank]) * 100
+        local filled = math.floor(percent / 10)
+        local empty = 10 - filled
+        if filled >= 10 then
+            filled = 10
+        end
+        if empty <= 0 then
+            empty = 0
+        end
+        local coloredProgressBar = "**["..string.rep("🟩", filled)..string.rep("🟥", empty).."] "..math.floor(percent + 0.5).."%**"
         getgenv().EnergyInfo = {
             EnergyText = tostring(EnergyMatched) or '',
             CurrentRank = tostring(currentRank) or '',
@@ -414,6 +423,7 @@ local success, errorOrValue = pcall(function()
             EnergyPerMinute = EPM or '',
             EnergyPerHour = EPH or '',
             TimeToRankUp = TTRU or '',
+            ColoredBar = coloredProgressBar or ''
         }
     end
     local function SendStats()
@@ -424,7 +434,7 @@ local success, errorOrValue = pcall(function()
         local lvlStat = Player.leaderstats:WaitForChild('Level (Prestige)')
         local level, prestige = lvlStat.Value:match('(%d+)%s*%((%d+)%)')
         level, prestige = tonumber(level), tonumber(prestige)
-        local nextXP, CanPrestige = getNextXP(level, prestige)
+        local nextXP, CanPrestige, LevelCap = getNextXP(level, prestige, LevelCap)
         local expText = PHUD:WaitForChild('Player_Levels', 10):WaitForChild('Main', 10):WaitForChild('EXP_Counter', 10).Text
         local currentExp = parseNumber(expText:match('EXP:%s*(.-)%s*/'))
         local NeedExp = CanPrestige and 0 or math.max(0, nextXP - currentExp)
@@ -437,16 +447,25 @@ local success, errorOrValue = pcall(function()
         local E = getgenv().EnergyInfo
         local description = table.concat({
             '**' .. CoinsText .. '**',
-            '**Rank: ' .. E.CurrentRank .. '**',
-            '**Energy: '.. E.EnergyText .. (E.EnergyUntilRank > 0 and ', Need: ' .. formatNumber(E.EnergyUntilRank) .. ' to Rank Up**' or '**'),
+            '*///////////*',
+            '**Rank: ' .. E.CurrentRank .. ' / '.. tostring(Max_Levels) .. '**',
+            '**Energy: '.. E.EnergyText .. (E.EnergyUntilRank > 0 and ' / ' .. formatNumber(E.EnergyUntilRank) .. '**' or '**'),
+            '' .. E.ColoredBar ..'',
+            '*///////////*',
+            '**Time to rank up: ' .. E.TimeToRankUp .. '**',
+            '*///////////*',
             '**Prestige: ' .. tostring(prestige) .. '**',
-            '**Level: '.. tostring(level) .. ', EXP: ' .. formatNumber(currentExp) .. ' / ' .. formatNumber(nextXP) .. (CanPrestige and ', Ready to Prestige**' or ', Need: ' .. formatNumber(NeedExp) .. ' to Level Up**'),
-            '',
+            '**Level: '.. tostring(level) .. ' / ' .. LevelCap .. '**',
+            '** EXP: ' .. formatNumber(currentExp) .. ' / ' .. formatNumber(nextXP) .. (CanPrestige and ', Ready to Prestige**' or ', Need: ' .. formatNumber(NeedExp) .. ' to Level Up**'),
+            '*///////////*',
             '**Calculations:**',
             '**EXP per minute: ' .. formatNumber(expPerMin) .. '**',
+            '*///////////*',
+            '**Energy per click: ' .. formatNumber(E.EnergyPerClick) .. '**',
             '**Energy per minute: ' .. E.EnergyPerMinute .. '**',
-            '**Time to rank up: ' .. E.TimeToRankUp .. '**',
-            '*Calculations might be wrong sometimes*',
+            '**Energy per hour: ' .. E.EnergyPerHour .. '**',
+            '*///////////*',
+            '*Calculations might be wrong sometimes*\n',
         }, '\n')
         SendEmbed('**Notification for ' .. Player.Name .. '**', description, 0x00ff00)
     end
@@ -843,3 +862,4 @@ if success then
 else
     print("[AE Helper] An error occurred:", errorOrValue, "\n Please send it to @rosel4k on discord")
 end
+
