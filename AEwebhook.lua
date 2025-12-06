@@ -448,7 +448,7 @@ local success, errorOrValue = pcall(function()
         local description = table.concat({
             '**' .. CoinsText .. '**',
             '*///////////*',
-            '**Rank: ' .. E.CurrentRank .. ' / '.. tostring(Max_Levels) .. '**',
+            '**Rank: ' .. E.CurrentRank .. ' / '.. tostring(LevelCaps[prestige]) .. '**',
             '**Energy: '.. E.EnergyText .. (E.EnergyUntilRank > 0 and ' / ' .. formatNumber(E.EnergyUntilRank) .. '**' or '**'),
             '' .. E.ColoredBar ..'',
             '*///////////*',
