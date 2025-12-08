@@ -372,19 +372,33 @@ local success, errorOrValue = pcall(function()
 
     local function formatTime(seconds)
         if not seconds or seconds == math.huge then
-            return '∞'
+            return "∞"
         end
+
+        local MAX_SECONDS = 30 * 24 * 60 * 60
+        if seconds >= MAX_SECONDS then
+            return "∞"
+        end
+    
+        seconds = math.floor(seconds)
+        local d = math.floor(seconds / 86400)
+        seconds = seconds % 86400
         local h = math.floor(seconds / 3600)
-        local m = math.floor((seconds % 3600) / 60)
-        local s = math.floor(seconds % 60)
-        if h > 0 then
-            return string.format('%dh %dm %ds', h, m, s)
+        seconds = seconds % 3600
+        local m = math.floor(seconds / 60)
+        local s = seconds % 60
+    
+        if d > 0 then
+            return string.format("%dd %dh %dm %ds", d, h, m, s)
+        elseif h > 0 then
+            return string.format("%dh %dm %ds", h, m, s)
         elseif m > 0 then
-            return string.format('%dm %ds', m, s)
+            return string.format("%dm %ds", m, s)
         else
-            return string.format('%ds', s)
+            return string.format("%ds", s)
         end
     end
+
 
     local function EnergyCalculator()
         local success, errorOrValue = pcall(function()
