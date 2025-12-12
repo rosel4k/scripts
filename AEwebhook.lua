@@ -438,7 +438,8 @@ local success, errorOrValue = pcall(function()
                 EnergyPerMinute = EPM or '',
                 EnergyPerHour = EPH or '',
                 TimeToRankUp = TTRU or '',
-                ColoredBar = coloredProgressBar or ''
+                ColoredBar = coloredProgressBar or '',
+                NextReq = RankReq[nextRank]
             }
         end)
         if not success then
@@ -483,7 +484,7 @@ local success, errorOrValue = pcall(function()
                 '**' .. CoinsText .. '**',
                 '*///////////*',
                 '**Rank: ' .. E.CurrentRank .. ' / '.. tostring(Max_Levels) .. '**',
-                '**Energy: '.. E.EnergyText .. (E.EnergyUntilRank > 0 and ' / ' .. formatNumber(E.EnergyUntilRank) .. '**' or '**'),
+                '**Energy: '.. E.EnergyText .. (E.EnergyUntilRank > 0 and ' / ' .. formatNumber(E.NextReq) .. '**' or '**'),
                 '' .. E.ColoredBar ..'',
                 '*///////////*',
                 '**Time to rank up: ' .. E.TimeToRankUp .. '**',
