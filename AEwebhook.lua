@@ -87,6 +87,7 @@ local success, errorOrValue = pcall(function()
         EnergyPerMinute = '',
         EnergyPerHour = '',
         TimeToRankUp = '',
+        NextRankReq = '',
     }
     local E = getgenv().EnergyInfo
 
