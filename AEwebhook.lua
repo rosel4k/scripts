@@ -371,7 +371,7 @@ local success, errorOrValue = pcall(function()
         end
     end)
 
-    Local function ItemQuest(Id, Name)
+    local function ItemQuest(Id, Name)
         local Counter = 0
         
         local function Action(type)
