@@ -363,7 +363,7 @@ local success, errorOrValue = pcall(function()
             end
         end)
     end
-
+    
     task.spawn(function()
         local ChatGui = Player:WaitForChild('PlayerGui'):WaitForChild('Chat')
         if ChatGui then
@@ -371,6 +371,38 @@ local success, errorOrValue = pcall(function()
         end
     end)
 
+    Local function ItemQuest(Id, Name)
+        local Counter = 0
+        
+        local function Action(type)
+            Event:FireServer({Id = Id, Type = type, Action = "_Quest"})
+        end
+        
+        repeat
+            Action("Accept")
+            Counter = Counter + 1
+            task.wait()
+        until workspace:FindFirstChild(Name) or Counter >= 5
+        
+        local path = workspace:FindFirstChild(Name)
+        if path and #path:GetChildren() > 0 then
+            for _, v in ipairs(path:GetChildren()) do
+                local promptFound = false
+                for _, k in ipairs(v:GetDescendants()) do
+                    if k:IsA("ProximityPrompt") then
+                        promptFound = true
+                        k.MaxActivationDistance = math.huge
+                        fireproximityprompt(k)
+                        task.wait()
+                        Action("Complete")
+                        break
+                    end
+                end
+                if not promptFound then continue end
+            end
+        end
+    end
+        
     local function formatTime(seconds)
         if not seconds or seconds == math.huge then
             return "∞"
@@ -720,32 +752,7 @@ local success, errorOrValue = pcall(function()
         Title = "Get Punching Machine",
         Description = "",
         Callback = function()
-            local Char = Player.Character or Player.CharacterAdded:Wait()
-            local RP = Char:WaitForChild("HumanoidRootPart")
-            local Counter = 0
-            repeat
-                task.wait()
-                Event:FireServer({Id = "2301", Type = "Accept", Action = "_Quest"})
-                task.wait(2)
-                Counter = Counter + 1
-            until workspace:FindFirstChild("Punching_Machine") or Counter >= 5
-
-            local path = workspace:FindFirstChild("Punching_Machine")
-            if path and #path:GetChildren() >= 1 then
-                for _, v in pairs(path:GetChildren()) do
-                    if (RP.CFrame.Position - v.CFrame.Position).Magnitude > 5 then
-                        RP.CFrame = v.CFrame
-                        task.wait(0.5)
-                        for _, k in pairs(v:GetDescendants()) do
-                            if k:IsA("ProximityPrompt") then
-                                fireproximityprompt(k)
-                                task.wait(3)
-                                Event:FireServer({["Id"] = "2301", ["Type"] = "Complete", ["Action"] = "_Quest"})
-                            end
-                        end
-                    end
-                end
-            end
+            ItemQuest("2301", "Punching_Machine")
         end
     })
 
@@ -753,34 +760,25 @@ local success, errorOrValue = pcall(function()
         Title = "Get Demon Fruit",
         Description = "",
         Callback = function()
-            local Char = Player.Character or Player.CharacterAdded:Wait()
-            local RP = Char:WaitForChild("HumanoidRootPart")
-            local Counter = 0
-            repeat
-                task.wait()
-                Event:FireServer({Id = "2302", Type = "Accept", Action = "_Quest"})
-                task.wait(2)
-                Counter = Counter + 1
-            until workspace:FindFirstChild("Demon_Fruit") or Counter >= 5
-
-            local path = workspace:FindFirstChild("Demon_Fruit")
-            if path and #path:GetChildren() >= 1 then
-                for _, v in pairs(path:GetChildren()) do
-                    if (RP.CFrame.Position - v.CFrame.Position).Magnitude > 5 then
-                        RP.CFrame = v.CFrame
-                        task.wait(0.5)
-                        for _, k in pairs(v:GetDescendants()) do
-                            if k:IsA("ProximityPrompt") then
-                                fireproximityprompt(k)
-                                task.wait(3)
-                                Event:FireServer({["Id"] = "2302", ["Type"] = "Complete", ["Action"] = "_Quest"})
-                            end
-                        end
-                    end
-                end
-            end
+            ItemQuest("2302", "Demon_Fruit")
         end
     })
+        
+    local ExorcismAuto = Tools:AddButton({
+        Title = "Perform Exorcism",
+        Description = "",
+        Callback = function()
+            ItemQuest("2303", "Exorcisms")
+        end
+    })
+    local BentoAuto = Tools:AddButton({
+        Title = "Get Lost Bento",
+        Description = "",
+        Callback = function()
+            ItemQuest("2305", "Lost_Bento_Box")
+        end
+    })
+
     local RejoinButton = Tools:AddButton({
         Title = "Rejoin Game",
         Description = "",
