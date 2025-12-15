@@ -543,9 +543,9 @@ local success, errorOrValue = pcall(function()
                 '*///////////*',       
                 EJ.X .. '**EXP per minute: ' .. formatNumber(expPerMin) .. '**',
                 '*///////////*',
-                EJ.R .. '**Energy per click: ' .. formatNumber(E.EnergyPerClick) .. '**',
-                EJ.R .. '**Energy per minute: ' .. E.EnergyPerMinute .. '**',
-                EJ.R .. '**Energy per hour: ' .. E.EnergyPerHour .. '**',
+                EJ.E .. '**Energy per click: ' .. formatNumber(E.EnergyPerClick) .. '**',
+                EJ.E .. '**Energy per minute: ' .. E.EnergyPerMinute .. '**',
+                EJ.E .. '**Energy per hour: ' .. E.EnergyPerHour .. '**',
                 '*///////////*',
                 '*Calculations might be wrong sometimes*\n',
             }, '\n')
