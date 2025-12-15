@@ -91,6 +91,18 @@ local success, errorOrValue = pcall(function()
     }
     local E = getgenv().EnergyInfo
 
+
+
+    getgenv().Emoji = {
+        P = <:Prestige:1450190176784617585>,
+        E = <:Energy:1450190062233849856>,
+        T = <:Time:1450190117925818462>,
+        R = <:Rank:1450187795577573426>,
+        C = <:Coins:1450189943434383532>,
+        L = <:Level:1450190159269068971>,
+        X = <:Xp:1450190137026674820>
+    }
+    local EJ = getgenv().Emoji
     getgenv().SelectedRarities = {}
     getgenv().SelectedRarityDel = {}
     getgenv().SelectedStat = ""
@@ -514,26 +526,26 @@ local success, errorOrValue = pcall(function()
             getgenv().PrevStats.Time = now
             local E = getgenv().EnergyInfo
             local description = table.concat({
-                '**' .. CoinsText .. '**',
+                EJ.C ..'**' .. CoinsText .. '**',
                 '*///////////*',
-                '**Rank: ' .. E.CurrentRank .. ' / '.. tostring(Max_Levels) .. '**',
-                '**Energy: '.. E.EnergyText .. (E.EnergyUntilRank > 0 and ' / ' .. formatNumber(E.NextReq) .. '**' or '**'),
+                EJ.R .. '**Rank: ' .. E.CurrentRank .. ' / '.. tostring(Max_Levels) .. '**',
+                EJ.E .. '**Energy: '.. E.EnergyText .. (E.EnergyUntilRank > 0 and ' / ' .. formatNumber(E.NextReq) .. '**' or '**'),
                 '' .. E.ColoredBar ..'',
                 '*///////////*',
-                '**Time to rank up: ' .. E.TimeToRankUp .. '**',
+                EJ.T .. '**Time to rank up: ' .. E.TimeToRankUp .. '**',
                 '*///////////*',
-                '**Prestige: ' .. tostring(prestige) .. '**',
-                '**Level: '.. tostring(level) .. ' / ' .. tostring(LevelCap) .. '**',
-                '** EXP: ' .. formatNumber(currentExp) .. ' / ' .. formatNumber(nextXP) ..'**',
-                '**' .. (CanPrestige and 'Ready to Prestige**' or lvlcolorbar .. '**'),
+                EJ.P .. '**Prestige: ' .. tostring(prestige) .. '**',
+                EJ.L .. '**Level: '.. tostring(level) .. ' / ' .. tostring(LevelCap) .. '**',
+                EJ.X .. '** EXP: ' .. formatNumber(currentExp) .. ' / ' .. formatNumber(nextXP) ..'**',
+                '**' .. (CanPrestige and EJ.P .. 'Ready to Prestige**' or lvlcolorbar .. '**'),
                 '*///////////*',
                 '**Calculations:**',
                 '*///////////*',       
-                '**EXP per minute: ' .. formatNumber(expPerMin) .. '**',
+                EJ.X .. '**EXP per minute: ' .. formatNumber(expPerMin) .. '**',
                 '*///////////*',
-                '**Energy per click: ' .. formatNumber(E.EnergyPerClick) .. '**',
-                '**Energy per minute: ' .. E.EnergyPerMinute .. '**',
-                '**Energy per hour: ' .. E.EnergyPerHour .. '**',
+                EJ.R .. '**Energy per click: ' .. formatNumber(E.EnergyPerClick) .. '**',
+                EJ.R .. '**Energy per minute: ' .. E.EnergyPerMinute .. '**',
+                EJ.R .. '**Energy per hour: ' .. E.EnergyPerHour .. '**',
                 '*///////////*',
                 '*Calculations might be wrong sometimes*\n',
             }, '\n')
