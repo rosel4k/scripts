@@ -25,6 +25,18 @@ local success, errorOrValue = pcall(function()
             VirtualUser:ClickButton2(Vector2.new())
         end)
 
+    local function Join(Raid)
+        Event:FireServer({Action = '_Enter_Dungeon', Name = Raid})
+    end
+
+    local function Leave()
+        Event:FireServer({Action = "Dungeon_Leave"})
+    end
+
+    local function Upgrade(Type)
+        Event:FireServer({Bench_Name = "Christmas_"..Type.."_Upgrade", Action = "_Progression", Upgrade_Name = "Christmas_"..Type})
+    end
+
     local function IsPlayerKicked(): boolean
         if not Overlay then return false end
         for _, child in ipairs(Overlay:GetChildren()) do
@@ -662,7 +674,10 @@ local success, errorOrValue = pcall(function()
         DailyQuests = false,
         AutoDelete = false,
         Webhook = false,
-        AutoUpgrade = false
+        AutoUpgrade = false,
+        AutoJoinXmas = false,
+        AutoLeaveWave = 0,
+        AutoUpgX = false
     }
     local T = getgenv().Toggles
 
@@ -805,7 +820,43 @@ local success, errorOrValue = pcall(function()
             TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, LocalPlayer)
         end
     })
-
+    local WavePara = Tools:AddParagraph({Title = "Leave Wave :",Content = ""})
+    local WaveInput = Tools:AddInput("WaveInput", {
+        Title = "Auto Leave Wave",
+        Default = "",
+        Placeholder = "Wave here",
+        Numeric = false,
+        Finished = true,
+        Callback = function(Value)
+            WavePara:SetDesc(Value)
+            T.AutoLeaveWave = tostring(Value)
+        end
+    })
+    local AutoJoinXmas = Tools:AddToggle("AutoJoinXmas", {Title = "Auto join Ice Raid", Default = false })
+    Options.AutoJoinXmas:OnChanged(function(Value)
+        T.AutoJoinXmas = Value
+        while T.AutoJoinXmas do task.wait(1)
+            local Path = Player:WaitForChild('PlayerGui'):WaitForChild('Dungeon').Default_Header
+            if Path.Main.Main.Visible and Path.Visible then
+                local TextLabel = Path.Main.Main.Wave
+                local Wave = tostring(T.AutoLeaveWave)
+                if TextLabel.Text == 'Wave: '..Wave..'/1000' then
+                    Leave()
+                end
+            else
+                Join("Ice_Raid")
+                task.wait(5)
+            end
+        end
+    end)
+    local AutoUpgX = Tools:AddToggle("AutoUpgX", {Title = "Auto upgrade Xmas", Default = false })
+    Options.AutoUpgX:OnChanged(function(Value)
+        T.AutoUpgX = Value
+        while T.AutoUpgX do task.wait(1)
+            Upgrade("Damage")
+            Upgrade("Materials")
+        end
+    end)
     local StatResets = Tools:AddToggle("StatResets", {Title = "Auto buy Stat Resets (10k x2)", Default = false })
     Options.StatResets:OnChanged(function(Value)
         T.StatResets = Value
