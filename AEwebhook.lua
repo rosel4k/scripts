@@ -399,6 +399,7 @@ local success, errorOrValue = pcall(function()
     local function ClaimChest(ChestName)
         Event:FireServer({Action = "_Chest_Claim",Name = ChestName})
     end
+
     local function ItemQuest(Id, Name)
         local Counter = 0
         
@@ -461,6 +462,7 @@ local success, errorOrValue = pcall(function()
     end
 
 
+
     local function EnergyCalculator()
         local success, errorOrValue = pcall(function()
             local energyText = LeftD:WaitForChild('Energy', 10):WaitForChild('Energy', 10):WaitForChild('Main', 10):WaitForChild('TextLabel', 10).Text
@@ -469,17 +471,36 @@ local success, errorOrValue = pcall(function()
             local rankStat = Player.leaderstats:WaitForChild('Rank')
             local currentRank = tonumber(rankStat.Value) or 0
             local nextRank = currentRank + 1
-            local NeedEnergy = nextRank <= Max_Levels and math.max(0, (RankReq[nextRank] or 0) - currentEnergy) or 0
             local Energy = (PlrData and PlrData.Stats and PlrData.Stats.Total and PlrData.Stats.Total['Energy']) or 0
             local EnergyPerSecond = Energy * 5.886
             local EnergyPerMinute = EnergyPerSecond * 60
             local EnergyPerHour = EnergyPerMinute * 60
-            local TTNR = NeedEnergy / (EnergyPerSecond > 0 and EnergyPerSecond or 1)
             local EPS = formatNumber(EnergyPerSecond)
             local EPM = formatNumber(EnergyPerMinute)
             local EPH = formatNumber(EnergyPerHour)
+
+            if currentRank >= Max_Levels then
+                getgenv().EnergyInfo = {
+                    EnergyText = tostring(EnergyMatched) or '',
+                    CurrentRank = tostring(currentRank) or '',
+                    NextRank = "MAX",
+                    EnergyUntilRank = 0,
+                    EnergyPerClick = Energy or 0,
+                    EnergyPerSecond = EPS or '',
+                    EnergyPerMinute = EPM or '',
+                    EnergyPerHour = EPH or '',
+                    TimeToRankUp = "MAX RANK",
+                    ColoredBar = "**[🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩] 100%**",
+                    NextReq = "MAX"
+                }
+                return
+            end
+
+            local nextRankReq = RankReq[nextRank] or 0
+            local NeedEnergy = math.max(0, nextRankReq - currentEnergy)
+            local TTNR = NeedEnergy / (EnergyPerSecond > 0 and EnergyPerSecond or 1)
             local TTRU = formatTime(TTNR)
-            local percent = (currentEnergy / RankReq[nextRank]) * 100
+            local percent = (currentEnergy / nextRankReq) * 100
             local filled = math.floor(percent / 10)
             local empty = 10 - filled
             if filled >= 10 then
@@ -489,6 +510,7 @@ local success, errorOrValue = pcall(function()
                 empty = 0
             end
             local coloredProgressBar = "**["..string.rep("🟩", filled)..string.rep("🟥", empty).."] "..math.floor(percent + 0.5).."%**"
+
             getgenv().EnergyInfo = {
                 EnergyText = tostring(EnergyMatched) or '',
                 CurrentRank = tostring(currentRank) or '',
@@ -500,13 +522,14 @@ local success, errorOrValue = pcall(function()
                 EnergyPerHour = EPH or '',
                 TimeToRankUp = TTRU or '',
                 ColoredBar = coloredProgressBar or '',
-                NextReq = RankReq[nextRank]
+                NextReq = nextRankReq
             }
         end)
         if not success then
             print("[AE Helper] An error occurred:", errorOrValue, "\n Please send it to @rosel4k on discord")
         end
     end
+
     local function SendStats()
         local success, errorOrValue = pcall(function()
             local PHUD = gui:WaitForChild('PlayerHUD', 10)
