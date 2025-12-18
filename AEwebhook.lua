@@ -133,6 +133,7 @@ local success, errorOrValue = pcall(function()
     local Rarities = {
         "Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythical", "Phantom", "Supreme", "Exotic"
     }
+    local Chests = {'Christmas_Tree_Chest','Ice_Chest','Santa_Chest','Christmas_Chest'}
     local RarityToNumber = {}
     for i, rarity in ipairs(Rarities) do
         RarityToNumber[rarity] = i
@@ -395,6 +396,9 @@ local success, errorOrValue = pcall(function()
         end
     end)
 
+    local function ClaimChest(ChestName)
+        Event:FireServer({Action = "_Chest_Claim",Name = ChestName})
+    end
     local function ItemQuest(Id, Name)
         local Counter = 0
         
@@ -677,7 +681,8 @@ local success, errorOrValue = pcall(function()
         AutoUpgrade = false,
         AutoJoinXmas = false,
         AutoLeaveWave = 0,
-        AutoUpgX = false
+        AutoUpgX = false,
+        AutoXChest = false
     }
     local T = getgenv().Toggles
 
@@ -832,7 +837,7 @@ local success, errorOrValue = pcall(function()
             T.AutoLeaveWave = tostring(Value)
         end
     })
-    local AutoJoinXmas = Tools:AddToggle("AutoJoinXmas", {Title = "Auto join Ice Raid", Default = false })
+    local AutoJoinXmas = Tools:AddToggle("AutoJoinXmas", {Title = "Auto join\nIce Raid", Default = false })
     Options.AutoJoinXmas:OnChanged(function(Value)
         T.AutoJoinXmas = Value
         while T.AutoJoinXmas do task.wait(1)
@@ -855,6 +860,15 @@ local success, errorOrValue = pcall(function()
         while T.AutoUpgX do task.wait(1)
             Upgrade("Damage")
             Upgrade("Materials")
+        end
+    end)
+    local AutoXChest = Tools:AddToggle("AutoXChest", {Title = "Auto claim\nXmas chests", Default = false })
+    Options.AutoXChest:OnChanged(function(Value)
+        T.AutoXChest = Value
+        while T.AutoXChest do task.wait(10)
+            for _,name in pairs(Chests) do task.wait(1)
+                ClaimChest(name)
+            end
         end
     end)
     local StatResets = Tools:AddToggle("StatResets", {Title = "Auto buy Stat Resets (10k x2)", Default = false })
@@ -964,4 +978,4 @@ if success then
     warn("[AE Helper] Loaded, made by @rosel4k (discord)")
 else
     print("[AE Helper] An error occurred:", errorOrValue, "\n Please send it to @rosel4k on discord")
-end
+end 
