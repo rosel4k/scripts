@@ -888,7 +888,7 @@ local success, errorOrValue = pcall(function()
     local AutoXChest = Tools:AddToggle("AutoXChest", {Title = "Auto claim\nXmas chests", Default = false })
     Options.AutoXChest:OnChanged(function(Value)
         T.AutoXChest = Value
-        while T.AutoXChest do task.wait(10)
+        while T.AutoXChest do task.wait(1)
             for _,name in pairs(Chests) do task.wait(1)
                 ClaimChest(name)
             end
