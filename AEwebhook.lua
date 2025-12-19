@@ -705,7 +705,8 @@ local success, errorOrValue = pcall(function()
         AutoJoinXmas = false,
         AutoLeaveWave = 0,
         AutoUpgX = false,
-        AutoXChest = false
+        AutoXChest = false,
+        GachaXmas = false
     }
     local T = getgenv().Toggles
 
@@ -892,6 +893,13 @@ local success, errorOrValue = pcall(function()
             for _,name in pairs(Chests) do task.wait(1)
                 ClaimChest(name)
             end
+        end
+    end)
+    local GachaXmas = Tools:AddToggle("GachaXmas", {Title = "Auto roll\nXmas gacha", Default = false })
+    Options.GachaXmas:OnChanged(function(Value)
+        T.GachaXmas = Value
+        while T.GachaXmas do task.wait(0.1)
+            Event:FireServer({Open_Amount = 5,Action = "_Gacha_Activate",Name = "Christmas_Glove"})
         end
     end)
     local StatResets = Tools:AddToggle("StatResets", {Title = "Auto buy Stat Resets (10k x2)", Default = false })
