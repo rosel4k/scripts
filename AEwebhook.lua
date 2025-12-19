@@ -898,7 +898,7 @@ local success, errorOrValue = pcall(function()
     local GachaXmas = Tools:AddToggle("GachaXmas", {Title = "Auto roll\nXmas gacha", Default = false })
     Options.GachaXmas:OnChanged(function(Value)
         T.GachaXmas = Value
-        while T.GachaXmas do task.wait(0.1)
+        while T.GachaXmas do task.wait(0.01)
             Event:FireServer({Open_Amount = 5,Action = "_Gacha_Activate",Name = "Christmas_Glove"})
         end
     end)
