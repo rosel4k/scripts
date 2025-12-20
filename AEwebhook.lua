@@ -191,11 +191,7 @@ local success, errorOrValue = pcall(function()
             if not tablefind(V.NotifyRarities, rarity) then
                 return
             end
-            SendEmbed('**Notification for ' .. playerName .. '**',
-                string.format('**%s\n[%s] - %s | %s**', rarity, category, rarity, item),
-                GetDropColor(rarity),
-                true
-            )
+            SendEmbed('**Notification for ' .. playerName .. '**',string.format('**%s\n[%s] - %s | %s**', rarity, category, rarity, item),Stuff.GetDropColor(rarity),true)
         end
     end
 
@@ -205,11 +201,7 @@ local success, errorOrValue = pcall(function()
         if playerName == Player.Name and playerName and category and rank and item then
             local data = RS.AVATAR_RARITY_MAP[rank:upper()]
             if data and tablefind(V.NotifyRarities, data.label) then
-                return {
-                    playerName = playerName,
-                    desc = string.format('**%s\n%s - %s | %s**', data.label, category, rank, item),
-                    color = data.color,
-                }
+                return {playerName = playerName,desc = string.format('**%s\n%s - %s | %s**', data.label, category, rank, item),color = data.color,}
             end
         end
         return nil
@@ -221,11 +213,7 @@ local success, errorOrValue = pcall(function()
         if playerName == Player.Name and playerName and category and rank and item then
             local data = RS.AVATAR_RARITY_MAP[rank:upper()]
             if data and tablefind(V.NotifyRarities, data.label) then
-                return {
-                    playerName = playerName,
-                    desc = string.format('**%s\n%s - %s | %s**', data.label, category, rank, item),
-                    color = data.color,
-                }
+                return {playerName = playerName,desc = string.format('**%s\n%s - %s | %s**', data.label, category, rank, item),color = data.color,}
             end
         end
         return nil
@@ -598,7 +586,7 @@ local success, errorOrValue = pcall(function()
                 local TextLabel = Path.Main.Main.Wave
                 local Wave = tostring(T.AutoLeaveWave)
                 if TextLabel.Text == 'Wave: '..Wave..'/1000' then
-                    Leave()
+                    Stuff.Leave()
                 end
             else
                 Stuff.Join("Ice_Raid")
