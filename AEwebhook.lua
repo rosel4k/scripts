@@ -682,7 +682,7 @@ local success, errorOrValue = pcall(function()
                 end
             end
             if #ToDelete > 0 then
-                PetsDelete(ToDelete)
+                Stuff.PetsDelete(ToDelete)
             end
         end
     end)
