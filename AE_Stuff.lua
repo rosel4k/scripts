@@ -60,7 +60,15 @@ getgenv().Emoji = {
     X = '<:Xp:1450190137026674820>'
 }
 
-local function GetDropColor(rarity)
+local Stuff = {}
+
+-- Define suffixList (or use getgenv().suffixList if you prefer)
+Stuff.suffixList = {
+    {"K", 1e3}, {"M", 1e6}, {"B", 1e9}, {"T", 1e12}
+}
+
+-- Define all functions and assign them to the Stuff table
+function Stuff.GetDropColor(rarity)
     rarity = rarity:upper()
     if rarity == 'EXOTIC' then
         return 0xff0000
@@ -73,35 +81,35 @@ local function GetDropColor(rarity)
     end
 end
 
-local function Join(Raid)
+function Stuff.Join(Raid)
     Event:FireServer({Action = '_Enter_Dungeon', Name = Raid})
 end
 
-local function Leave()
+function Stuff.Leave()
     Event:FireServer({Action = "Dungeon_Leave"})
 end
 
-local function Upgrade(Type)
+function Stuff.Upgrade(Type)
     Event:FireServer({Bench_Name = "Christmas_"..Type.."_Upgrade", Action = "_Progression", Upgrade_Name = "Christmas_"..Type})
 end
 
-local function ClaimChest(ChestName)
-    Event:FireServer({Action = "_Chest_Claim",Name = ChestName})
+function Stuff.ClaimChest(ChestName)
+    Event:FireServer({Action = "_Chest_Claim", Name = ChestName})
 end
 
-local function ItemQuest(Id, Name)
+function Stuff.ItemQuest(Id, Name)
     local Counter = 0
-    
+
     local function Action(type)
         Event:FireServer({Id = Id, Type = type, Action = "_Quest"})
     end
-    
+
     repeat
         Action("Accept")
         Counter = Counter + 1
         task.wait()
     until workspace:FindFirstChild(Name) or Counter >= 5
-    
+
     local path = workspace:FindFirstChild(Name)
     if path and #path:GetChildren() > 0 then
         for _, v in ipairs(path:GetChildren()) do
@@ -121,23 +129,23 @@ local function ItemQuest(Id, Name)
     end
 end
 
-local function Roll(Amount,Gacha)
-    Event:FireServer({Open_Amount = Amount,Action = "_Gacha_Activate",Name = Gacha})
+function Stuff.Roll(Amount, Gacha)
+    Event:FireServer({Open_Amount = Amount, Action = "_Gacha_Activate", Name = Gacha})
 end
 
-local function Merchant(BuyAmount,PrdId,Bench)
-    Event:FireServer({Amount = BuyAmount,Product_Id = PrdId,Action = "Merchant_Purchase",Bench_Name = Bench})
+function Stuff.Merchant(BuyAmount, PrdId, Bench)
+    Event:FireServer({Amount = BuyAmount, Product_Id = PrdId, Action = "Merchant_Purchase", Bench_Name = Bench})
 end
 
-local function Assign(Stat,Amount)
-    Event:FireServer({['Name'] = Stat,['Action'] = 'Assign_Level_Stats',['Amount'] = Amount})
+function Stuff.Assign(Stat, Amount)
+    Event:FireServer({['Name'] = Stat, ['Action'] = 'Assign_Level_Stats', ['Amount'] = Amount})
 end
 
-local function PetsDelete(Table)
-    InventoryEvent:FireServer({Selected = Table,Action = "Mass_Delete",Category = "Pets"})
+function Stuff.PetsDelete(Table)
+    InventoryEvent:FireServer({Selected = Table, Action = "Mass_Delete", Category = "Pets"})
 end
 
-local function formatTime(seconds)
+function Stuff.formatTime(seconds)
     if not seconds or seconds == math.huge then
         return "∞"
     end
@@ -166,13 +174,13 @@ local function formatTime(seconds)
     end
 end
 
-local function parseNumber(str)
+function Stuff.parseNumber(str)
     if not str then
         return 0
     end
     local num, suf = str:match('([%d%.]+)(%a+)')
     if num and suf then
-        for _, p in ipairs(getgenv().suffixList) do
+        for _, p in ipairs(Stuff.suffixList) do
             if p[1] == suf then
                 return tonumber(num) * p[2]
             end
@@ -181,9 +189,9 @@ local function parseNumber(str)
     return tonumber(str) or 0
 end
 
-local function formatNumber(n)
+function Stuff.formatNumber(n)
     local absn = math.abs(n)
-    for _, p in ipairs(getgenv().suffixList) do
+    for _, p in ipairs(Stuff.suffixList) do
         if absn >= p[2] then
             local x = n / p[2]
             if x % 1 == 0 then
@@ -199,6 +207,10 @@ local function formatNumber(n)
         return ('%.2f'):format(n)
     end
 end
+
+-- Return the Stuff table
+return Stuff
+
 
 local player = game.Players.LocalPlayer
 local gui = Instance.new("ScreenGui")
