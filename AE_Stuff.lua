@@ -60,14 +60,84 @@ getgenv().Emoji = {
     X = '<:Xp:1450190137026674820>'
 }
 
+
+
+local player = game.Players.LocalPlayer
+local gui = Instance.new("ScreenGui")
+gui.ResetOnSpawn = false
+gui.Parent = player:WaitForChild("PlayerGui")
+
+local buttonFrame = Instance.new("Frame")
+buttonFrame.Size = UDim2.new(0, 100, 0, 40)
+buttonFrame.Position = UDim2.new(0.5, 150, 0, 10)
+buttonFrame.BackgroundTransparency = 0.3
+buttonFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+buttonFrame.BorderSizePixel = 0
+buttonFrame.Parent = gui
+
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(1, 0, 1, 0)
+button.Text = "Press L"
+button.TextColor3 = Color3.new(1, 1, 1)
+button.BackgroundTransparency = 0.1
+button.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+button.Parent = buttonFrame
+
+local isDragging = false
+local dragStart = Vector2.new()
+local startPos = UDim2.new()
+
+local UserInputService = game:GetService("UserInputService")
+local VirtualInputManager = game:GetService("VirtualInputManager")
+
+local function startDrag(input)
+    isDragging = true
+    dragStart = input.Position
+    startPos = buttonFrame.Position
+end
+
+local function stopDrag()
+    isDragging = false
+end
+
+local function updateDrag(input)
+    if isDragging then
+        local delta = input.Position - dragStart
+        buttonFrame.Position = UDim2.new(
+            startPos.X.Scale,
+            startPos.X.Offset + delta.X,
+            startPos.Y.Scale,
+            startPos.Y.Offset + delta.Y
+        )
+    end
+end
+
+button.MouseButton1Click:Connect(function()
+    VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.L, false, game)
+    VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.L, false, game)
+    print("L pressed")
+end)
+
+button.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        startDrag(input)
+    end
+end)
+
+button.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        stopDrag()
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement then
+        updateDrag(input)
+    end
+end)
+
 local Stuff = {}
 
--- Define suffixList (or use getgenv().suffixList if you prefer)
-Stuff.suffixList = {
-    {"K", 1e3}, {"M", 1e6}, {"B", 1e9}, {"T", 1e12}
-}
-
--- Define all functions and assign them to the Stuff table
 function Stuff.GetDropColor(rarity)
     rarity = rarity:upper()
     if rarity == 'EXOTIC' then
@@ -180,7 +250,7 @@ function Stuff.parseNumber(str)
     end
     local num, suf = str:match('([%d%.]+)(%a+)')
     if num and suf then
-        for _, p in ipairs(Stuff.suffixList) do
+        for _, p in ipairs(getgenv().suffixList) do
             if p[1] == suf then
                 return tonumber(num) * p[2]
             end
@@ -191,7 +261,7 @@ end
 
 function Stuff.formatNumber(n)
     local absn = math.abs(n)
-    for _, p in ipairs(Stuff.suffixList) do
+    for _, p in ipairs(getgenv().suffixList) do
         if absn >= p[2] then
             local x = n / p[2]
             if x % 1 == 0 then
@@ -208,80 +278,4 @@ function Stuff.formatNumber(n)
     end
 end
 
--- Return the Stuff table
 return Stuff
-
-
-local player = game.Players.LocalPlayer
-local gui = Instance.new("ScreenGui")
-gui.ResetOnSpawn = false
-gui.Parent = player:WaitForChild("PlayerGui")
-
-local buttonFrame = Instance.new("Frame")
-buttonFrame.Size = UDim2.new(0, 100, 0, 40)
-buttonFrame.Position = UDim2.new(0.5, 150, 0, 10)
-buttonFrame.BackgroundTransparency = 0.3
-buttonFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-buttonFrame.BorderSizePixel = 0
-buttonFrame.Parent = gui
-
-local button = Instance.new("TextButton")
-button.Size = UDim2.new(1, 0, 1, 0)
-button.Text = "Press L"
-button.TextColor3 = Color3.new(1, 1, 1)
-button.BackgroundTransparency = 0.1
-button.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-button.Parent = buttonFrame
-
-local isDragging = false
-local dragStart = Vector2.new()
-local startPos = UDim2.new()
-
-local UserInputService = game:GetService("UserInputService")
-local VirtualInputManager = game:GetService("VirtualInputManager")
-
-local function startDrag(input)
-    isDragging = true
-    dragStart = input.Position
-    startPos = buttonFrame.Position
-end
-
-local function stopDrag()
-    isDragging = false
-end
-
-local function updateDrag(input)
-    if isDragging then
-        local delta = input.Position - dragStart
-        buttonFrame.Position = UDim2.new(
-            startPos.X.Scale,
-            startPos.X.Offset + delta.X,
-            startPos.Y.Scale,
-            startPos.Y.Offset + delta.Y
-        )
-    end
-end
-
-button.MouseButton1Click:Connect(function()
-    VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.L, false, game)
-    VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.L, false, game)
-    print("L pressed")
-end)
-
-button.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        startDrag(input)
-    end
-end)
-
-button.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        stopDrag()
-    end
-end)
-
-UserInputService.InputChanged:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseMovement then
-        updateDrag(input)
-    end
-end)
