@@ -8,10 +8,8 @@ local success, errorOrValue = pcall(function()
     if game.PlaceId ~= 90462358603255 then
         Player:Kick("Wrong game buddy")
     end
+    local Stuff = loadstring(game:HttpGet('https://raw.githubusercontent.com/rosel4k/scripts/refs/heads/main/AE_Stuff.lua'))()
 
-    local ReplicatedStorage = game:GetService('ReplicatedStorage')
-    local InventoryEvent = ReplicatedStorage.Events.Inventory
-    local Event = ReplicatedStorage.Events.To_Server
     local HttpService = game:GetService('HttpService')
     local TCS = game:GetService('TextChatService')
     local VirtualUser = game:GetService('VirtualUser')
@@ -20,23 +18,11 @@ local success, errorOrValue = pcall(function()
     local LocalPlayer = cloneref(Players.LocalPlayer)
     local PromptGui = CoreGui:WaitForChild("RobloxPromptGui", 10)
     local Overlay = PromptGui and PromptGui:WaitForChild("promptOverlay", 10)
-        Player.Idled:Connect(function()
-            VirtualUser:CaptureController()
-            VirtualUser:ClickButton2(Vector2.new())
-        end)
 
-    local function Join(Raid)
-        Event:FireServer({Action = '_Enter_Dungeon', Name = Raid})
-    end
+    ---Anti AFK
+    Player.Idled:Connect(function()VirtualUser:CaptureController()VirtualUser:ClickButton2(Vector2.new())end)
 
-    local function Leave()
-        Event:FireServer({Action = "Dungeon_Leave"})
-    end
-
-    local function Upgrade(Type)
-        Event:FireServer({Bench_Name = "Christmas_"..Type.."_Upgrade", Action = "_Progression", Upgrade_Name = "Christmas_"..Type})
-    end
-
+    --Auto reconnect
     local function IsPlayerKicked(): boolean
         if not Overlay then return false end
         for _, child in ipairs(Overlay:GetChildren()) do
@@ -79,70 +65,23 @@ local success, errorOrValue = pcall(function()
 
     warn("[AutoReconnect] Loaded and monitoring for kicks.")
 
-    getgenv().Values = {
-        WebhookURL = '',
-        WebhookMode = false,
-        WebhookTimer = 5,
-        GameNotifications = false,
-        UserId = '',
-        NotifyRarities = {},
-    }
+
+    ---variables
     local V = getgenv().Values
-
-    getgenv().EnergyInfo = {
-        EnergyText = '',
-        CurrentRank = 0,
-        NextRank = 0,
-        EnergyUntilRank = 0,
-        EnergyPerClick = 0,
-        EnergyPerSecond = '',
-        EnergyPerMinute = '',
-        EnergyPerHour = '',
-        TimeToRankUp = '',
-        NextRankReq = '',
-    }
     local E = getgenv().EnergyInfo
-
-
-
-    getgenv().Emoji = {
-        P = '<:Prestige:1450190176784617585>',
-        E = '<:Energy:1450190062233849856>',
-        T = '<:Time:1450190117925818462>',
-        R = '<:Rank:1450187795577573426>',
-        C = '<:Coins:1450189943434383532>',
-        L = '<:Level:1450190159269068971>',
-        X = '<:Xp:1450190137026674820>'
-    }
     local EJ = getgenv().Emoji
-    getgenv().SelectedRarities = {}
-    getgenv().SelectedRarityDel = {}
-    getgenv().SelectedStat = ""
+    local RS = getgenv().RandomStuff
+    local T = getgenv().Toggles
 
-    local PrimaryUpgrades = {
-        ["Damage"] = "Primary_Damage",
-        ["Energy"] = "Primary_Energy",
-        ["Coins"] = "Primary_Coins",
-        ["Luck"] = "Primary_Luck"
-    }
-
-    local WEBHOOK_USERNAME = 'Anime Eternal Notificator'
-    local WEBHOOK_AVATAR = 'https://i.imgur.com/SX41gmf.png'
-
-    local suffixList = {{'UNCENT',1e306},{'CENT',1e303},{'NONONGNTL',1e300},{'OTNONGNTL',1e297},{'SPNONGNTL',1e294},{'SXNONGNTL',1e291},{'QNNONGNTL',1e288},{'QTNONGNTL',1e285},{'TNONGNTL',1e282},{'DNONGNTL',1e279},{'UNONGNTL',1e276},{'NONGNTL',1e273},{'NVOTGNTL',1e270},{'OTOTGNTL',1e267},{'SPOTGNTL',1e264},{'SXOTGNTL',1e261},{'QNOTGNTL',1e258},{'QTOTGNTL',1e255},{'TOTGNTL',1e252},{'DOTGNTL',1e249},{'UOTGNTL',1e246},{'OTGNTL',1e243},{'NVSPTGNTL',1e240},{'OSPTGNTL',1e237},{'SPSPTGNTL',1e234},{'SXSPTGNTL',1e231},{'QNSPTGNTL',1e228},{'QTSPTGNTL',1e225},{'TSPTGNTL',1e222},{'DSPTGNTL',1e219},{'USPTGNTL',1e216},{'SPTGNTL',1e213},{'NVSXGNTL',1e210},{'OSXGNTL',1e207},{'SPSXGNTL',1e204},{'SXSXGNTL',1e201},{'QNSXGNTL',1e198},{'QTSXGNTL',1e195},{'TSXGNTL',1e192},{'DSXGNTL',1e189},{'USXGNTL',1e186},{'SXGNTL',1e183},{'NQQGNT',1e180},{'OQQGNT',1e177},{'SpQGNT',1e174},{'sxQGNT',1e171},{'QnQGNT',1e168},{'qdQGNT',1e165},{'tQGNT',1e162},{'dQGNT',1e159},{'uQGNT',1e156},{'qQGNT',1e153},{'NQDDr',1e150},{'OQDDr',1e147},{'SpQDR',1e144},{'sxQDR',1e141},{'QnQDR',1e138},{'qdQDR',1e135},{'tQDR',1e132},{'dQDR',1e129},{'uQDR',1e126},{'QdDR',1e123},{'NoTG',1e120},{'OcTG',1e117},{'SpTG',1e114},{'ssTG',1e111},{'QnTG',1e108},{'qtTG',1e105},{'tsTG',1e102},{'DTG',1e99},{'UTG',1e96},{'TGN',1e93},{'NVG',1e90},{'OVG',1e87},{'SPG',1e84},{'SeV',1e81},{'QnV',1e78},{'qtV',1e75},{'TVg',1e72},{'DVg',1e69},{'UVg',1e66},{'Vgn',1e63},{'NvD',1e60},{'OcD',1e57},{'SpD',1e54},{'sxD',1e51},{'QnD',1e48},{'qdD',1e45},{'tdD',1e42},{'DD',1e39},{'Ud',1e36},{'de',1e33},{'N',1e30},{'O',1e27},{'Sp',1e24},{'sx',1e21},{'Qn',1e18},{'qd',1e15},{'T',1e12},{'B',1e9},{'M',1e6},{'k',1e3}}
-    local Rarities = {
-        "Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythical", "Phantom", "Supreme", "Exotic"
-    }
-    local Chests = {'Christmas_Tree_Chest','Ice_Chest','Santa_Chest','Christmas_Chest'}
     local RarityToNumber = {}
-    for i, rarity in ipairs(Rarities) do
+    for i, rarity in ipairs(RS.Rarities) do
         RarityToNumber[rarity] = i
     end
 
     local gui = Player:WaitForChild('PlayerGui')
     local LeftD = gui:WaitForChild('Main', 10):WaitForChild('Left_Side', 10):WaitForChild('Displays', 10)
     local visited, Max_Levels, RankReq = {}, 0, {}
-    local a = require(ReplicatedStorage.Common.ReplicatedService.ReplicaController)
+    local a = require(game.ReplicatedStorage.Common.ReplicatedService.ReplicaController)
     local PetsID = {}
     local PlrData,GameData
 
@@ -169,40 +108,6 @@ local success, errorOrValue = pcall(function()
             end
         end
         return nil
-    end
-
-    local function parseNumber(str)
-        if not str then
-            return 0
-        end
-        local num, suf = str:match('([%d%.]+)(%a+)')
-        if num and suf then
-            for _, p in ipairs(suffixList) do
-                if p[1] == suf then
-                    return tonumber(num) * p[2]
-                end
-            end
-        end
-        return tonumber(str) or 0
-    end
-
-    local function formatNumber(n)
-        local absn = math.abs(n)
-        for _, p in ipairs(suffixList) do
-            if absn >= p[2] then
-                local x = n / p[2]
-                if x % 1 == 0 then
-                    return ('%d%s'):format(x, p[1])
-                else
-                    return ('%.2f%s'):format(x, p[1])
-                end
-            end
-        end
-        if n % 1 == 0 then
-            return ('%d'):format(n)
-        else
-            return ('%.2f'):format(n)
-        end
     end
 
     local function scan(tbl)
@@ -257,26 +162,6 @@ local success, errorOrValue = pcall(function()
 
     getgenv().PrevStats = getgenv().PrevStats or { Exp = 0, Time = tick() }
 
-    local AVATAR_RARITY_MAP = {
-        S = { label = 'MYTHICAL', color = 0xff0000 },
-        SS = { label = 'PHANTOM', color = 0x5b00b5 },
-        SSS = { label = 'SUPREME', color = 0xff7100 },
-        SSSS = { label = 'EXOTIC', color = 0xff0000 }
-    }
-
-    local function GetDropColor(rarity)
-        rarity = rarity:upper()
-        if rarity == 'EXOTIC' then
-            return 0xff0000
-        elseif rarity == 'SUPREME' then
-            return 0xff7100
-        elseif rarity == 'PHANTOM' then
-            return 0x5b00b5
-        else
-            return 0x00ff00
-        end
-    end
-
     local function SendEmbed(title, desc, color, doPing)
         if not V.WebhookMode or V.WebhookURL == '' then
             return
@@ -285,8 +170,8 @@ local success, errorOrValue = pcall(function()
         local body = {
             content = doPing and ('<@' .. (V.UserId or '') .. '>') or '',
             embeds = {{ title = title, description = desc .. '\n<t:' .. ts .. ':T>\n*made by @rosel4k*', color = color }},
-            username = WEBHOOK_USERNAME,
-            avatar_url = WEBHOOK_AVATAR,
+            username = RS.WEBHOOK_USERNAME,
+            avatar_url = RS.WEBHOOK_AVATAR,
             attachments = {},
         }
         pcall(function()
@@ -318,7 +203,7 @@ local success, errorOrValue = pcall(function()
         local clean = msg:gsub('<[^>]->', '')
         local playerName, category, rank, item = clean:match('(%S+) got a (%[.-%]) RANK (%S+) %[Av%]%s*(.+)')
         if playerName == Player.Name and playerName and category and rank and item then
-            local data = AVATAR_RARITY_MAP[rank:upper()]
+            local data = RS.AVATAR_RARITY_MAP[rank:upper()]
             if data and tablefind(V.NotifyRarities, data.label) then
                 return {
                     playerName = playerName,
@@ -334,7 +219,7 @@ local success, errorOrValue = pcall(function()
         local clean = msg:gsub('<[^>]->', '')
         local playerName, category, rank, item = clean:match('(%S+) got a (%[Shadows%]) RANK (%S+) %[%S+%] (.+)')
         if playerName == Player.Name and playerName and category and rank and item then
-            local data = AVATAR_RARITY_MAP[rank:upper()]
+            local data = RS.AVATAR_RARITY_MAP[rank:upper()]
             if data and tablefind(V.NotifyRarities, data.label) then
                 return {
                     playerName = playerName,
@@ -396,78 +281,11 @@ local success, errorOrValue = pcall(function()
         end
     end)
 
-    local function ClaimChest(ChestName)
-        Event:FireServer({Action = "_Chest_Claim",Name = ChestName})
-    end
-
-    local function ItemQuest(Id, Name)
-        local Counter = 0
-        
-        local function Action(type)
-            Event:FireServer({Id = Id, Type = type, Action = "_Quest"})
-        end
-        
-        repeat
-            Action("Accept")
-            Counter = Counter + 1
-            task.wait()
-        until workspace:FindFirstChild(Name) or Counter >= 5
-        
-        local path = workspace:FindFirstChild(Name)
-        if path and #path:GetChildren() > 0 then
-            for _, v in ipairs(path:GetChildren()) do
-                local promptFound = false
-                for _, k in ipairs(v:GetDescendants()) do
-                    if k:IsA("ProximityPrompt") then
-                        promptFound = true
-                        k.MaxActivationDistance = math.huge
-                        fireproximityprompt(k)
-                        task.wait()
-                        Action("Complete")
-                        break
-                    end
-                end
-                if not promptFound then continue end
-            end
-        end
-    end
-        
-    local function formatTime(seconds)
-        if not seconds or seconds == math.huge then
-            return "∞"
-        end
-
-        local MAX_SECONDS = 30 * 24 * 60 * 60
-        if seconds >= MAX_SECONDS then
-            return "∞"
-        end
-    
-        seconds = math.floor(seconds)
-        local d = math.floor(seconds / 86400)
-        seconds = seconds % 86400
-        local h = math.floor(seconds / 3600)
-        seconds = seconds % 3600
-        local m = math.floor(seconds / 60)
-        local s = seconds % 60
-    
-        if d > 0 then
-            return string.format("%dd %dh %dm %ds", d, h, m, s)
-        elseif h > 0 then
-            return string.format("%dh %dm %ds", h, m, s)
-        elseif m > 0 then
-            return string.format("%dm %ds", m, s)
-        else
-            return string.format("%ds", s)
-        end
-    end
-
-
-
     local function EnergyCalculator()
         local success, errorOrValue = pcall(function()
             local energyText = LeftD:WaitForChild('Energy', 10):WaitForChild('Energy', 10):WaitForChild('Main', 10):WaitForChild('TextLabel', 10).Text
             local EnergyMatched = energyText:match('Energy:%s*(.-)$')
-            local currentEnergy = parseNumber(EnergyMatched)
+            local currentEnergy = Stuff.parseNumber(EnergyMatched)
             local rankStat = Player.leaderstats:WaitForChild('Rank')
             local currentRank = tonumber(rankStat.Value) or 0
             local nextRank = currentRank + 1
@@ -475,9 +293,9 @@ local success, errorOrValue = pcall(function()
             local EnergyPerSecond = Energy * 5.886
             local EnergyPerMinute = EnergyPerSecond * 60
             local EnergyPerHour = EnergyPerMinute * 60
-            local EPS = formatNumber(EnergyPerSecond)
-            local EPM = formatNumber(EnergyPerMinute)
-            local EPH = formatNumber(EnergyPerHour)
+            local EPS = Stuff.formatNumber(EnergyPerSecond)
+            local EPM = Stuff.formatNumber(EnergyPerMinute)
+            local EPH = Stuff.formatNumber(EnergyPerHour)
 
             if currentRank >= Max_Levels then
                 getgenv().EnergyInfo = {
@@ -499,7 +317,7 @@ local success, errorOrValue = pcall(function()
             local nextRankReq = RankReq[nextRank] or 0
             local NeedEnergy = math.max(0, nextRankReq - currentEnergy)
             local TTNR = NeedEnergy / (EnergyPerSecond > 0 and EnergyPerSecond or 1)
-            local TTRU = formatTime(TTNR)
+            local TTRU = Stuff.formatTime(TTNR)
             local percent = (currentEnergy / nextRankReq) * 100
             local filled = math.floor(percent / 10)
             local empty = 10 - filled
@@ -541,7 +359,7 @@ local success, errorOrValue = pcall(function()
             level, prestige = tonumber(level), tonumber(prestige)
             local nextXP, CanPrestige, LevelCap = getNextXP(level, prestige, LevelCap)
             local expText = PHUD:WaitForChild('Player_Levels', 10):WaitForChild('Main', 10):WaitForChild('EXP_Counter', 10).Text
-            local currentExp = parseNumber(expText:match('EXP:%s*(.-)%s*/'))
+            local currentExp = Stuff.parseNumber(expText:match('EXP:%s*(.-)%s*/'))
             local NeedExp = CanPrestige and 0 or math.max(0, nextXP - currentExp)
             local CoinsText = LeftD:WaitForChild('Energy', 10):WaitForChild('Coins', 10):WaitForChild('Main', 10):WaitForChild('TextLabel', 10).Text
             local now = tick()
@@ -568,21 +386,21 @@ local success, errorOrValue = pcall(function()
                 EJ.C ..'**' .. CoinsText .. '**',
                 '*///////////*',
                 EJ.R .. '**Rank: ' .. E.CurrentRank .. ' / '.. tostring(Max_Levels) .. '**',
-                EJ.E .. '**Energy: '.. E.EnergyText .. (E.EnergyUntilRank > 0 and ' / ' .. formatNumber(E.NextReq) .. '**' or '**'),
+                EJ.E .. '**Energy: '.. E.EnergyText .. (E.EnergyUntilRank > 0 and ' / ' .. Stuff.formatNumber(E.NextReq) .. '**' or '**'),
                 '' .. E.ColoredBar ..'',
                 '*///////////*',
                 EJ.T .. '**Time to rank up: ' .. E.TimeToRankUp .. '**',
                 '*///////////*',
                 EJ.P .. '**Prestige: ' .. tostring(prestige) .. '**',
                 EJ.L .. '**Level: '.. tostring(level) .. ' / ' .. tostring(LevelCap) .. '**',
-                EJ.X .. '** EXP: ' .. formatNumber(currentExp) .. ' / ' .. formatNumber(nextXP) ..'**',
+                EJ.X .. '** EXP: ' .. Stuff.formatNumber(currentExp) .. ' / ' .. Stuff.formatNumber(nextXP) ..'**',
                 '**' .. (CanPrestige and EJ.P .. 'Ready to Prestige**' or lvlcolorbar .. '**'),
                 '*///////////*',
                 '**Calculations:**',
                 '*///////////*',       
-                EJ.X .. '**EXP per minute: ' .. formatNumber(expPerMin) .. '**',
+                EJ.X .. '**EXP per minute: ' .. Stuff.formatNumber(expPerMin) .. '**',
                 '*///////////*',
-                EJ.E .. '**Energy per click: ' .. formatNumber(E.EnergyPerClick) .. '**',
+                EJ.E .. '**Energy per click: ' .. Stuff.formatNumber(E.EnergyPerClick) .. '**',
                 EJ.E .. '**Energy per minute: ' .. E.EnergyPerMinute .. '**',
                 EJ.E .. '**Energy per hour: ' .. E.EnergyPerHour .. '**',
                 '*///////////*',
@@ -595,82 +413,6 @@ local success, errorOrValue = pcall(function()
         end
     end
 
-    ---GUI BUTTON OPEN/CLOSE GUI
-    local player = game.Players.LocalPlayer
-    local gui = Instance.new("ScreenGui")
-    gui.ResetOnSpawn = false
-    gui.Parent = player:WaitForChild("PlayerGui")
-
-    local buttonFrame = Instance.new("Frame")
-    buttonFrame.Size = UDim2.new(0, 100, 0, 40)
-    buttonFrame.Position = UDim2.new(0.5, 150, 0, 10)
-    buttonFrame.BackgroundTransparency = 0.3
-    buttonFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    buttonFrame.BorderSizePixel = 0
-    buttonFrame.Parent = gui
-
-    local button = Instance.new("TextButton")
-    button.Size = UDim2.new(1, 0, 1, 0)
-    button.Text = "Press L"
-    button.TextColor3 = Color3.new(1, 1, 1)
-    button.BackgroundTransparency = 0.1
-    button.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    button.Parent = buttonFrame
-
-    local isDragging = false
-    local dragStart = Vector2.new()
-    local startPos = UDim2.new()
-
-    local UserInputService = game:GetService("UserInputService")
-    local VirtualInputManager = game:GetService("VirtualInputManager")
-
-    local function startDrag(input)
-        isDragging = true
-        dragStart = input.Position
-        startPos = buttonFrame.Position
-    end
-
-    local function stopDrag()
-        isDragging = false
-    end
-
-    local function updateDrag(input)
-        if isDragging then
-            local delta = input.Position - dragStart
-            buttonFrame.Position = UDim2.new(
-                startPos.X.Scale,
-                startPos.X.Offset + delta.X,
-                startPos.Y.Scale,
-                startPos.Y.Offset + delta.Y
-            )
-        end
-    end
-
-    button.MouseButton1Click:Connect(function()
-        VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.L, false, game)
-        VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.L, false, game)
-        print("L pressed")
-    end)
-
-    button.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            startDrag(input)
-        end
-    end)
-
-    button.InputEnded:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            stopDrag()
-        end
-    end)
-
-    UserInputService.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement then
-            updateDrag(input)
-        end
-    end)
-
-    ---GUI PART
     local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
     local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
     local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -696,19 +438,6 @@ local success, errorOrValue = pcall(function()
     local Tools = Tabs.ToolsTab:AddSection("Tools")
 
     local Options = Fluent.Options
-    getgenv().Toggles = {
-        StatResets = false,
-        DailyQuests = false,
-        AutoDelete = false,
-        Webhook = false,
-        AutoUpgrade = false,
-        AutoJoinXmas = false,
-        AutoLeaveWave = 0,
-        AutoUpgX = false,
-        AutoXChest = false,
-        GachaXmas = false
-    }
-    local T = getgenv().Toggles
 
     local WebTog = WebSec:AddToggle("WebTog", {Title = "Enable Webhook", Default = false})
     Options.WebTog:OnChanged(function(Value)
@@ -793,8 +522,8 @@ local success, errorOrValue = pcall(function()
         EnergyCalculator()
         local E = getgenv().EnergyInfo
         EnergyPara1:SetDesc(E.EnergyText )
-        EnergyPara2:SetDesc(formatNumber(E.EnergyUntilRank) )
-        EnergyPara3:SetDesc(formatNumber(E.EnergyPerClick) )
+        EnergyPara2:SetDesc(Stuff.formatNumber(E.EnergyUntilRank) )
+        EnergyPara3:SetDesc(Stuff.formatNumber(E.EnergyPerClick) )
         EnergyPara4:SetDesc(E.EnergyPerSecond )
         EnergyPara5:SetDesc(E.EnergyPerMinute )
         EnergyPara6:SetDesc(E.EnergyPerHour )
@@ -803,12 +532,11 @@ local success, errorOrValue = pcall(function()
 
     UpdateParas()
 
-
     local PunchAuto = Tools:AddButton({
         Title = "Get Punching Machine",
         Description = "",
         Callback = function()
-            ItemQuest("2301", "Punching_Machine")
+            Stuff.ItemQuest("2301", "Punching_Machine")
         end
     })
 
@@ -816,7 +544,7 @@ local success, errorOrValue = pcall(function()
         Title = "Get Demon Fruit",
         Description = "",
         Callback = function()
-            ItemQuest("2302", "Demon_Fruit")
+            Stuff.ItemQuest("2302", "Demon_Fruit")
         end
     })
         
@@ -824,14 +552,14 @@ local success, errorOrValue = pcall(function()
         Title = "Perform Exorcism",
         Description = "",
         Callback = function()
-            ItemQuest("2303", "Exorcisms")
+            Stuff.ItemQuest("2303", "Exorcisms")
         end
     })
     local BentoAuto = Tools:AddButton({
         Title = "Get Lost Bento",
         Description = "",
         Callback = function()
-            ItemQuest("2305", "Lost_Bento_Box")
+            Stuff.ItemQuest("2305", "Lost_Bento_Box")
         end
     })
 
@@ -873,7 +601,7 @@ local success, errorOrValue = pcall(function()
                     Leave()
                 end
             else
-                Join("Ice_Raid")
+                Stuff.Join("Ice_Raid")
                 task.wait(5)
             end
         end
@@ -882,8 +610,8 @@ local success, errorOrValue = pcall(function()
     Options.AutoUpgX:OnChanged(function(Value)
         T.AutoUpgX = Value
         while T.AutoUpgX do task.wait(1)
-            Upgrade("Damage")
-            Upgrade("Materials")
+            Stuff.Upgrade("Damage")
+            Stuff.Upgrade("Materials")
         end
     end)
     local AutoXChest = Tools:AddToggle("AutoXChest", {Title = "Auto claim\nXmas chests", Default = false })
@@ -891,7 +619,7 @@ local success, errorOrValue = pcall(function()
         T.AutoXChest = Value
         while T.AutoXChest do task.wait(1)
             for _,name in pairs(Chests) do task.wait(1)
-                ClaimChest(name)
+                Stuff.ClaimChest(name)
             end
         end
     end)
@@ -899,27 +627,14 @@ local success, errorOrValue = pcall(function()
     Options.GachaXmas:OnChanged(function(Value)
         T.GachaXmas = Value
         while T.GachaXmas do task.wait(0.01)
-            Event:FireServer({Open_Amount = 5,Action = "_Gacha_Activate",Name = "Christmas_Glove"})
+            Stuff.Roll(5,"Christmas_Glove")
         end
     end)
     local StatResets = Tools:AddToggle("StatResets", {Title = "Auto buy Stat Resets (10k x2)", Default = false })
     Options.StatResets:OnChanged(function(Value)
         T.StatResets = Value
         while T.StatResets do task.wait(10)
-            Event:FireServer({Amount = 1,Product_Id = 7,Action = "Merchant_Purchase",Bench_Name = "Exchange_Shop_Products"})
-        end
-    end)
-
-    local DailyQuests = Tools:AddToggle("DailyQuests", {Title = "Auto Accept Daily Quests", Default = false })
-    Options.DailyQuests:OnChanged(function(Value)
-        T.DailyQuests = Value
-        while T.DailyQuests do
-            for i = 1, 7 do
-                if not T.DailyQuests then break end
-                task.wait(1)
-                Event:FireServer({Id = "200" .. i,Type = "Accept",Action = "_Quest"})
-            end
-            task.wait(10)
+            Stuff.Merchant(1,7,"Exchange_Shop_Products")
         end
     end)
 
@@ -931,7 +646,7 @@ local success, errorOrValue = pcall(function()
         Default = "",
         Callback = function(Value)
             if type(Value) == "string" then
-                getgenv().SelectedStat = PrimaryUpgrades[Value] or ""
+                RS.SelectedStat = PrimaryUpgrades[Value] or ""
             end
         end
     })
@@ -939,8 +654,7 @@ local success, errorOrValue = pcall(function()
     Options.AutoUpgrade:OnChanged(function(Value)
         T.AutoUpgrade = Value
         while T.AutoUpgrade do task.wait(0.1)
-            local tbl = {['Name'] = getgenv().SelectedStat,['Action'] = 'Assign_Level_Stats',['Amount'] = 1,}
-            Event:FireServer(tbl)
+            Stuff.Assign(RS.SelectedStat,1)
         end
     end)
 
@@ -948,12 +662,12 @@ local success, errorOrValue = pcall(function()
     local RarityDrop = Tools:AddDropdown("RarityDropdown", {
         Title = "Select Rarity\nTo Delete",
         Description = "",
-        Values = Rarities,
+        Values = RS.Rarities,
         Multi = true,
         Default = {},
         Callback = function(Value)
             local SelectedRarities = {}
-            getgenv().SelectedRarityDel = {}
+            RS.SelectedRarityDel = {}
             for i,v in pairs(Value) do
                 if not table.find(SelectedRarities, i) then
                     table.insert(SelectedRarities, i)
@@ -961,8 +675,8 @@ local success, errorOrValue = pcall(function()
             end
             for _, rarity in ipairs(SelectedRarities) do
                 local num = RarityToNumber[rarity]
-                if num and not table.find(getgenv().SelectedRarityDel, num) then
-                    table.insert(getgenv().SelectedRarityDel, num)
+                if num and not table.find(RS.SelectedRarityDel, num) then
+                    table.insert(RS.SelectedRarityDel, num)
                 end
             end
         end
@@ -974,13 +688,13 @@ local success, errorOrValue = pcall(function()
             local ToDelete = {}
             for i, v in pairs(PlrData.Inventory.Items) do
                 if table.find(PetsID, v.Id) then
-                    if v.Stats and v.Stats.Energy and not v.Locked and not v.Equipped and table.find(getgenv().SelectedRarityDel, v.Rarity) then
+                    if v.Stats and v.Stats.Energy and not v.Locked and not v.Equipped and table.find(RS.SelectedRarityDel, v.Rarity) then
                         table.insert(ToDelete, i)
                     end
                 end
             end
             if #ToDelete > 0 then
-                InventoryEvent:FireServer({Selected = ToDelete,Action = "Mass_Delete",Category = "Pets"})
+                PetsDelete(ToDelete)
             end
         end
     end)
