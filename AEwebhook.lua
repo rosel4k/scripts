@@ -612,10 +612,6 @@ local success, errorOrValue = pcall(function()
             Stuff.Upgrade("Christmas_Damage","Christmas_Damage_Upgrade")
             Stuff.Upgrade("Christmas_Materials","Christmas_Materials_Upgrade")
             Stuff.Upgrade("Christmas_Damage","Christmas_Damage_Upgrade_2")
-            local UID = GetUIDX()
-            if UID ~= nil then
-                Stuff.Level("Christmas_Glove_Leveling",UID)
-            end
         end
     end)
     local AutoXChest = Tools:AddToggle("AutoXChest", {Title = "Auto claim\nXmas chests", Default = false })
@@ -632,6 +628,16 @@ local success, errorOrValue = pcall(function()
         T.GachaXmas = Value
         while T.GachaXmas do task.wait(0.01)
             Stuff.Roll(5,"Christmas_Glove")
+        end
+    end)
+    local AutoProgX = Tools:AddToggle("AutoProgX", {Title = "Auto upgrade\nXmas gloves", Default = false })
+    Options.AutoProgX:OnChanged(function(Value)
+        T.AutoProgX = Value
+        while T.AutoProgX do task.wait(1)
+            local UID = GetUIDX()
+            if UID ~= nil then
+                Stuff.Level("Christmas_Glove_Leveling",UID)
+            end
         end
     end)
     local StatResets = Tools:AddToggle("StatResets", {Title = "Auto buy Stat Resets (10k x2)", Default = false })
