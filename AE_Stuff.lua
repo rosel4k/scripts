@@ -169,7 +169,7 @@ function Stuff.ClaimChest(ChestName)
 end
 
 function Stuff.Level(BenchName,UID)
-    Evenf:FireServr({Bench_Name = BenchName, UniqueId = UID, Action = "Prog_Lv_Items", Upgrade_Name = "Level"})
+    Evenf:FireServer({Bench_Name = BenchName, UniqueId = UID, Action = "Prog_Lv_Items", Upgrade_Name = "Level"})
 end
 
 function Stuff.ItemQuest(Id, Name)
