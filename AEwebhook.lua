@@ -630,16 +630,6 @@ local success, errorOrValue = pcall(function()
             Stuff.Roll(5,"Christmas_Glove")
         end
     end)
-    local AutoProgX = Tools:AddToggle("AutoProgX", {Title = "Auto upgrade\nXmas gloves", Default = false })
-    Options.AutoProgX:OnChanged(function(Value)
-        T.AutoProgX = Value
-        while T.AutoProgX do task.wait(1)
-            local UID = GetUIDX()
-            if UID ~= nil then
-                Stuff.Level("Christmas_Glove_Leveling",UID)
-            end
-        end
-    end)
     local StatResets = Tools:AddToggle("StatResets", {Title = "Auto buy Stat Resets (10k x2)", Default = false })
     Options.StatResets:OnChanged(function(Value)
         T.StatResets = Value
