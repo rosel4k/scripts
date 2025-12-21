@@ -100,17 +100,6 @@ local success, errorOrValue = pcall(function()
             end
         end
     end
-    local function GetUIDX()
-        for i, v in pairs(PlrData.Inventory.Items) do
-            if v.Rarity == 9 then
-                if v.U and v.U.Prog_Lv_Items and v.U.Prog_Lv_Items.List and v.U.Prog_Lv_Items.List.Level then
-                    if v.U.Prog_Lv_Items.List.Level.Name == "Christmas_Glove_Leveling" then
-                        return v.UniqueId
-                    end
-                end
-            end
-        end
-    end
 
     local function tablefind(tbl, value)
         for i, v in ipairs(tbl) do
