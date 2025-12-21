@@ -100,6 +100,17 @@ local success, errorOrValue = pcall(function()
             end
         end
     end
+    local function GetUIDX()
+        for i, v in pairs(PlrData.Inventory.Items) do
+            if v.Rarity == 9 then
+                if v.U and v.U.Prog_Lv_Items and v.U.Prog_Lv_Items.List and v.U.Prog_Lv_Items.List.Level then
+                    if v.U.Prog_Lv_Items.List.Level.Name == "Christmas_Glove_Leveling" then
+                        return v.UniqueId
+                    end
+                end
+            end
+        end
+    end
 
     local function tablefind(tbl, value)
         for i, v in ipairs(tbl) do
@@ -598,15 +609,20 @@ local success, errorOrValue = pcall(function()
     Options.AutoUpgX:OnChanged(function(Value)
         T.AutoUpgX = Value
         while T.AutoUpgX do task.wait(1)
-            Stuff.Upgrade("Damage")
-            Stuff.Upgrade("Materials")
+            Stuff.Upgrade("Christmas_Damage","Christmas_Damage_Upgrade")
+            Stuff.Upgrade("Christmas_Materials","Christmas_Materials_Upgrade")
+            Stuff.Upgrade("Christmas_Damage","Christmas_Damage_Upgrade_2")
+            local UID = GetUIDX()
+            if UID ~= nil then
+                Stuff.Level("Christmas_Glove_Leveling",UID)
+            end
         end
     end)
     local AutoXChest = Tools:AddToggle("AutoXChest", {Title = "Auto claim\nXmas chests", Default = false })
     Options.AutoXChest:OnChanged(function(Value)
         T.AutoXChest = Value
         while T.AutoXChest do task.wait(1)
-            for _,name in pairs(Chests) do task.wait(1)
+            for _,name in pairs(RS.Chests) do task.wait(1)
                 Stuff.ClaimChest(name)
             end
         end
