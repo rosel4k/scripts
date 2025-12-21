@@ -168,10 +168,6 @@ function Stuff.ClaimChest(ChestName)
     Event:FireServer({Action = "_Chest_Claim", Name = ChestName})
 end
 
-function Stuff.Level(BenchName,UID)
-    Evenf:FireServer({Bench_Name = BenchName, UniqueId = UID, Action = "Prog_Lv_Items", Upgrade_Name = "Level"})
-end
-
 function Stuff.ItemQuest(Id, Name)
     local Counter = 0
 
