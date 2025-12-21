@@ -47,7 +47,8 @@ getgenv().Toggles = {
     AutoLeaveWave = 0,
     AutoUpgX = false,
     AutoXChest = false,
-    GachaXmas = false
+    GachaXmas = false,
+    AutoProgX = false
 }
 
 getgenv().Emoji = {
@@ -159,12 +160,16 @@ function Stuff.Leave()
     Event:FireServer({Action = "Dungeon_Leave"})
 end
 
-function Stuff.Upgrade(Type)
-    Event:FireServer({Bench_Name = "Christmas_"..Type.."_Upgrade", Action = "_Progression", Upgrade_Name = "Christmas_"..Type})
+function Stuff.Upgrade(Type,BenchName)
+    Event:FireServer({Bench_Name = BenchName, Action = "_Progression", Upgrade_Name = Type})
 end
 
 function Stuff.ClaimChest(ChestName)
     Event:FireServer({Action = "_Chest_Claim", Name = ChestName})
+end
+
+function Stuff.Level(BenchName,UID)
+    Evenf:FireServr({Bench_Name = BenchName, UniqueId = UID, Action = "Prog_Lv_Items", Upgrade_Name = "Level"})
 end
 
 function Stuff.ItemQuest(Id, Name)
