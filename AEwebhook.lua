@@ -418,12 +418,14 @@ local success, errorOrValue = pcall(function()
         WebhookTab = Window:AddTab({ Title = "Webhook", Icon = "webhook" }),
         CalculationsTab = Window:AddTab({ Title = "Calculations", Icon = "calculator" }),
         ToolsTab = Window:AddTab({ Title = "Tools", Icon = "hammer" }),
+		EventsTab = Window:AddTab({ Title = "Events", Icon = "gift" }),
         Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
     }
 
     local WebSec = Tabs.WebhookTab:AddSection("Webhook Setting") 
     local Calculations = Tabs.CalculationsTab:AddSection("Energy Calculations")
     local Tools = Tabs.ToolsTab:AddSection("Tools")
+	local Christmas = Tabs.EventsTab:AddSection("Christmas Event")
 
     local Options = Fluent.Options
 
@@ -565,61 +567,8 @@ local success, errorOrValue = pcall(function()
             TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, LocalPlayer)
         end
     })
-    local WavePara = Tools:AddParagraph({Title = "Leave Wave :",Content = ""})
-    local WaveInput = Tools:AddInput("WaveInput", {
-        Title = "Auto Leave Wave",
-        Default = "",
-        Placeholder = "Wave here",
-        Numeric = false,
-        Finished = true,
-        Callback = function(Value)
-            WavePara:SetDesc(Value)
-            T.AutoLeaveWave = tostring(Value)
-        end
-    })
-    local AutoJoinXmas = Tools:AddToggle("AutoJoinXmas", {Title = "Auto join\nIce Raid", Default = false })
-    Options.AutoJoinXmas:OnChanged(function(Value)
-        T.AutoJoinXmas = Value
-        while T.AutoJoinXmas do task.wait(1)
-            local Path = Player:WaitForChild('PlayerGui'):WaitForChild('Dungeon').Default_Header
-            if Path.Main.Main.Visible and Path.Visible then
-                local TextLabel = Path.Main.Main.Wave
-                local Wave = tostring(T.AutoLeaveWave)
-                if TextLabel.Text == 'Wave: '..Wave..'/1000' then
-                    Stuff.Leave()
-                end
-            else
-                Stuff.Join("Ice_Raid")
-                task.wait(5)
-            end
-        end
-    end)
-    local AutoUpgX = Tools:AddToggle("AutoUpgX", {Title = "Auto upgrade Xmas", Default = false })
-    Options.AutoUpgX:OnChanged(function(Value)
-        T.AutoUpgX = Value
-        while T.AutoUpgX do task.wait(1)
-            Stuff.Upgrade("Christmas_Damage","Christmas_Damage_Upgrade")
-            Stuff.Upgrade("Christmas_Materials","Christmas_Materials_Upgrade")
-            Stuff.Upgrade("Christmas_Damage","Christmas_Damage_Upgrade_2")
-        end
-    end)
-    local AutoXChest = Tools:AddToggle("AutoXChest", {Title = "Auto claim\nXmas chests", Default = false })
-    Options.AutoXChest:OnChanged(function(Value)
-        T.AutoXChest = Value
-        while T.AutoXChest do task.wait(1)
-            for _,name in pairs(RS.Chests) do task.wait(1)
-                Stuff.ClaimChest(name)
-            end
-        end
-    end)
-    local GachaXmas = Tools:AddToggle("GachaXmas", {Title = "Auto roll\nXmas gacha", Default = false })
-    Options.GachaXmas:OnChanged(function(Value)
-        T.GachaXmas = Value
-        while T.GachaXmas do task.wait(0.01)
-            Stuff.Roll(5,"Christmas_Glove")
-        end
-    end)
-    local StatResets = Tools:AddToggle("StatResets", {Title = "Auto buy Stat Resets (10k x2)", Default = false })
+	
+	local StatResets = Tools:AddToggle("StatResets", {Title = "Auto buy Stat Resets (10k x2)", Default = false })
     Options.StatResets:OnChanged(function(Value)
         T.StatResets = Value
         while T.StatResets do task.wait(10)
@@ -685,6 +634,102 @@ local success, errorOrValue = pcall(function()
             if #ToDelete > 0 then
                 Stuff.PetsDelete(ToDelete)
             end
+        end
+    end)
+	
+	-- Auto Raid
+	local function AutoRaid(config)
+		Options[config.ToggleFlag]:OnChanged(function(Value)
+			T[config.ToggleFlag] = Value
+
+			while T[config.ToggleFlag] do
+				task.wait(1)
+
+				if not T.AutoLeaveWave then
+					continue
+				end
+
+				local gui = Player:WaitForChild("PlayerGui")
+				local dungeonGui = gui:WaitForChild("Dungeon").Default_Header
+
+				if dungeonGui.Visible and dungeonGui.Main.Main.Visible then
+					local text = dungeonGui.Main.Main.Wave.Text
+					local currentWave = tonumber(text:match("Wave:%s*(%d+)"))
+
+					if currentWave and currentWave >= T.AutoLeaveWave then
+						Stuff.Leave()
+					end
+				else
+					Stuff.Join(config.DungeonName)
+					task.wait(5)
+				end
+			end
+		end)
+	end
+	
+	-- Christmas Raids
+	local WavePara = Christmas:AddParagraph({
+    Title = "Leave Wave :",
+    Content = ""
+	})
+
+	Christmas:AddInput("WaveInput", {
+		Title = "Auto Leave Wave",
+		Numeric = true,
+		Finished = true,
+		Placeholder = "Wave here",
+		Callback = function(Value)
+			local num = tonumber(Value)
+			if num then
+				T.AutoLeaveWave = num
+				WavePara:SetDesc(num)
+			else
+				T.AutoLeaveWave = nil
+				WavePara:SetDesc("Invalid wave")
+			end
+		end
+	})
+	
+	Christmas:AddToggle("AutoJoinXmas", {
+		Title = "Auto Join\nIce Raid",
+		Default = false
+	})
+
+	Christmas:AddToggle("AutoJoinSanta", {
+		Title = "Auto Join\nSanta Raid",
+		Default = false
+	})
+	
+	-- Raids
+	AutoRaid({ ToggleFlag = "AutoJoinXmas", DungeonName = "Ice_Raid", MaxWave = 1000 })
+	AutoRaid({ ToggleFlag = "AutoJoinSanta", DungeonName = "Santa_Raid", MaxWave = 1000 })
+	
+	-- Christmas Upgrades
+	local AutoUpgX = Christmas:AddToggle("AutoUpgX", {Title = "Auto upgrade Xmas", Default = false })
+    Options.AutoUpgX:OnChanged(function(Value)
+        T.AutoUpgX = Value
+        while T.AutoUpgX do task.wait(1)
+            Stuff.Upgrade("Christmas_Damage","Christmas_Damage_Upgrade")
+            Stuff.Upgrade("Christmas_Materials","Christmas_Materials_Upgrade")
+            Stuff.Upgrade("Christmas_Damage","Christmas_Damage_Upgrade_2")
+			Stuff.Upgrade("Christmas_Damage","Christmas_Damage_Upgrade_3")
+			Stuff.Upgrade("Christmas_Damage","Christmas_Damage_Upgrade_4")
+        end
+    end)
+    local AutoXChest = Christmas:AddToggle("AutoXChest", {Title = "Auto claim\nXmas chests", Default = false })
+    Options.AutoXChest:OnChanged(function(Value)
+        T.AutoXChest = Value
+        while T.AutoXChest do task.wait(1)
+            for _,name in pairs(RS.Chests) do task.wait(1)
+                Stuff.ClaimChest(name)
+            end
+        end
+    end)
+    local GachaXmas = Christmas:AddToggle("GachaXmas", {Title = "Auto roll\nXmas gacha", Default = false })
+    Options.GachaXmas:OnChanged(function(Value)
+        T.GachaXmas = Value
+        while T.GachaXmas do task.wait(0.01)
+            Stuff.Roll(5,"Christmas_Glove")
         end
     end)
 
