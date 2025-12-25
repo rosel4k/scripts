@@ -243,8 +243,10 @@ local OreDrop = Tab:CreateDropdown({
    MultipleOptions = true,
    Flag = "Ores",
    Callback = function(Options)
-        for i,v in pairs(Options) do
-            print(i,v)
+        for _,v in pairs(Options) do
+            if not table.find(C.SelectedOres, v) then
+                table.insert(C.SelectedOres)
+            end
         end
    end,
 })
@@ -256,8 +258,10 @@ local ItemDrop = Tab:CreateDropdown({
    MultipleOptions = true,
    Flag = "Items",
    Callback = function(Options)
-        for i,v in pairs(Options) do
-            print(i,v)
+        for _,v in pairs(Options) do
+            if not table.find(C.SelectedItems, v) then
+                table.insert(C.SelectedItems)
+            end
         end
    end,
 })
