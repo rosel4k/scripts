@@ -694,6 +694,7 @@ local success, errorOrValue = pcall(function()
 				T.AutoLeaveWave = num
 				WavePara:SetDesc(num)
 			else
+				T.AutoLeaveWave = nil
 				WavePara:SetDesc("Max wave")
 			end
 		end
