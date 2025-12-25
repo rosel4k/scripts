@@ -199,13 +199,13 @@ local SettingSec = Tab:CreateSection("Webhook Settings")
 local SendWebhook = Tab:CreateToggle({
    Name = "Activate webhook",
    CurrentValue = false,
-   Flag = "Webhook",
+   Flag = "WebToggle",
    Callback = function(Value)
-        C.EnableWEB = true
+        C.EnableWEB = Value
         CollectAndSend()
         while C.EnableWEB and task.wait(C.TimeToSend * 60) do
             CollectAndSend()
-        end 
+        end
    end,
 })
 
@@ -245,7 +245,7 @@ local OreDrop = Tab:CreateDropdown({
    Callback = function(Options)
         for _,v in pairs(Options) do
             if not table.find(C.SelectedOres, v) then
-                table.insert(C.SelectedOres)
+                table.insert(C.SelectedOres, v)
             end
         end
    end,
@@ -260,7 +260,7 @@ local ItemDrop = Tab:CreateDropdown({
    Callback = function(Options)
         for _,v in pairs(Options) do
             if not table.find(C.SelectedItems, v) then
-                table.insert(C.SelectedItems)
+                table.insert(C.SelectedItems, v)
             end
         end
    end,
