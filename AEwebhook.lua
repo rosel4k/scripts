@@ -656,6 +656,16 @@ local success, errorOrValue = pcall(function()
 					local text = dungeonGui.Main.Main.Wave.Text
 					local currentWave = tonumber(text:match("Wave:%s*(%d+)"))
 
+					-- Fix invalid AutoLeaveWave
+					if type(T.AutoLeaveWave) ~= "number" or T.AutoLeaveWave <= 0 then
+					T.AutoLeaveWave = config.MaxWave or math.huge
+					end
+
+					-- Clamp to max wave
+					if config.MaxWave and T.AutoLeaveWave > config.MaxWave then
+						T.AutoLeaveWave = config.MaxWave
+					end
+
 					if currentWave and currentWave >= T.AutoLeaveWave then
 						Stuff.Leave()
 					end
@@ -684,8 +694,8 @@ local success, errorOrValue = pcall(function()
 				T.AutoLeaveWave = num
 				WavePara:SetDesc(num)
 			else
-				T.AutoLeaveWave = nil
-				WavePara:SetDesc("Invalid wave")
+				T.AutoLeaveWave = config.MaxWave
+				WavePara:SetDesc("Max wave")
 			end
 		end
 	})
