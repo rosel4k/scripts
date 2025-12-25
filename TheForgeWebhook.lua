@@ -261,3 +261,4 @@ local ItemDrop = Tab:CreateDropdown({
         end
    end,
 })
+Rayfield:LoadConfiguration()
