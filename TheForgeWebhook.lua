@@ -186,7 +186,7 @@ local Window = Rayfield:CreateWindow({
    DisableBuildWarnings = false,
    ConfigurationSaving = {
       Enabled = true,
-      FolderName = "rosel4k",
+      FolderName = "rosel4kForge",
       FileName = "theforge"
    },
    KeySystem = false,
